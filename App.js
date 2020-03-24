@@ -3,56 +3,63 @@ import React, {Component} from 'react';
 import { Button, View, Text,TextInput, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-function HomeScreen({ navigation }) {
+
+function HomeScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 30 }}>This is the home screen!</Text>
-      <Button
-        onPress={() => navigation.navigate('MyModal')}
-        title="Open Modal"
-      />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home!</Text>
     </View>
   );
 }
 
-function ModalScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
+function InfoScreen(){
+  return(
+    <View style={{flex:1, justifyContent: 'center', alignItems:'center' }}>
+      <Text>Info!!!</Text>
     </View>
   );
 }
 
-function DetailsScreen() {
+function SettingsScreen() {
   return (
-    <View>
-      <Text>Details</Text>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
     </View>
   );
 }
 
-const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
+const MainTopStack = createBottomTabNavigator();
 
-function MainStackScreen() {
+function MainStackScreen(){
   return (
-    <MainStack.Navigator>
-      <MainStack.Screen name="Home" component={HomeScreen} />
-      <MainStack.Screen name="Details" component={DetailsScreen} />
-    </MainStack.Navigator>
+    <MainTopStack.Navigator>
+      <MainTopStack.Screen name="Home" component={HomeScreen}/>
+      <MainTopStack.Screen name="Info" component={InfoScreen}/>
+      <MainTopStack.Screen name="Setting" component={SettingsScreen}/>
+    </MainTopStack.Navigator>
   );
 }
+
+
 export default class App extends Component{
   render() {
     return (
-      <NavigationContainer>
-        <RootStack.Navigator mode="modal" headerMode="none">
-          <RootStack.Screen name="Main" component={MainStackScreen} />
-          <RootStack.Screen name="MyModal" component={ModalScreen} />
+      <NavigationContainer
+        onStateChange={state => console.log('New state is', state)}
+      >
+        <RootStack.Navigator 
+          headerMode="none"
+          //Main의 header을 숨김
+        > 
+          <RootStack.Screen name="Main" 
+            component={MainStackScreen} 
+            // headerMode="none"
+          />
         </RootStack.Navigator>
-    </NavigationContainer>
+      </NavigationContainer>
     );
   }
 }
