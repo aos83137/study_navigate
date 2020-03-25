@@ -7,6 +7,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 // import { Ionicons } from '@expo/vector-icons';
 
+import SettingsScreen from './scr/screens/SettingsScreen';
+import InfoScreen from './scr/screens/InfoScreen';
+import HomeScreen from './scr/screens/HomeScreen';
+
 function IconWithBadge({ name, badgeCount, color, size }) {
   return (
     <View style={{ width: 24, height: 24, margin: 5 }}>
@@ -38,30 +42,6 @@ function IconWithBadge({ name, badgeCount, color, size }) {
 function HomeIconWithBadge(props) {
   // React Context API, Redux, MobX 또는 이벤트 이미 터와 같은 다른 방법으로 badgeCount를 전달해야합니다.
   return <IconWithBadge {...props} badgeCount={3} />;
-}
-
-function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function InfoScreen(){
-  return(
-    <View style={{flex:1, justifyContent: 'center', alignItems:'center' }}>
-      <Text>Info!!!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
 }
 
 const RootStack = createStackNavigator();
