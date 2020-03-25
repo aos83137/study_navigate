@@ -70,6 +70,7 @@ const MainTabStack = createBottomTabNavigator();
 function MainStackScreen(){
   return (
     <MainTabStack.Navigator
+      initialRouteName="Home"
       screenOptions={({route}) => ({
         tabBarIcon : ({ focused, color , size}) => {
           if (route.name === 'Home'){
@@ -107,12 +108,11 @@ export default class App extends Component{
         onStateChange={state => console.log('New state is', state)}
       >
         <RootStack.Navigator 
-          headerMode="none"
+          headerMode ="none"
           //Main의 header을 숨김
         > 
           <RootStack.Screen name="Main" 
             component={MainStackScreen} 
-            // headerMode="none"
           />
         </RootStack.Navigator>
       </NavigationContainer>
