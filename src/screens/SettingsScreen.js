@@ -8,7 +8,7 @@ export default class SettingsScreen extends Component{
             <ScrollView style={styles.container}>
                 <View style={styles.wrapContent}>
                     <View style={styles.content}>
-                        <Text>g2</Text>
+                        <Text>g2123123</Text>
                     </View>
                 </View>
             </ScrollView>
