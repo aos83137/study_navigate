@@ -2,7 +2,7 @@ import React , {Component} from 'react';
 import {Text ,View, ScrollView, StyleSheet} from 'react-native';
 
 export default class HomeScreen extends Component{
-    render(){
+    render(props){
         function IconWithBadge({ name, badgeCount, color, size }) {
             return (
                 <View style={{ width: 24, height: 24, margin: 5 }}>
@@ -26,7 +26,7 @@ export default class HomeScreen extends Component{
 }
 
 styles = StyleSheet.create({
-    badge = {
+    badge : {
         // On React Native < 0.57 overflow outside of parent will not work on Android, see https://git.io/fhLJ8
         position: 'absolute',
         right: -6,
