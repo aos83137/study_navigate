@@ -1,49 +1,74 @@
 import React,{component, Component} from 'react';
 import {View,Text, ScrollView, StyleSheet} from 'react-native';
-// import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import colors from '../styles/colors'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class SettingsScreen extends Component{
     render(){
         return(
-            <ScrollView style={styles.container} invertStickyHeaders={true} >
-                <Text>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium illo, optio sunt eius atque possimus nobis magni quo deleorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium illo, optio sunt eius atque possimus nobis magni quo delectus quos inventore adipisci laboriosam pariatur animi tempora porro hic quaerat odit?</Text>
-                <View style={styles.wrapContent}>                    
-                    <View style={styles.content}>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                        <Text>Lo214124?</Text>
-                        <Text>Lo12412442</Text>
-                    </View>
+            <ScrollView style={styles.container} stickyHeaderIndices ={[0]} >
+                <View style={styles.titleContent}>
+                    <Text style={styles.headerText}>설정</Text>
                 </View>
+                <View style={styles.wrapContent}>                    
+                    <View style={styles.subTitleContent}>
+                        <Text style={styles.text}>인증</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>Sign Up</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>Login</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.subTitleContent}>
+                        <Text style={styles.text}>기본설정</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>알림</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>GPS</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>언어설정</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.subTitleContent}>
+                        <Text style={styles.text}>Help</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>FAQ</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>금지 품목</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>지원팀으로 연락</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.subTitleContent}>
+                        <Text style={styles.text}>이 앱에 관하여</Text>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>공지</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>금지 품목</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>지원팀으로 연락</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                    
+                </View>           
             </ScrollView>
         );
     }
@@ -52,18 +77,45 @@ export default class SettingsScreen extends Component{
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // padding: wp('5%'),
         backgroundColor: 'white',
     },
     wrapContent: {
-        // width: wp('90%'),
-        // height: wp('90%'),
+        width: '100%',
+        height: '100%',
         // paddingBottom: wp('5%'),
-        
     },
-    content: {
+    titleContent: {
         width: "100%",
         height: "100%",
-        backgroundColor: "#46c3ad",
+        backgroundColor: colors.white,
+        flex:1,
+        alignItems:'center',
+        padding:'2%',
+    },
+    subTitleContent:{
+        paddingLeft:'4%',
+        padding:'1.5%',
+        backgroundColor:'#AAA',
+    },
+    content:{
+        paddingLeft:'4%',
+        padding:'3%',
+        paddingBottom:'-3%',
+        borderBottomWidth:1,
+        borderBottomStartRadius:20,
+        borderBottomRightRadius:20,
+        borderBottomWidth:0.3,
+        flex:1,
+        flexDirection:'row',
+        justifyContent: 'space-between',
+    },
+    headerText:{
+        fontSize :24,
+        fontWeight:'bold',
+        color:colors.title,
+    },
+    text:{
+        fontSize :18,
+        color:colors.title,
     }
 })
