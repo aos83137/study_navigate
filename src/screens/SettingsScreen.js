@@ -5,10 +5,43 @@ import {View,Text, ScrollView, StyleSheet} from 'react-native';
 export default class SettingsScreen extends Component{
     render(){
         return(
-            <ScrollView style={styles.container}>
-                <View style={styles.wrapContent}>
+            <ScrollView style={styles.container} invertStickyHeaders={true} >
+                <Text>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium illo, optio sunt eius atque possimus nobis magni quo deleorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium illo, optio sunt eius atque possimus nobis magni quo delectus quos inventore adipisci laboriosam pariatur animi tempora porro hic quaerat odit?</Text>
+                <View style={styles.wrapContent}>                    
                     <View style={styles.content}>
-                        <Text>g2123123</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text><Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
+                        <Text>Lo214124?</Text>
+                        <Text>Lo12412442</Text>
                     </View>
                 </View>
             </ScrollView>

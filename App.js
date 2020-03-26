@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 // import { Ionicons } from '@expo/vector-icons';
 
 import MainTabStack from './src/screens/MainTabStack';
+import MyDrawerTap from './src/screens/MyDrawerTap';
+
 
 const RootStack = createStackNavigator();
 
@@ -21,6 +23,7 @@ export default class App extends Component{
         > 
           <RootStack.Screen name="Main" 
             component={MainTabStack} 
+            component={MyDrawerTap}
           />
         </RootStack.Navigator>
       </NavigationContainer>
