@@ -6,6 +6,7 @@ export default class InfoScreen extends Component{
         return(
             <View style={{flex:1, justifyContent: 'center', alignItems:'center' }}>
                 <Text>Info!!!</Text>
+                <Text>예약 정보 넣어야함</Text>
              </View>
         );
     }
