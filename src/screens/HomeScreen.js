@@ -156,13 +156,13 @@ export default class HomeScreen extends Component{
                         (e)=> this.setState({x: e.nativeEvent.coordinate})
                     }
                     //마커 이미지 사이즈가 안변함...
-                    // image={require('../img/airbnb-logo.png')}
+                    // image={require('../img/logo.png')}
                     // style={{ width: 50, height: 5 }}
 
                     // title={"this is a marker"}
                 >
                     <Callout onPress={this.showWelcomMesage}>
-                        {/* <Image source={require('../img/sushi.jpg')}/> */}
+                        <Image source={require('../img/sushi.jpg')}/>
                         <Text>An Interstion city</Text>
                     </Callout>
                     {/* <Image source={require('../img/marker.png')}/> */}
