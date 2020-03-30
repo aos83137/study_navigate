@@ -5,6 +5,7 @@ import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Carousel from 'react-native-snap-carousel';
 import SearchMenu from '../components/menu/SearchMenu';
+import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -29,7 +30,7 @@ export default class HomeScreen extends Component{
             hiddenMenu:{display:'none'}
         };
     }
-    
+
     //componentDidMount : render가 호출된 후 실행되는 메서드
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
@@ -38,11 +39,12 @@ export default class HomeScreen extends Component{
                     let initialRegion = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.0115,
-                        longitudeDelta: 0.0121,
+                        latitudeDelta: 0.045,
+                        longitudeDelta: 0.045,
                     }
 
-                    this.setState({ 
+                    this.setState({
+                        region : initialRegion, 
                         latitude : position.coords.latitude,
                         longitude : position.coords.longitude,
                         initialRegion,
@@ -59,15 +61,31 @@ export default class HomeScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-
-            
-        
     }
+
+    
+    //현재 위치로 돌아가는 버튼
+    centerMap(){
+        const {
+            latitude, 
+            longitude, 
+            latitudeDelta, 
+            longitudeDelta} = this.state.region
+        this._map.animateToRegion({
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta
+        })
+    }
+
+    //맵 클릭시 가게 정보 슬라이드 메뉴가 사라짐
     clickMapHiddenMenu = () =>{
         this.setState({
             hiddenMenu:{display:'none'}
         })
     }
+
     //Alert 사용
     showWelcomMesage = () =>{
         Alert.alert(
@@ -126,93 +144,96 @@ export default class HomeScreen extends Component{
             <Image style={styles.cardImage} source={item.image}/>
         </View>
     )    
+    
 
-
+    
     render(){
         return(
             <View style={styles.container}>
-            <MapView
-                provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                style={styles.map}
-                ref={map=> this._map = map}
-                initialRegion={this.state.initialRegion}
-                showsUserLocation={true}
-                showsMyLocationButton = {true}
-                showsCompass = {true}
-                rotateEnabled={false}
-                onPress = {this.clickMapHiddenMenu}
-            >   
-                <Circle
-                    center={{ latitude: 35.8943188,
-                        longitude:128.6238612, }}
-                    radius={100}
-                    fillColor={'rgba(100,100,200,0.5)'}
+                <CurrentLocationButton
+                 cb={()=>{this.centerMap()}}
                 />
-                <Marker
-                    draggable
-                    coordinate={this.state.coordinate}
-                    // 드래그 이벤트 아직 작동 잘안해..
-                    onDragEnd={
-                        (e)=> this.setState({x: e.nativeEvent.coordinate})
-                    }
-                    //마커 이미지 사이즈가 안변함...
-                    // image={require('../img/logo.png')}
-                    // style={{ width: 50, height: 5 }}
+                <MapView
+                    provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                    style={styles.map}
+                    ref={map=> {this._map = map}}
+                    initialRegion={this.state.initialRegion}
+                    showsUserLocation={true}
+                    showsMyLocationButton = {true}
+                    showsCompass = {true}
+                    rotateEnabled={false}
+                    onPress = {this.clickMapHiddenMenu}
+                >   
+                    <Circle
+                        center={{ latitude: 35.8943188,
+                            longitude:128.6238612, }}
+                        radius={100}
+                        fillColor={'rgba(100,100,200,0.5)'}
+                    />
+                    <Marker
+                        draggable
+                        coordinate={this.state.coordinate}
+                        // 드래그 이벤트 아직 작동 잘안해..
+                        onDragEnd={
+                            (e)=> this.setState({x: e.nativeEvent.coordinate})
+                        }
+                        //마커 이미지 사이즈가 안변함...
+                        // image={require('../img/logo.png')}
+                        // style={{ width: 50, height: 5 }}
 
-                    // title={"this is a marker"}
-                >
-                    <Callout onPress={this.showWelcomMesage}>
-                        <Image source={require('../img/sushi.jpg')}/>
-                        <Text>An Interstion city</Text>
-                    </Callout>
-                    {/* <Image source={require('../img/marker.png')}/> */}
-                </Marker>
-                <Marker
-                    coordinate={{latitude: 35.896198, longitude: 128.622353}}
-                    title="this is a marker"
-                    description="this is a marker example"
-                />
-                
-                {
-                    this.state.coordinates.map((marker, index)=>(
-                        <Marker
-                        key={marker.name}
-                        coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
-                        title={marker.name}
-                        ref={ref=> this.state.markers[index] = ref}
-                        onPress = {() => this.onMarkerPressed(marker, index)}
-                        >
-                            
-                        </Marker>
-                    ))
-                }
-            </MapView>
-
-            <View style={styles.title}>
-                <SearchMenu/>
-            </View>
-            <View style={styles.content}>
-                <Text>현재 좌표</Text>
-                <Text >latitude : {this.state.latitude}</Text>
-                <Text >longitude : {this.state.longitude}</Text>
-            </View>
-            <View style={[this.state.hiddenMenu,styles.footer]}>
-                <Carousel
-                //https://github.com/archriss/react-native-snap-carousel
-                    ref={(c) => { this._carousel = c; }}
-                    data={this.state.coordinates}
-                    renderItem={this.renderCarouselItem}
-                    sliderWidth={Dimensions.get('window').width}
-                    itemWidth={300}
-                    containerCustomStyle={styles.carousel}
-                    onSnapToItem = {
-                        (index) => this.onCarouselItemChange(index)
+                        // title={"this is a marker"}
+                    >
+                        <Callout onPress={this.showWelcomMesage}>
+                            <Image source={require('../img/sushi.jpg')}/>
+                            <Text>An Interstion city</Text>
+                        </Callout>
+                        {/* <Image source={require('../img/marker.png')}/> */}
+                    </Marker>
+                    <Marker
+                        coordinate={{latitude: 35.896198, longitude: 128.622353}}
+                        title="this is a marker"
+                        description="this is a marker example"
+                    />
+                    
+                    {
+                        this.state.coordinates.map((marker, index)=>(
+                            <Marker
+                            key={marker.name}
+                            coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
+                            title={marker.name}
+                            ref={ref=> this.state.markers[index] = ref}
+                            onPress = {() => this.onMarkerPressed(marker, index)}
+                            >
+                                
+                            </Marker>
+                        ))
                     }
-                    removeClippedSubviews={false}
-                />
+                </MapView>
+
+                <View style={styles.title}>
+                    {/* <SearchMenu/> */}
+                </View>
+                <View style={styles.content}>
+                    <Text>현재 좌표</Text>
+                    <Text >latitude : {this.state.latitude}</Text>
+                    <Text >longitude : {this.state.longitude}</Text>
+                </View>
+                <View style={[this.state.hiddenMenu,styles.footer]}>
+                    <Carousel
+                    //https://github.com/archriss/react-native-snap-carousel
+                        ref={(c) => { this._carousel = c; }}
+                        data={this.state.coordinates}
+                        renderItem={this.renderCarouselItem}
+                        sliderWidth={Dimensions.get('window').width}
+                        itemWidth={300}
+                        containerCustomStyle={styles.carousel}
+                        onSnapToItem = {
+                            (index) => this.onCarouselItemChange(index)
+                        }
+                        removeClippedSubviews={false}
+                    />
+                </View>
             </View>
-            
-        </View>
         );
     }
 }

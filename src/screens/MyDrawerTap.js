@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainTabStack from './MainTabStack';
-
+import PlacesAutoComplete from './PlacesAutoComplete';
 
 function Feed() {
     return (
@@ -16,7 +16,8 @@ function Feed() {
   function Notifications() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Notifications Screen</Text>
+        {/* <Text>Notifications Screen</Text> */}
+        <PlacesAutoComplete/>
       </View>
     );
   }
