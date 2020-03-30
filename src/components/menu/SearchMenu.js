@@ -7,17 +7,20 @@ import {
     TouchableHighlight,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {PlacesAutoComplete} from '../../screens/PlacesAutoComplete';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const FS = 14;
 
-export default class SearchMenu extends Component{
-    render(){
-        // const { text, textColor, background,handleOnPress, icon } = this.props;
+export const SearchMenu = function(props){
+    const cb = props.onPress ? props.onPress :()=> console.log('Callback function not passed to CurrnetLocatioinButton!');
+
         const whereLocation = '대구 북구 복현로';
         const date = '03/19 10:00 - 03/19 19:00';
         return(
             <View style = {styles.container}>
-                <TouchableHighlight style={styles.titleSearchButton}>
+                <TouchableHighlight style={styles.titleSearchButton} onPress={()=> cb()} >
                     <View style={styles.elem}>
                         <Icon
                             name = "search"
@@ -61,7 +64,6 @@ export default class SearchMenu extends Component{
                 </TouchableHighlight>             
             </View>
         );
-    }
 }
 
 // SearchMenu.propTypes = {

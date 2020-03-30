@@ -4,8 +4,9 @@ import {Text ,View, StyleSheet, Image, Alert, Dimensions,} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Carousel from 'react-native-snap-carousel';
-import SearchMenu from '../components/menu/SearchMenu';
+import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
+import {PlacesAutoComplete} from '../screens/PlacesAutoComplete';
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -129,7 +130,6 @@ export default class HomeScreen extends Component{
             latitudeDelta: 0.0115,
             longitudeDelta: 0.0121,
         })
-
         //snapToItem : carousel 의 함수  index에 맞는 스냅을 보여줌
         this._carousel.snapToItem(index);
         this.setState({
@@ -211,7 +211,7 @@ export default class HomeScreen extends Component{
                 </MapView>
 
                 <View style={styles.title}>
-                    {/* <SearchMenu/> */}
+                    <SearchMenu cb={()=>{}}/>
                 </View>
                 <View style={styles.content}>
                     <Text>현재 좌표</Text>
