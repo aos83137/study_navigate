@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainTabStack from './src/screens/MainTabStack';
 import MyDrawerTap from './src/screens/MyDrawerTap';
 import PlacesAutoComplete from './src/screens/PlacesAutoComplete';
+import DateSetting from './src/screens/DateSetting';
 
 export async function request_location_runtime_permission() {
 
@@ -59,6 +60,7 @@ export default class App extends Component{
             component={MyDrawerTap}
           />
           <RootStack.Screen name="PlacesAutoComplete" component={PlacesAutoComplete} />
+          <RootStack.Screen name="DateSetting" component={DateSetting}/>
         </RootStack.Navigator>
       </NavigationContainer>
     );

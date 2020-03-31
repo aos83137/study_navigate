@@ -16,7 +16,7 @@ export default class App extends Component{
       <NavigationContainer
         onStateChange={state => console.log('New state is', state)}
       >
-        <RootStack.Navigator  headerMode ="none"
+        <RootStack.Navigator Z headerMode ="none"
           //Main의 header을 숨김
         > 
           <RootStack.Screen name="HomeScreen" component={HomeScreen}/>

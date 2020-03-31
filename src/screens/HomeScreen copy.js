@@ -1,15 +1,12 @@
 import React , {Component} from 'react';
-import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button} from 'react-native';
+import {Text ,View, StyleSheet, Image, Alert, Dimensions,} from 'react-native';
 
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Carousel from 'react-native-snap-carousel';
 import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
-import PlacesAutoComplete from '../screens/PlacesAutoComplete';
-import {StackNavigationProp} from '@react-navigation/stack'
-
-const NavigationProp = StackNavigationProp;
+import {PlacesAutoComplete} from '../screens/PlacesAutoComplete';
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -17,10 +14,6 @@ export default class HomeScreen extends Component{
         this.state = {
             latitude: null,
             longitude: null,
-            coordinate:{
-                latitude:35.8943188,
-                longitude:128.6238612,
-            },
             error: null,
             coordinates:[
                 { name : '1', latitude:35.8938, longitude:128.6245, image:require('../img/sushi.jpg')},
@@ -141,18 +134,14 @@ export default class HomeScreen extends Component{
     }
 
     //carousel의 아이템 뷰 설정 함수
-    renderCarouselItem = ({item}) => (
+    renderCarouselItem = ({item}) => {
         <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>{item.name}</Text>
             <Image style={styles.cardImage} source={item.image}/>
         </View>
-    )    
-    
-
+    };    
     
     render(){
-        console.log("여기는 프롭스"+this.props.navigation.navigate);
-
         return(
             <View style={styles.container}>
                 <CurrentLocationButton
@@ -175,6 +164,30 @@ export default class HomeScreen extends Component{
                         radius={100}
                         fillColor={'rgba(100,100,200,0.5)'}
                     />
+                    <Marker
+                        draggable
+                        coordinate={this.state.coordinate}
+                        // 드래그 이벤트 아직 작동 잘안해..
+                        onDragEnd={
+                            (e)=> this.setState({x: e.nativeEvent.coordinate})
+                        }
+                        //마커 이미지 사이즈가 안변함...
+                        // image={require('../img/logo.png')}
+                        // style={{ width: 50, height: 5 }}
+
+                        // title={"this is a marker"}
+                    >
+                        <Callout onPress={this.showWelcomMesage}>
+                            <Image source={require('../img/sushi.jpg')}/>
+                            <Text>An Interstion city</Text>
+                        </Callout>
+                        {/* <Image source={require('../img/marker.png')}/> */}
+                    </Marker>
+                    <Marker
+                        coordinate={{latitude: 35.896198, longitude: 128.622353}}
+                        title="this is a marker"
+                        description="this is a marker example"
+                    />
                     
                     {
                         this.state.coordinates.map((marker, index)=>(
@@ -192,18 +205,13 @@ export default class HomeScreen extends Component{
                 </MapView>
 
                 <View style={styles.title}>
-                    <SearchMenu 
-                        goPlace={()=>{this.props.navigation.navigate('PlacesAutoComplete');}}
-                        goDate={()=>{this.props.navigation.navigate('DateSetting');}}
-                    />
+                    <SearchMenu cb={()=>{}}/>
                 </View>
-
                 <View style={styles.content}>
                     <Text>현재 좌표</Text>
                     <Text >latitude : {this.state.latitude}</Text>
                     <Text >longitude : {this.state.longitude}</Text>
                 </View>
-
                 <View style={[this.state.hiddenMenu,styles.footer]}>
                     <Carousel
                     //https://github.com/archriss/react-native-snap-carousel
@@ -221,7 +229,7 @@ export default class HomeScreen extends Component{
                 </View>
             </View>
         );
-    } 
+    }
 }
 
 const styles = StyleSheet.create({

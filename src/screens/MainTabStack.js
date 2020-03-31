@@ -13,8 +13,9 @@ import HomeIconWithBadge from '../components/HomeIconWithBadge';
 export default class MainTabStack extends Component{
     render(){
         const MainTabStack = createBottomTabNavigator();
-
-
+        // const {navigation } = this.props;
+        // console.log("여기는 프롭스"+this.props.navigation.navigate);
+        
         function IconWithBadge({ name, badgeCount, color, size }) {
             return (
                 <View style={{ width: 24, height: 24, margin: 5 }}>
@@ -75,7 +76,9 @@ export default class MainTabStack extends Component{
                 inactiveTintColor: 'gray',
                 }}
             >
-                <MainTabStack.Screen name="Home" component={HomeScreen}/>
+                <MainTabStack.Screen name="Home" 
+                    component={HomeScreen}
+                    />
                 <MainTabStack.Screen name="Info" component={InfoScreen}/>
                 <MainTabStack.Screen name="Setting" component={SettingsScreen}/>
           </MainTabStack.Navigator>
