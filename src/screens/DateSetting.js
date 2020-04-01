@@ -14,6 +14,7 @@ export default class DateSetting extends Component{
             carrCnt:0,
         }
     }
+    //데이터 보내야함
     //count up &down
     cntUp(check){
         if (check ==='bag') {
