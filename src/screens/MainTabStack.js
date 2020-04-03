@@ -13,8 +13,6 @@ import HomeIconWithBadge from '../components/HomeIconWithBadge';
 export default class MainTabStack extends Component{
     render(){
         const MainTabStack = createBottomTabNavigator();
-        // const {navigation } = this.props;
-        // console.log("여기는 프롭스"+this.props.navigation.navigate);
         
         function IconWithBadge({ name, badgeCount, color, size }) {
             return (

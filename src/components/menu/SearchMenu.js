@@ -7,18 +7,33 @@ import {
     TouchableHighlight,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { PlacesAutoComplete } from '../../screens/PlacesAutoComplete';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+
 
 const FS = 14;
 
 export const SearchMenu = function(props){
+    const getFormatDate = date=>{
+        let month = (1 + date.getMonth());          //M
+        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+        let day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        let hour = date.getHours();                 //h
+        let min = date.getMinutes();                //m
+        if(min<10) min = '0' + min;
+        return  '' + month + '/' + day + ' ' + hour+':'+min;
+    }
+
     const goPlace = props.goPlace ? props.goPlace :()=> console.log('여기는 콜백 위치 검색 이벤트지');
     const goDate = props.goDate ? props.goDate : ()=> console.log('여기는 콜백 날짜 이벤트지');
-    
-        const whereLocation = '대구 북구 복현로';
-        const date = '03/19 10:00 - 03/19 19:00';
+    const checkIn = props.checkIn ? getFormatDate(props.checkIn) : getFormatDate(new Date());
+    const checkOut = props.checkOut ? getFormatDate(props.checkOut):getFormatDate(new Date());
+    const bagCnt = props.bagCnt?props.bagCnt:0;
+    const carrCnt = props.carrCnt?props.carrCnt:0;
+
+
+    const whereLocation = '대구 북구 복현로';
+    const date = checkIn+ ' - ' + checkOut;
+
         return(
             <View style = {styles.container}>
                 <TouchableHighlight style={styles.titleSearchButton} onPress={()=> goPlace()} >
@@ -52,14 +67,14 @@ export const SearchMenu = function(props){
                                 color={colors.green01}
                                 style={styles.icon}
                             />
-                            <Text style={styles.titleText}> x0</Text>
+                            <Text style={styles.titleText}> x{bagCnt}</Text>
                             <Icon
                                 name="suitcase"
                                 size={24}
                                 color={colors.green01}
                                 style={styles.icon}
                             />
-                            <Text style={styles.titleText}> x1</Text>
+                            <Text style={styles.titleText}> x{carrCnt}</Text>
                         </View>
                     </View>
                 </TouchableHighlight>             

@@ -11,6 +11,7 @@ import {StackNavigationProp} from '@react-navigation/stack'
 
 const NavigationProp = StackNavigationProp;
 
+
 export default class HomeScreen extends Component{
     constructor(props){
         super(props);
@@ -31,8 +32,9 @@ export default class HomeScreen extends Component{
                 
             ],
             markers:[],
-            hiddenMenu:{display:'none'}
-        };
+            hiddenMenu:{display:'none'},
+            // bagCnt : props.route.params.bacCnt,
+        };        
     }
 
     //componentDidMount : render가 호출된 후 실행되는 메서드
@@ -59,12 +61,13 @@ export default class HomeScreen extends Component{
                 },
                 (error) => {
                     // See error code charts below.
-                    this.setState({error:error.message}),
+                    this.setState({error:error.message});
                     console.log(error.code, error.message);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
+            
     }
 
     
@@ -148,10 +151,11 @@ export default class HomeScreen extends Component{
         </View>
     )    
     
-
-    
-    render(){
-        console.log("여기는 프롭스"+this.props.navigation.navigate);
+    render(){     
+        const checkIn = this.props.route.params?.checkIn
+        const checkOut = this.props.route.params?.checkOut
+        const bagCnt = this.props.route.params?.bagCnt
+        const carrCnt = this.props.route.params?.carrCnt
 
         return(
             <View style={styles.container}>
@@ -194,7 +198,16 @@ export default class HomeScreen extends Component{
                 <View style={styles.title}>
                     <SearchMenu 
                         goPlace={()=>{this.props.navigation.navigate('PlacesAutoComplete');}}
-                        goDate={()=>{this.props.navigation.navigate('DateSetting');}}
+                        goDate={()=>{this.props.navigation.navigate('DateSetting',{
+                            carrCnt,
+                            bagCnt,
+                            checkIn,
+                            checkOut,
+                        });}}
+                        checkIn = {checkIn}
+                        checkOut = {checkOut}
+                        bagCnt = {bagCnt}
+                        carrCnt ={carrCnt}
                     />
                 </View>
 
