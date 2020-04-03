@@ -1,68 +1,90 @@
-import React , {Component} from 'react';
-import {Text ,View,StyleSheet, Image, Alert, Dimensions,} from 'react-native';
+import React , {Component,useState } from 'react';
+import {Text ,View,StyleSheet, Image, Alert, Dimensions, TouchableHighlight} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import  colors from '../styles/colors'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Calendar from "../components/calendar";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-export default class DateSetting extends Component{   
-    constructor(props){
-        super(props);
-        this.state={
-            bagCnt:0,
-            carrCnt:0,
-        }
-    }
+
+const DateSetting = ()=>{   
+    const [bagCnt, setbagCnt] = useState(0);
+    const [carrCnt, setCarrCnt] = useState(0);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    
+
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = date => {
+        console.warn("A date has been picked: ", date);
+        hideDatePicker();
+        return date;
+    };
     //데이터 보내야함
     //count up &down
-    cntUp(check){
-        if (check ==='bag') {
-            this.setState({
-                bagCnt: this.state.bagCnt + 1,
-            });
-            console.log(this.state.bagCnt);
-        }else if (check==='carr') {
-            this.setState({
-                carrCnt: this.state.carrCnt + 1,
-            });
-            console.log(this.state.carrCnt);
-        }
-    }
-    cntDown(check){
-        if (check ==='bag') {
-            if (this.state.bagCnt>0) {
-                this.setState({
-                    bagCnt: this.state.bagCnt-1,
-                });    
-            }
-        }else if (check==='carr') {
-            if (this.state.carrCnt>0) {
-                this.setState({
-                    carrCnt: this.state.carrCnt-1,
-                });    
-            }
-        }
-    }
-
-    render(){
+    // cntUp(check){
+    //     if (check ==='bag') {
+    //         this.setState({
+    //             bagCnt: this.state.bagCnt + 1,
+    //         });
+    //         console.log(this.state.bagCnt);
+    //     }else if (check==='carr') {
+    //         this.setState({
+    //             carrCnt: this.state.carrCnt + 1,
+    //         });
+    //         console.log(this.state.carrCnt);
+    //     }
+    // }
+    // cntDown(check){
+    //     if (check ==='bag') {
+    //         if (this.state.bagCnt>0) {
+    //             this.setState({
+    //                 bagCnt: this.state.bagCnt-1,
+    //             });    
+    //         }
+    //     }else if (check==='carr') {
+    //         if (this.state.carrCnt>0) {
+    //             this.setState({
+    //                 carrCnt: this.state.carrCnt-1,
+    //             });    
+    //         }
+    //     }
+    // }
         return(
             <View style = {styles.container}> 
                 <View style={styles.backIcon}>
                     <Icon name='keyboard-arrow-left' size={24}/>
                 </View>
                 <View style={styles.dateView}>
-                    <View>
-                        <Text style={styles.checkText1}>체크인</Text>
-                        <Text style={styles.checkText2}>03.31. 오후 1:30</Text>
-                    </View>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                    />
+                    <TouchableHighlight onPress={()=>{showDatePicker()}}>
+                        <View>
+                            <Text style={styles.checkText1}>체크인</Text>
+                            <Text style={styles.checkText2}>03.31. 오후 1:30</Text>
+                        </View>
+                    </TouchableHighlight>
                     <View>
                         <Icon name='keyboard-arrow-right' size={30}/>
                     </View>
-                    <View>
-                        <Text style={styles.checkText1}>체크아웃</Text>
-                        <Text style={styles.checkText2}>03.31. 오후 1:30</Text>
-                    </View>
+                    <TouchableHighlight onPress={()=>{showDatePicker()}}>
+                        <View>
+                            <Text style={styles.checkText1}>체크아웃</Text>
+                            <Text style={styles.checkText2}>03.31. 오후 1:30</Text>
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 <View style={styles.luggageView}>
                     <View style={styles.luggageWrap}>
@@ -83,8 +105,8 @@ export default class DateSetting extends Component{
                                     color={colors.white}
                                 />
                             } buttonStyle={styles.buttonStyle}
-                            onPress={()=>{this.cntDown('bag')}}/>
-                            <Text> {this.state.bagCnt? this.state.bagCnt: 0} </Text>
+                            onPress={()=>{ bagCnt? setbagCnt(bagCnt-1) : false}}/>
+                            <Text> {bagCnt? bagCnt: 0} </Text>
                             <Button icon={
                                 <Icon2
                                     name='plus'
@@ -92,7 +114,7 @@ export default class DateSetting extends Component{
                                     color={colors.white}
                                 />
                             } buttonStyle={styles.buttonStyle}
-                            onPress={()=>this.cntUp('bag')}
+                            onPress={()=>{setbagCnt(bagCnt+1)}}
                             />
                         </View>
                     </View>
@@ -114,9 +136,9 @@ export default class DateSetting extends Component{
                                     color={colors.white}
                                 />
                             } buttonStyle={styles.buttonStyle} 
-                            onPress={()=>this.cntDown('carr')}
+                            onPress={()=>{carrCnt?setCarrCnt(carrCnt-1):false}}
                             />
-                            <Text> {this.state.carrCnt? this.state.carrCnt: 0} </Text>
+                            <Text> {carrCnt? carrCnt: 0} </Text>
                             <Button icon={
                                 <Icon2
                                     name='plus'
@@ -124,7 +146,7 @@ export default class DateSetting extends Component{
                                     color={colors.white}
                                 />
                             } buttonStyle={styles.buttonStyle}
-                            onPress={()=>this.cntUp('carr')}/>
+                            onPress={()=>{setCarrCnt(carrCnt+1)}}/>
                         </View>
                     </View>
                 </View>
@@ -134,7 +156,7 @@ export default class DateSetting extends Component{
             </View>
         );
     }
-}
+
     
 const styles = StyleSheet.create({
     container:{
@@ -199,4 +221,6 @@ const styles = StyleSheet.create({
         marginTop:'10%',
         
     },
-})
+});
+
+export default DateSetting;
