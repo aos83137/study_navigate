@@ -13,7 +13,7 @@ import HomeIconWithBadge from '../components/HomeIconWithBadge';
 export default class MainTabStack extends Component{
     render(){
         const MainTabStack = createBottomTabNavigator();
-        
+
         function IconWithBadge({ name, badgeCount, color, size }) {
             return (
                 <View style={{ width: 24, height: 24, margin: 5 }}>
