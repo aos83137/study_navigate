@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainTabStack from './MainTabStack';
+import KeeperInfo from './KeeperInfo';
 import PlacesAutoComplete from './PlacesAutoComplete';
 
 function Feed() {
@@ -49,7 +50,7 @@ function Feed() {
               />
               <Drawer.Screen
                 name="Profile"
-                component={Profile}
+                component={KeeperInfo}
                 options={{ drawerLabel: 'Profile' }}
               />
             </Drawer.Navigator>
