@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button} from 'react-native';
+import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlight} from 'react-native';
 
 import Geolocation from 'react-native-geolocation-service';
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
@@ -145,10 +145,16 @@ export default class HomeScreen extends Component{
 
     //carousel의 아이템 뷰 설정 함수
     renderCarouselItem = ({item}) => (
-        <View style={styles.cardContainer}>
-            <Text style={styles.cardTitle}>{item.name}</Text>
-            <Image style={styles.cardImage} source={item.image}/>
-        </View>
+        <TouchableHighlight onPress={()=>{
+            //네비갈때 데이터 던져주는걸로 구분하면 될듯함
+            this.props.navigation.navigate('KeeperInfo');
+        }}>
+            <View style={styles.cardContainer}>
+                    <Text style={styles.cardTitle}>{item.name}</Text>
+                    <Image style={styles.cardImage} source={item.image}/>
+
+            </View>
+        </TouchableHighlight>
     )    
     
     render(){     
@@ -217,7 +223,8 @@ export default class HomeScreen extends Component{
                     <Text >longitude : {this.state.longitude}</Text>
                 </View>
 
-                <View style={[this.state.hiddenMenu,styles.footer]}>
+                {/* <View style={[this.state.hiddenMenu,styles.footer]}> */}
+                <View style={[styles.footer]}>
                     <Carousel
                     //https://github.com/archriss/react-native-snap-carousel
                         ref={(c) => { this._carousel = c; }}

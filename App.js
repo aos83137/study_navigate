@@ -9,6 +9,7 @@ import MainTabStack from './src/screens/MainTabStack';
 import MyDrawerTap from './src/screens/MyDrawerTap';
 import PlacesAutoComplete from './src/screens/PlacesAutoComplete';
 import DateSetting from './src/screens/DateSetting';
+import KeeperInfo from './src/screens/KeeperInfo';
 
 export async function request_location_runtime_permission() {
 
@@ -61,6 +62,7 @@ export default class App extends Component{
           />
           <RootStack.Screen name="PlacesAutoComplete" component={PlacesAutoComplete} />
           <RootStack.Screen name="DateSetting" component={DateSetting}/>
+          <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
         </RootStack.Navigator>
       </NavigationContainer>
     );

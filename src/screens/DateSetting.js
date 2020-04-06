@@ -43,7 +43,6 @@ const DateSetting = (props)=>{
         hideDatePicker();
 
         setcheckOut(date)
-        console.log('test'+checkOut);
 
         return date;
     }
