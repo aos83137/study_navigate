@@ -4,33 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MainTabStack from './MainTabStack';
 import KeeperInfo from './KeeperInfo';
+import LinkDBTest from './LinkDBTest';
 import PlacesAutoComplete from './PlacesAutoComplete';
 
-function Feed() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Feed Screen</Text>
-      </View>
-    );
-  }
-  
-  function Notifications() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* <Text>Notifications Screen</Text> */}
-        <PlacesAutoComplete/>
-      </View>
-    );
-  }
-  
-  function Profile() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Profile Screen</Text>
-      </View>
-    );
-  }
-  
   const Drawer = createDrawerNavigator();
 
   
@@ -45,7 +21,7 @@ function Feed() {
               />
               <Drawer.Screen
                 name="Notifications"
-                component={Notifications}
+                component={LinkDBTest}
                 options={{ drawerLabel: 'Updates' }}
               />
               <Drawer.Screen
