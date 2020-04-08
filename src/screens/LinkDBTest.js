@@ -14,6 +14,24 @@ const LinkDBTest = (props)=>{
         console.log('TextInputEmail : ' +TextInputEmail);
         console.log('TextInputPhoneNumber : '+TextInputPhoneNumber);
 
+        //fetch(url,콜백함수)
+        fetch('http://192.168.0.2/tr_reactnative/insert.php',{
+            method: 'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+            body: JSON.stringify({
+                name: TextInputName,
+                email: TextInputEmail,
+                phone_number: TextInputPhoneNumber,
+            })
+        }).then((response)=> response.json())
+        .then((responseJson)=>{
+            Alert.alert(responseJson);
+        }).catch((error)=>{
+            console.error(error);
+        });
     }
 
     return(
