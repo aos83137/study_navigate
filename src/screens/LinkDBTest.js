@@ -117,7 +117,7 @@ const LinkDBTest = (props)=>{
 
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={InputScreen} />
+            <Stack.Screen name="InputS" component={InputScreen} />
             <Stack.Screen name="List" component={ViewDatauser}/>
         </Stack.Navigator>
     )

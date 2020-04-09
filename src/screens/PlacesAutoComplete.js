@@ -19,7 +19,7 @@ export default class PlacesAutoComplete extends Component{
               // listViewDisplayed='auto'    // true/false/undefined
               fetchDetails={true}
               // renderDescription={row => row.description} // custom description render
-              onPress={(placeData, details = null) => { // 'details' is provided when fetchDetails = true
+              onPress={(data, placeData = null) => { // 'details' is provided when fetchDetails = true
                 // console.log('data : '+JSON.stringify(data));
                 // console.log('details : '+JSON.stringify(details));
                 this.props.navigation.navigate('Home',{placeData});

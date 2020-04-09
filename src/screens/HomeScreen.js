@@ -37,41 +37,72 @@ export default class HomeScreen extends Component{
         };        
     }
 
+
     //componentDidMount : render가 호출된 후 실행되는 메서드
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
 
-            Geolocation.getCurrentPosition(
-                (position) => {
-                    let initialRegion = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: 0.045,
-                        longitudeDelta: 0.045,
-                    }
 
-                    this.setState({
-                        region : initialRegion, 
-                        latitude : position.coords.latitude,
-                        longitude : position.coords.longitude,
-                        initialRegion,
-                        error: null,
-                    });
-                    console.log(JSON.stringify(position));
-                    
-                },
-                (error) => {
-                    // See error code charts below.
-                    this.setState({error:error.message});
-                    console.log(error.code, error.message);
-                },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                //정확도, 타임아웃, 최대 연령
-            );
-            
+
+        Geolocation.getCurrentPosition(
+            (position) => {
+                let userRegion = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: 0.045,
+                    longitudeDelta: 0.045,
+                }
+
+                let initialRegion = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: 0.045,
+                    longitudeDelta: 0.045,
+                }
+
+                this.setState({
+                    region : userRegion, 
+                    initialRegion,
+                    error: null,
+                });
+                
+
+                // console.log(JSON.stringify(position));
+                
+            },
+            (error) => {
+                // See error code charts below.
+                this.setState({error:error.message});
+                console.log(error.code, error.message);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            //정확도, 타임아웃, 최대 연령
+        );
     }
+    componentWillReceiveProps(){
 
-    
+    }
+    componentDidUpdate(prevProps,prevState){
+        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
+        if(placeData){
+            const geometry = placeData.geometry.location;
+            const lat = geometry.lat;
+            const lng = geometry.lng;
+            console.log('lat : '+lat);
+            console.log('lng : '+lng);
+
+            this._map.animateToRegion({
+                latitude:lat,
+                longitude:lng,
+                latitudeDelta: 0.045,
+                longitudeDelta: 0.045,
+            });
+        }
+    }
+    movePlace(){
+        this._map.animateToRegion({
+        });
+    }
     //현재 위치로 돌아가는 버튼
     centerMap(){
         const {
@@ -165,7 +196,7 @@ export default class HomeScreen extends Component{
         const checkOut = this.props.route.params?.checkOut
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
-        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)
+        console.log('render실행 initialRegion : ' + JSON.stringify(this.state.initialRegion));
 
         return(
             <View style={styles.container}>
