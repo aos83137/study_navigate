@@ -40,6 +40,7 @@ export default class HomeScreen extends Component{
     //componentDidMount : render가 호출된 후 실행되는 메서드
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
+
             Geolocation.getCurrentPosition(
                 (position) => {
                     let initialRegion = {
@@ -88,8 +89,10 @@ export default class HomeScreen extends Component{
 
     //맵 클릭시 가게 정보 슬라이드 메뉴가 사라짐
     clickMapHiddenMenu = () =>{
+
         this.setState({
             hiddenMenu:{display:'none'}
+            
         })
     }
 
@@ -162,6 +165,7 @@ export default class HomeScreen extends Component{
         const checkOut = this.props.route.params?.checkOut
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
+        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)
 
         return(
             <View style={styles.container}>
@@ -223,21 +227,22 @@ export default class HomeScreen extends Component{
                     <Text >longitude : {this.state.longitude}</Text>
                 </View>
 
-                {/* <View style={[this.state.hiddenMenu,styles.footer]}> */}
-                <View style={[styles.footer]}>
-                    <Carousel
-                    //https://github.com/archriss/react-native-snap-carousel
-                        ref={(c) => { this._carousel = c; }}
-                        data={this.state.coordinates}
-                        renderItem={this.renderCarouselItem}
-                        sliderWidth={Dimensions.get('window').width}
-                        itemWidth={300}
-                        containerCustomStyle={styles.carousel}
-                        onSnapToItem = {
-                            (index) => this.onCarouselItemChange(index)
-                        }
-                        removeClippedSubviews={false}
-                    />
+                <View style={[this.state.hiddenMenu,styles.footer]}>
+                    <View style={[styles.footer]}>
+                        <Carousel
+                        //https://github.com/archriss/react-native-snap-carousel
+                            ref={(c) => { this._carousel = c; }}
+                            data={this.state.coordinates}
+                            renderItem={this.renderCarouselItem}
+                            sliderWidth={Dimensions.get('window').width}
+                            itemWidth={300}
+                            containerCustomStyle={styles.carousel}
+                            onSnapToItem = {
+                                (index) => this.onCarouselItemChange(index)
+                            }
+                            removeClippedSubviews={false}
+                        />
+                    </View>
                 </View>
             </View>
         );

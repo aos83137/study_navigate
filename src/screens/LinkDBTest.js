@@ -89,8 +89,8 @@ const LinkDBTest = (props)=>{
             }).catch((error)=>{
                 console.error(error);
         })
-        },{})
-        console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
+        },{dataSource})
+        // console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
         
         
         if(isLoding){
@@ -108,7 +108,6 @@ const LinkDBTest = (props)=>{
                         <View style={styles.rowViewContainer}>
                             <Text style={styles.text}>
                                 {rowData.index+1+' - '+rowData.item.name}
-                                {console.log('안에값임 : '+JSON.stringify(rowData)) }
                             </Text>
                         </View>
                     )}
