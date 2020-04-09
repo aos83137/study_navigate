@@ -7,19 +7,12 @@ import { Input } from 'react-native-elements';
 
 
 const LinkDBTest = (props)=>{   
-   
-    const [isLoding, setIsLoding] = useState(true);
-    const [dataSource,setDataSource] = useState({
-        'name':'',
-        'email':'',
-        'phone_number':'',
-    });
-
-
+//navi
     const ViewUsersList=()=>{
         props.navigation.navigate('List')
     }
-
+    const Stack = createStackNavigator();
+//navi
 
     const InputScreen = () => {
         const [TextInputName, setTextInputName] = useState('Useless Placeholder');
@@ -81,22 +74,25 @@ const LinkDBTest = (props)=>{
     }
 
     const ViewDatauser =()=>{
+        const [isLoding, setIsLoding] = useState(true);
+        const [dataSource, setDataSource] = useState({})
+
         const navigationOptions ={
             title:'Data Users'
         }
-        fetch('http://192.168.0.2/tr_reactnative/view_users.php')
-                .then((response)=>response.json())
-                .then((responseJson)=>{
-                    setIsLoding(false);
-                    console.log(isLoding);
-                    responseJson.map(({name,email})=>{
-                        console.log('name:'+name);
-                        console.log('email:'+email);
-                    })
-                    
-                }).catch((error)=>{
-                    console.error(error);
-                })
+        useEffect(()=>{
+            fetch('http://192.168.0.2/tr_reactnative/view_users.php')
+            .then((response)=>response.json())
+            .then((responseJson)=>{
+                setIsLoding(false);
+                setDataSource(responseJson);
+            }).catch((error)=>{
+                console.error(error);
+        })
+        },{})
+        console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
+        
+        
         if(isLoding){
             return(
                 <View style={{ flex:1, paddingTop:20}}>
@@ -107,22 +103,18 @@ const LinkDBTest = (props)=>{
         return(
             <View style={styles.containerDataUsers}>
                 <FlatList
-                    dataSource = {dataSource}
+                    data = {dataSource}
                     renderItem ={(rowData)=>(
-                        <View style={{ 
-                            height:.5,
-                            width:'100%',
-                            backgroundColor:'#2196f3',
-                         }}>
-                            <Text style={styles.rowViewContainer}>
-                            {rowData.name}
+                        <View style={styles.rowViewContainer}>
+                            <Text style={styles.text}>
+                                {rowData.index+1+' - '+rowData.item.name}
+                                {console.log('안에값임 : '+JSON.stringify(rowData)) }
                             </Text>
                         </View>
                     )}
                 />
             </View>
     );}
-    const Stack = createStackNavigator();
 
     return(
         <Stack.Navigator>
@@ -171,17 +163,21 @@ const styles = StyleSheet.create({
         backgroundColor : '#00BCD4'
     },
     containerDataUsers:{
-        flex:1,
-        padding:20,
-        marginLeft:5,
-        marginRight:5,
+        paddingTop: 30,
+
     },
     rowViewContainer:{
-        textAlign:'center',
-        fontSize:20,
-        paddingTop:10,
-        paddingRight:10,
-        paddingBottom:10
+        flex: 1, 
+        borderBottomWidth : 1,
+        borderColor: '#3212f6',
+        paddingTop:20,
+        paddingBottom:8,
     },
+    text:{
+        flex: 1,
+        fontSize: 20,
+        textAlign: 'center',
+        color:"gray",
+    }
 })
 export default LinkDBTest;
