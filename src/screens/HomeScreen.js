@@ -90,7 +90,7 @@ export default class HomeScreen extends Component{
             const lng = geometry.lng;
             console.log('lat : '+lat);
             console.log('lng : '+lng);
-
+            
             this._map.animateToRegion({
                 latitude:lat,
                 longitude:lng,
@@ -196,7 +196,8 @@ export default class HomeScreen extends Component{
         const checkOut = this.props.route.params?.checkOut
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
-        console.log('render실행 initialRegion : ' + JSON.stringify(this.state.initialRegion));
+        const inputData = this.props.route.params?.inputData.description
+        console.log('render실행 initialRegion : ' + JSON.stringify(inputData));
 
         return(
             <View style={styles.container}>
@@ -249,6 +250,7 @@ export default class HomeScreen extends Component{
                         checkOut = {checkOut}
                         bagCnt = {bagCnt}
                         carrCnt ={carrCnt}
+                        inputText={inputData}
                     />
                 </View>
 

@@ -29,9 +29,9 @@ export const SearchMenu = function(props){
     const checkOut = props.checkOut ? getFormatDate(props.checkOut):getFormatDate(new Date());
     const bagCnt = props.bagCnt?props.bagCnt:0;
     const carrCnt = props.carrCnt?props.carrCnt:0;
-
-
-    const whereLocation = '대구 북구 복현로';
+    const whereLocation = props.inputText?props.inputText:'검색';
+    console.log('여기는 서치메뉴 프롭스:'+props.inputText);
+    
     const date = checkIn+ ' - ' + checkOut;
 
         return(

@@ -19,10 +19,10 @@ export default class PlacesAutoComplete extends Component{
               // listViewDisplayed='auto'    // true/false/undefined
               fetchDetails={true}
               // renderDescription={row => row.description} // custom description render
-              onPress={(data, placeData = null) => { // 'details' is provided when fetchDetails = true
+              onPress={(inputData, placeData = null) => { // 'details' is provided when fetchDetails = true
                 // console.log('data : '+JSON.stringify(data));
                 // console.log('details : '+JSON.stringify(details));
-                this.props.navigation.navigate('Home',{placeData});
+                this.props.navigation.navigate('Home',{inputData,placeData,});
               }}
               
               getDefaultValue={() => ''}
@@ -31,7 +31,7 @@ export default class PlacesAutoComplete extends Component{
                 // available options: https://developers.google.com/places/web-service/autocomplete
                 key: 'AIzaSyBayvtNmfr3CKZV9lZaUZSyzL3NPYQEq98',
                 language: 'ko', // language of the results
-                types: '(cities)' // default: 'geocode'
+                types: '(regions)' // default: 'geocode'
               }}
         
               styles={{
