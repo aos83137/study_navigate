@@ -78,9 +78,11 @@ export default class HomeScreen extends Component{
     }
     componentWillMount() {
         console.log('Component WILL MOUNT!')
-      }
-      componentWillReceiveProps(nextProps) {    
+    }
+    componentWillReceiveProps(nextProps) {    
         console.log('Component WILL RECIEVE PROPS!')
+        console.log(nextProps);
+        
         const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
         if(placeData){
             const geometry = placeData.geometry.location;
@@ -94,21 +96,37 @@ export default class HomeScreen extends Component{
                 longitudeDelta: 0.045,
             });
         }
-      }
-      shouldComponentUpdate(nextProps, nextState) {
+        delete nextProps.placeData
+    }
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log('Component UPDATE!');
+
         return true;
-      }
-      componentWillUpdate(nextProps, nextState) {
-        console.log('Component WILL UPDATE!');
-      }
+    }
+    componentWillUpdate(nextProps, nextState) {
+        console.log('1. Component WILL UPDATE!');
+    }
 
-      componentWillUnmount() {
-        console.log('Component WILL UNMOUNT!')
-      }
+    componentWillUnmount() {
+        console.log('2. Component WILL UNMOUNT!')
+    }
     componentDidUpdate(prevProps,prevState){
-        console.log('Component DID UPDATE!')
+        console.log('마지막Component DID UPDATE!')
 
-
+        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
+        if(placeData){
+            const geometry = placeData.geometry.location;
+            const lat = geometry.lat;
+            const lng = geometry.lng;
+            
+            this._map.animateToRegion({
+                latitude:lat,
+                longitude:lng,
+                latitudeDelta: 0.045,
+                longitudeDelta: 0.045,
+            });
+        }
+        delete prevProps.placeData
     }
     movePlace(){
         this._map.animateToRegion({
