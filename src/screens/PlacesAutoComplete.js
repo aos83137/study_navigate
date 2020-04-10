@@ -23,7 +23,15 @@ export default class PlacesAutoComplete extends Component{
               onPress={(inputData, placeData = null) => { // 'details' is provided when fetchDetails = true
                 // console.log('data : '+JSON.stringify(data));
                 // console.log('details : '+JSON.stringify(details));
-                this.props.navigation.navigate('Home',{inputData,placeData,});                
+                const callback = () =>{
+                  this.props.route.params?._map.animateToRegion({
+                    latitude: placeData.geometry.location.lat,
+                    longitude: placeData.geometry.location.lng,
+                    latitudeDelta: 0.045,
+                    longitudeDelta: 0.045,
+                  })
+                }
+                this.props.navigation.navigate('Home',{inputData,placeData,callback});                
               }}
               
               getDefaultValue={() => ''}

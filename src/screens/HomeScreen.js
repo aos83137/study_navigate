@@ -6,11 +6,6 @@ import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps
 import Carousel from 'react-native-snap-carousel';
 import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
-import PlacesAutoComplete from '../screens/PlacesAutoComplete';
-import {StackNavigationProp} from '@react-navigation/stack'
-
-const NavigationProp = StackNavigationProp;
-
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -72,29 +67,6 @@ export default class HomeScreen extends Component{
 
     componentWillReceiveProps(nextProps) {    
         console.log('Component WILL RECIEVE PROPS!')
-        console.log(nextProps.route.params?.placeData);
-        // console.log('1. Component DID MOUNT!')
-        const placeData = nextProps.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
-
-        if(placeData){
-            const geometry = placeData.geometry.location;
-            const lat = geometry.lat;
-            const lng = geometry.lng;
-            
-            let initialRegion = {
-                latitude: lat,
-                longitude: lng,
-                latitudeDelta: 0.045,
-                longitudeDelta: 0.045,
-            }
-            console.log(lat+' - '+ lng +' - region바꾸는 장소');
-            
-            this.setState({
-                initialRegion
-            });
-        }else{
-        }
-        // delete nextProps.placeData
     }
     //현재 위치로 돌아가는 버튼
     centerMap(){
@@ -187,7 +159,7 @@ export default class HomeScreen extends Component{
         const carrCnt = this.props.route.params?.carrCnt
         const inputData = this.props.route.params?.inputData.description
 
-        console.log('render할때 값 : '+JSON.stringify(this.state.initialRegion));
+        // console.log('render할때 값 : '+JSON.stringify(this.state.initialRegion));
         
         return(
             <View style={styles.container}>
@@ -198,7 +170,7 @@ export default class HomeScreen extends Component{
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                     style={styles.map}
                     ref={map=> {this._map = map}}
-                    region={this.state.initialRegion}
+                    initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
                     showsMyLocationButton = {true}
                     showsCompass = {true}
@@ -229,7 +201,9 @@ export default class HomeScreen extends Component{
 
                 <View style={styles.title}>
                     <SearchMenu 
-                        goPlace={()=>{this.props.navigation.navigate('PlacesAutoComplete');}}
+                        goPlace={()=>{this.props.navigation.navigate('PlacesAutoComplete',{
+                            _map : this._map
+                        });}}
                         goDate={()=>{this.props.navigation.navigate('DateSetting',{
                             carrCnt,
                             bagCnt,
