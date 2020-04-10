@@ -22,6 +22,9 @@ export default class HomeScreen extends Component{
             ],
             markers:[],
             // bagCnt : props.route.params.bacCnt,
+            hiddenToggle:{
+                display:'none'
+            }
         };        
     }
 
@@ -76,7 +79,11 @@ export default class HomeScreen extends Component{
 
     //맵 클릭시 가게 정보 슬라이드 메뉴가 사라짐
     clickMapHiddenMenu = () =>{
-
+        this.setState({
+            hiddenToggle:{
+                display:'none'
+            }
+        })
     }
 
     //Alert 사용
@@ -125,7 +132,9 @@ export default class HomeScreen extends Component{
         //snapToItem : carousel 의 함수  index에 맞는 스냅을 보여줌
         this._carousel.snapToItem(index);
         this.setState({
-            hiddenMenu:{display:'flex'}
+            hiddenToggle:{
+                display:'flex'
+            }
         })
     }
 
@@ -135,7 +144,7 @@ export default class HomeScreen extends Component{
             //네비갈때 데이터 던져주는걸로 구분하면 될듯함
             this.props.navigation.navigate('KeeperInfo');
         }}>
-            <View style={styles.cardContainer}>
+            <View style={[styles.cardContainer,this.state.hiddenToggle]}>
                     <Text style={styles.cardTitle}>{item.name}</Text>
                     <Image style={styles.cardImage} source={item.image}/>
 
