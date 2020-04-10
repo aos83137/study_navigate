@@ -6,6 +6,11 @@ import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps
 import Carousel from 'react-native-snap-carousel';
 import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
+import PlacesAutoComplete from '../screens/PlacesAutoComplete';
+import {StackNavigationProp} from '@react-navigation/stack'
+
+const NavigationProp = StackNavigationProp;
+
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -27,53 +32,14 @@ export default class HomeScreen extends Component{
                 
             ],
             markers:[],
-            hiddenMenu:{display:'none'},
             // bagCnt : props.route.params.bacCnt,
         };        
-
-        Geolocation.getCurrentPosition(
-            (position) => {
-                let userRegion = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.045,
-                    longitudeDelta: 0.045,
-                }
-
-                let initialRegion = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.045,
-                    longitudeDelta: 0.045,
-                }
-
-                this.setState({
-                    region : userRegion, 
-                    initialRegion,
-                    error: null,
-                });
-                
-
-                // console.log(JSON.stringify(position));
-                
-            },
-            (error) => {
-                // See error code charts below.
-                this.setState({error:error.message});
-                console.log(error.code, error.message);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-            //정확도, 타임아웃, 최대 연령
-        );
     }
 
-    
-    //componentDidMount : render가 호출되기 전? 실행되는 메서드
+    //componentDidMount : render가 호출된 후 실행되는 메서드
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
-<<<<<<< HEAD
 
-=======
             Geolocation.getCurrentPosition(
                 (position) => {
                     let initialRegion = {
@@ -82,67 +48,31 @@ export default class HomeScreen extends Component{
                         latitudeDelta: 0.045,
                         longitudeDelta: 0.045,
                     }
->>>>>>> parent of c3604ce... place_id 던지기 가능
 
-        // Geolocation.getCurrentPosition(
-        //     (position) => {
-        //         let userRegion = {
-        //             latitude: position.coords.latitude,
-        //             longitude: position.coords.longitude,
-        //             latitudeDelta: 0.045,
-        //             longitudeDelta: 0.045,
-        //         }
-
-        //         let initialRegion = {
-        //             latitude: position.coords.latitude,
-        //             longitude: position.coords.longitude,
-        //             latitudeDelta: 0.045,
-        //             longitudeDelta: 0.045,
-        //         }
-
-        //         this.setState({
-        //             region : userRegion, 
-        //             initialRegion,
-        //             error: null,
-        //         });
-                
-
-        //         // console.log(JSON.stringify(position));
-                
-        //     },
-        //     (error) => {
-        //         // See error code charts below.
-        //         this.setState({error:error.message});
-        //         console.log(error.code, error.message);
-        //     },
-        //     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-        //     //정확도, 타임아웃, 최대 연령
-        // );
-        // console.log('1. Component DID MOUNT!')
-        // const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
-
-        // if(placeData){
-        //     const geometry = placeData.geometry.location;
-        //     const lat = geometry.lat;
-        //     const lng = geometry.lng;
-        //     let initialRegion = {
-        //         latitude: lat,
-        //         longitude: lng,
-        //         latitudeDelta: 0.045,
-        //         longitudeDelta: 0.045,
-        //     }
-        //     this.setState({
-        //         initialRegion
-        //     });
-        // }else{
-        // }
+                    this.setState({
+                        region : initialRegion, 
+                        latitude : position.coords.latitude,
+                        longitude : position.coords.longitude,
+                        initialRegion,
+                        error: null,
+                    });
+                    console.log(JSON.stringify(position));
+                    
+                },
+                (error) => {
+                    // See error code charts below.
+                    this.setState({error:error.message});
+                    console.log(error.code, error.message);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                //정확도, 타임아웃, 최대 연령
+            );
+            
     }
-    componentWillMount() {
-        console.log('Component WILL MOUNT!')
-    }
+
     componentWillReceiveProps(nextProps) {    
         console.log('Component WILL RECIEVE PROPS!')
-        // console.log(nextProps.route.params?.placeData);
+        console.log(nextProps.route.params?.placeData);
         // console.log('1. Component DID MOUNT!')
         const placeData = nextProps.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
 
@@ -166,23 +96,6 @@ export default class HomeScreen extends Component{
         }
         // delete nextProps.placeData
     }
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log('2. Component UPDATE!');
-
-        return true;
-    }
-    componentWillUpdate(nextProps, nextState) {
-        console.log('3. Component WILL UPDATE!');
-    }
-
-    componentWillUnmount() {
-        console.log('0. Component WILL UNMOUNT!')
-    }
-    componentDidUpdate(prevProps,prevState){
-        console.log('마지막Component DID UPDATE!')
-        this._map.animateToRegion
-    }
-
     //현재 위치로 돌아가는 버튼
     centerMap(){
         const {
@@ -200,9 +113,7 @@ export default class HomeScreen extends Component{
 
     //맵 클릭시 가게 정보 슬라이드 메뉴가 사라짐
     clickMapHiddenMenu = () =>{
-        this.setState({
-            hiddenMenu:{display:'none'}
-        })
+
     }
 
     //Alert 사용
@@ -256,7 +167,7 @@ export default class HomeScreen extends Component{
     }
 
     //carousel의 아이템 뷰 설정 함수
-    renderCarouselItem = ({item}) => {(
+    renderCarouselItem = ({item}) => (
         <TouchableHighlight onPress={()=>{
             //네비갈때 데이터 던져주는걸로 구분하면 될듯함
             this.props.navigation.navigate('KeeperInfo');
@@ -267,19 +178,17 @@ export default class HomeScreen extends Component{
 
             </View>
         </TouchableHighlight>
-    )    }
+    )    
     
     render(){     
         const checkIn = this.props.route.params?.checkIn
         const checkOut = this.props.route.params?.checkOut
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
-<<<<<<< HEAD
         const inputData = this.props.route.params?.inputData.description
-        console.log('render실행 initialRegion : ' + JSON.stringify(inputData)+ JSON.stringify(this.state.initialRegion));
-=======
->>>>>>> parent of c3604ce... place_id 던지기 가능
 
+        console.log('render할때 값 : '+JSON.stringify(this.state.initialRegion));
+        
         return(
             <View style={styles.container}>
                 <CurrentLocationButton
@@ -294,6 +203,7 @@ export default class HomeScreen extends Component{
                     showsMyLocationButton = {true}
                     showsCompass = {true}
                     rotateEnabled={false}
+                    onPress = {this.clickMapHiddenMenu}
                 >   
                     <Circle
                         center={{ latitude: 35.8943188,
@@ -330,7 +240,7 @@ export default class HomeScreen extends Component{
                         checkOut = {checkOut}
                         bagCnt = {bagCnt}
                         carrCnt ={carrCnt}
-                        inputText={inputData}
+                        inputText = {inputData}
                     />
                 </View>
 
@@ -340,21 +250,22 @@ export default class HomeScreen extends Component{
                     <Text >longitude : {this.state.longitude}</Text>
                 </View>
 
-                {/* <View style={[this.state.hiddenMenu,styles.footer]}> */}
                 <View style={[styles.footer]}>
-                    <Carousel
-                    //https://github.com/archriss/react-native-snap-carousel
-                        ref={(c) => { this._carousel = c; }}
-                        data={this.state.coordinates}
-                        renderItem={this.renderCarouselItem}
-                        sliderWidth={Dimensions.get('window').width}
-                        itemWidth={300}
-                        containerCustomStyle={styles.carousel}
-                        onSnapToItem = {
-                            (index) => this.onCarouselItemChange(index)
-                        }
-                        removeClippedSubviews={false}
-                    />
+                    <View style={[styles.footer]}>
+                        <Carousel
+                        //https://github.com/archriss/react-native-snap-carousel
+                            ref={(c) => { this._carousel = c; }}
+                            data={this.state.coordinates}
+                            renderItem={this.renderCarouselItem}
+                            sliderWidth={Dimensions.get('window').width}
+                            itemWidth={300}
+                            containerCustomStyle={styles.carousel}
+                            onSnapToItem = {
+                                (index) => this.onCarouselItemChange(index)
+                            }
+                            removeClippedSubviews={false}
+                        />
+                    </View>
                 </View>
             </View>
         );
