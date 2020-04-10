@@ -2,6 +2,7 @@ import React , {Component} from 'react';
 import {Text ,View, Image, StyleSheet} from 'react-native';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { log } from 'react-native-reanimated';
 
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
@@ -22,7 +23,7 @@ export default class PlacesAutoComplete extends Component{
               onPress={(inputData, placeData = null) => { // 'details' is provided when fetchDetails = true
                 // console.log('data : '+JSON.stringify(data));
                 // console.log('details : '+JSON.stringify(details));
-                this.props.navigation.navigate('Home',{inputData,placeData,});
+                this.props.navigation.navigate('Home',{inputData,placeData,});                
               }}
               
               getDefaultValue={() => ''}

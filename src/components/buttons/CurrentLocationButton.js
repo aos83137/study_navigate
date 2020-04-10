@@ -13,7 +13,7 @@ const HEIGHT = Dimensions.get('window').height;
 export const CurrentLocationButton = function(props){
     const cb = props.cb ? props.cb :()=> console.log('Callback function not passed to CurrnetLocatioinButton!');
 
-    console.log(props.bottom);
+    // console.log(props.bottom);
     const bottom = props.bottom ? props.bottom : 130;
 
     return(

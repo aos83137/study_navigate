@@ -30,14 +30,6 @@ export default class HomeScreen extends Component{
             hiddenMenu:{display:'none'},
             // bagCnt : props.route.params.bacCnt,
         };        
-    }
-
-
-    //componentDidMount : render가 호출된 후 실행되는 메서드
-    componentDidMount() {
-        // Instead of navigator.geolocation, just use Geolocation.
-
-
 
         Geolocation.getCurrentPosition(
             (position) => {
@@ -73,65 +65,113 @@ export default class HomeScreen extends Component{
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             //정확도, 타임아웃, 최대 연령
         );
-        console.log('Component DID MOUNT!')
+    }
 
+    
+    //componentDidMount : render가 호출되기 전? 실행되는 메서드
+    componentDidMount() {
+        // Instead of navigator.geolocation, just use Geolocation.
+
+
+        // Geolocation.getCurrentPosition(
+        //     (position) => {
+        //         let userRegion = {
+        //             latitude: position.coords.latitude,
+        //             longitude: position.coords.longitude,
+        //             latitudeDelta: 0.045,
+        //             longitudeDelta: 0.045,
+        //         }
+
+        //         let initialRegion = {
+        //             latitude: position.coords.latitude,
+        //             longitude: position.coords.longitude,
+        //             latitudeDelta: 0.045,
+        //             longitudeDelta: 0.045,
+        //         }
+
+        //         this.setState({
+        //             region : userRegion, 
+        //             initialRegion,
+        //             error: null,
+        //         });
+                
+
+        //         // console.log(JSON.stringify(position));
+                
+        //     },
+        //     (error) => {
+        //         // See error code charts below.
+        //         this.setState({error:error.message});
+        //         console.log(error.code, error.message);
+        //     },
+        //     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        //     //정확도, 타임아웃, 최대 연령
+        // );
+        // console.log('1. Component DID MOUNT!')
+        // const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
+
+        // if(placeData){
+        //     const geometry = placeData.geometry.location;
+        //     const lat = geometry.lat;
+        //     const lng = geometry.lng;
+        //     let initialRegion = {
+        //         latitude: lat,
+        //         longitude: lng,
+        //         latitudeDelta: 0.045,
+        //         longitudeDelta: 0.045,
+        //     }
+        //     this.setState({
+        //         initialRegion
+        //     });
+        // }else{
+        // }
     }
     componentWillMount() {
         console.log('Component WILL MOUNT!')
     }
     componentWillReceiveProps(nextProps) {    
         console.log('Component WILL RECIEVE PROPS!')
-        console.log(nextProps);
-        
-        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
+        // console.log(nextProps.route.params?.placeData);
+        // console.log('1. Component DID MOUNT!')
+        const placeData = nextProps.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
+
         if(placeData){
             const geometry = placeData.geometry.location;
             const lat = geometry.lat;
             const lng = geometry.lng;
             
-            this._map.animateToRegion({
-                latitude:lat,
-                longitude:lng,
+            let initialRegion = {
+                latitude: lat,
+                longitude: lng,
                 latitudeDelta: 0.045,
                 longitudeDelta: 0.045,
+            }
+            console.log(lat+' - '+ lng +' - region바꾸는 장소');
+            
+            this.setState({
+                initialRegion
             });
+        }else{
         }
-        delete nextProps.placeData
+        // delete nextProps.placeData
     }
     shouldComponentUpdate(nextProps, nextState) {
-        console.log('Component UPDATE!');
+        console.log('2. Component UPDATE!');
 
         return true;
     }
     componentWillUpdate(nextProps, nextState) {
-        console.log('1. Component WILL UPDATE!');
+        console.log('3. Component WILL UPDATE!');
     }
 
     componentWillUnmount() {
-        console.log('2. Component WILL UNMOUNT!')
+        console.log('0. Component WILL UNMOUNT!')
     }
     componentDidUpdate(prevProps,prevState){
         console.log('마지막Component DID UPDATE!')
+        this._map.animateToRegion
+    }
 
-        const placeData = this.props.route.params?.placeData;//placeData는 PlacesAutoComplete.js보낸 place api 정보임(place_id등등  사용가능)        
-        if(placeData){
-            const geometry = placeData.geometry.location;
-            const lat = geometry.lat;
-            const lng = geometry.lng;
-            
-            this._map.animateToRegion({
-                latitude:lat,
-                longitude:lng,
-                latitudeDelta: 0.045,
-                longitudeDelta: 0.045,
-            });
-        }
-        delete prevProps.placeData
-    }
-    movePlace(){
-        this._map.animateToRegion({
-        });
-    }
     //현재 위치로 돌아가는 버튼
     centerMap(){
         const {
@@ -207,7 +247,7 @@ export default class HomeScreen extends Component{
     }
 
     //carousel의 아이템 뷰 설정 함수
-    renderCarouselItem = ({item}) => (
+    renderCarouselItem = ({item}) => {(
         <TouchableHighlight onPress={()=>{
             //네비갈때 데이터 던져주는걸로 구분하면 될듯함
             this.props.navigation.navigate('KeeperInfo');
@@ -218,7 +258,7 @@ export default class HomeScreen extends Component{
 
             </View>
         </TouchableHighlight>
-    )    
+    )    }
     
     render(){     
         const checkIn = this.props.route.params?.checkIn
@@ -226,7 +266,7 @@ export default class HomeScreen extends Component{
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
         const inputData = this.props.route.params?.inputData.description
-        console.log('render실행 initialRegion : ' + JSON.stringify(inputData));
+        console.log('render실행 initialRegion : ' + JSON.stringify(inputData)+ JSON.stringify(this.state.initialRegion));
 
         return(
             <View style={styles.container}>
@@ -237,12 +277,11 @@ export default class HomeScreen extends Component{
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                     style={styles.map}
                     ref={map=> {this._map = map}}
-                    initialRegion={this.state.initialRegion}
+                    region={this.state.initialRegion}
                     showsUserLocation={true}
                     showsMyLocationButton = {true}
                     showsCompass = {true}
                     rotateEnabled={false}
-                    onPress = {this.clickMapHiddenMenu}
                 >   
                     <Circle
                         center={{ latitude: 35.8943188,
