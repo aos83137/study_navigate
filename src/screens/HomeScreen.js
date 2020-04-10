@@ -11,12 +11,6 @@ export default class HomeScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            latitude: null,
-            longitude: null,
-            coordinate:{
-                latitude:35.8943188,
-                longitude:128.6238612,
-            },
             error: null,
             coordinates:[
                 { name : '1', latitude:35.8938, longitude:128.6245, image:require('../img/sushi.jpg')},
@@ -45,9 +39,6 @@ export default class HomeScreen extends Component{
                     }
 
                     this.setState({
-                        region : initialRegion, 
-                        latitude : position.coords.latitude,
-                        longitude : position.coords.longitude,
                         initialRegion,
                         error: null,
                     });
@@ -74,7 +65,7 @@ export default class HomeScreen extends Component{
             latitude, 
             longitude, 
             latitudeDelta, 
-            longitudeDelta} = this.state.region
+            longitudeDelta} = this.state.initialRegion
         this._map.animateToRegion({
             latitude,
             longitude,
@@ -219,9 +210,9 @@ export default class HomeScreen extends Component{
                 </View>
 
                 <View style={styles.content}>
-                    <Text>현재 좌표</Text>
+                    {/* <Text>현재 좌표</Text>
                     <Text >latitude : {this.state.latitude}</Text>
-                    <Text >longitude : {this.state.longitude}</Text>
+                    <Text >longitude : {this.state.longitude}</Text> */}
                 </View>
 
                 <View style={[styles.footer]}>
