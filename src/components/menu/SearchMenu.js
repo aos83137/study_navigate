@@ -12,6 +12,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const FS = 14;
 
 export const SearchMenu = function(props){
+
+    
     const getFormatDate = date=>{
         let month = (1 + date.getMonth());          //M
         month = month >= 10 ? month : '0' + month;  //month 두자리로 저장

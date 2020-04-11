@@ -5,8 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input } from 'react-native-elements';
 
-
+const url = '192.168.0.72';
 const LinkDBTest = (props)=>{   
+ 
 //navi
     const ViewUsersList=()=>{
         props.navigation.navigate('List')
@@ -20,12 +21,12 @@ const LinkDBTest = (props)=>{
         const [TextInputPhoneNumber, setTextInputPhoneNumber] = useState('Useless Placeholder');
 
         const InsertUser=()=>{
-            console.log('TextInputName : '+TextInputName);
-            console.log('TextInputEmail : ' +TextInputEmail);
-            console.log('TextInputPhoneNumber : '+TextInputPhoneNumber);
+            // console.log('TextInputName : '+TextInputName);
+            // console.log('TextInputEmail : ' +TextInputEmail);
+            // console.log('TextInputPhoneNumber : '+TextInputPhoneNumber);
     
             //fetch(url,콜백함수)
-            fetch('http://192.168.0.2/tr_reactnative/insert.php',{
+            fetch('http://'+url+'/tr_reactnative/insert.php',{
                 method: 'POST',
                 headers:{
                     'Accept':'application/json',
@@ -45,31 +46,31 @@ const LinkDBTest = (props)=>{
         }
         return(
             <View style={styles.container}>
-            <TextInput
-                placeholder='Enter Name'
-                onChangeText={TextInputValue=>setTextInputName(TextInputValue)}
-                // underlineColorAndroid = 'transparent'
-                style={styles.textInputStyle2}
-            />
-            <TextInput
-                placeholder='Enter Email'
-                onChangeText={TextInputValue=>setTextInputEmail(TextInputValue)}
-                underlineColorAndroid = 'transparent'
-                style={styles.textInputStyle}
-            />
-            <TextInput
-                placeholder='Enter PhoneNumber'
-                onChangeText={TextInputValue=>setTextInputPhoneNumber(TextInputValue)}
-                underlineColorAndroid = 'transparent'
-                style={styles.textInputStyle}
-            />
-            <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle} onPress={InsertUser}>
-                <Text style={styles.TextStyle}>SAVE</Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle} onPress={ViewUsersList}>
-                <Text style={styles.TextStyle}>List</Text>
-            </TouchableOpacity>
-        </View>
+                <TextInput
+                    placeholder='Enter Name'
+                    onChangeText={TextInputValue=>setTextInputName(TextInputValue)}
+                    // underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle2}
+                />
+                <TextInput
+                    placeholder='Enter Email'
+                    onChangeText={TextInputValue=>setTextInputEmail(TextInputValue)}
+                    underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle}
+                />
+                <TextInput
+                    placeholder='Enter PhoneNumber'
+                    onChangeText={TextInputValue=>setTextInputPhoneNumber(TextInputValue)}
+                    underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle}
+                />
+                <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle} onPress={InsertUser}>
+                    <Text style={styles.TextStyle}>SAVE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle} onPress={ViewUsersList}>
+                    <Text style={styles.TextStyle}>List</Text>
+                </TouchableOpacity>
+            </View>
         );
     }
 
@@ -77,11 +78,8 @@ const LinkDBTest = (props)=>{
         const [isLoding, setIsLoding] = useState(true);
         const [dataSource, setDataSource] = useState({})
 
-        const navigationOptions ={
-            title:'Data Users'
-        }
         useEffect(()=>{
-            fetch('http://192.168.0.2/tr_reactnative/view_users.php')
+            fetch('http://'+url+'/tr_reactnative/view_users.php')
             .then((response)=>response.json())
             .then((responseJson)=>{
                 setIsLoding(false);
@@ -90,7 +88,7 @@ const LinkDBTest = (props)=>{
                 console.error(error);
         })
         },{})
-        console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
+        // console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
         
         
         if(isLoding){
@@ -100,26 +98,135 @@ const LinkDBTest = (props)=>{
                 </View>
             )
         }
+        const Action_Click=(id,name,email,phone_number)=> {
+            props.navigation.navigate('ViewInfo',{
+                id,
+                name,
+                email,
+                phone_number
+            })
+        }
         return(
             <View style={styles.containerDataUsers}>
                 <FlatList
                     data = {dataSource}
                     renderItem ={(rowData)=>(
-                        <View style={styles.rowViewContainer}>
-                            <Text style={styles.text}>
-                                {rowData.index+1+' - '+rowData.item.name}
-                                {console.log('안에값임 : '+JSON.stringify(rowData)) }
-                            </Text>
-                        </View>
+                        <TouchableOpacity
+                            key={rowData.item.id}
+                            onPress ={Action_Click.bind(this,
+                                rowData.item.id,
+                                rowData.item.name,
+                                rowData.item.email,
+                                rowData.item.phone_number,
+                                )}
+                            style={[
+                                styles.item,
+                                { backgroundColor: rowData.selected ? '#6e3b6e' : '#f9c2ff' },
+                            ]}
+                            >
+                            <View style={styles.rowViewContainer}>
+                                <Text style={styles.text}>
+                                    {rowData.index+1+' - '+rowData.item.name}
+                                                                    </Text>
+                            </View>
+                        </TouchableOpacity>
                     )}
                 />
             </View>
-    );}
+        );
+    }
 
+    const ViewInfoScreen =(props)=>{
+        const [TextInputId, setTextInputId] = useState('Useless Placeholder');
+        const [TextInputName, setTextInputName] = useState('Useless Placeholder');
+        const [TextInputEmail, setTextInputEmail] = useState('Useless Placeholder');
+        const [TextInputPhoneNumber, setTextInputPhoneNumber] = useState('Useless Placeholder');        
+
+        useEffect(()=>{
+            setTextInputId(props.route.params?.id);
+            setTextInputName(props.route.params?.name);
+            setTextInputEmail(props.route.params?.email)
+            setTextInputPhoneNumber(props.route.params?.phone_number)
+        },[])
+
+        const UpdateUsers= ()=>{
+            fetch('http://'+url+'/tr_reactnative/update.php',{
+                method: 'POST',
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify({
+                    id : TextInputId,
+                    name:TextInputName,
+                    email:TextInputEmail,
+                    phone_number:TextInputPhoneNumber,
+                })
+            }).then((response)=> response.json())
+            .then((responseJson)=>{
+                Alert.alert(responseJson);
+                props.navigation.navigate('List');
+            }).catch((error)=>{
+                console.error(error);
+            }); 
+        }
+
+        // const ListViewItemSepartor
+        const DeleteUsers = ()=>{
+            fetch('http://'+url+'/tr_reactnative/delete.php',{
+                method: 'POST',
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify({
+                    id : TextInputId,
+                })
+            }).then((response)=> response.json())
+            .then((responseJson)=>{
+                Alert.alert(responseJson);
+                props.navigation.navigate('List')
+            }).catch((error)=>{
+                console.error(error);
+            });        
+        }
+        return(
+            <View style={styles.container}>
+                <TextInput
+                    value={TextInputName}
+                    placeholder='Enter Name'
+                    onChangeText={TextInputValue=>setTextInputName(TextInputValue)}
+                    // underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle2}
+                />
+                <TextInput
+                    value={TextInputEmail}
+                    placeholder='Enter Email'
+                    onChangeText={TextInputValue=>setTextInputEmail(TextInputValue)}
+                    underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle}
+                />
+                <TextInput
+                    value={TextInputPhoneNumber}
+                    placeholder='Enter PhoneNumber'
+                    onChangeText={TextInputValue=>setTextInputPhoneNumber(TextInputValue)}
+                    underlineColorAndroid = 'transparent'
+                    style={styles.textInputStyle}
+                />
+                <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle} onPress={UpdateUsers}>
+                    <Text style={styles.TextStyle}>UPDATE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={.4} style={styles.TouchableOpacityStyle2} onPress={DeleteUsers}>
+                    <Text style={styles.TextStyle}>DELETE</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
     return(
         <Stack.Navigator>
             <Stack.Screen name="InputS" component={InputScreen} />
             <Stack.Screen name="List" component={ViewDatauser}/>
+            <Stack.Screen name="ViewInfo" component={ViewInfoScreen}/>
         </Stack.Navigator>
     )
 }
@@ -161,6 +268,14 @@ const styles = StyleSheet.create({
         margin:7,
         width:'90%',
         backgroundColor : '#00BCD4'
+    },
+    TouchableOpacityStyle2:{
+        paddingTop:10,
+        paddingBottom:10,
+        borderRadius:5,
+        margin:7,
+        width:'90%',
+        backgroundColor : '#FF5722'
     },
     containerDataUsers:{
         paddingTop: 30,
