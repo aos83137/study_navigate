@@ -6,6 +6,7 @@ import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps
 import Carousel from 'react-native-snap-carousel';
 import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
+import SplashScreen from 'react-native-splash-screen';
 
 export default class HomeScreen extends Component{
     constructor(props){
@@ -56,12 +57,20 @@ export default class HomeScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            
+            SplashScreen.hide();
+
     }
 
-    componentWillReceiveProps(nextProps) {    
-        console.log('Component WILL RECIEVE PROPS!')
-    }
+    static getDerivedStateFromProps(props, state) {
+        // Store prevId in state so we can compare when props change.
+        // Clear out previously-loaded data (so we don't render stale stuff).
+        if (props.id !== state.prevId) {
+          return console.log('update');
+          ;
+        }
+        // No state update necessary
+        return null;
+      }
     //현재 위치로 돌아가는 버튼
     centerMap(){
         const {
