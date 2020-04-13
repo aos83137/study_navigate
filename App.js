@@ -10,7 +10,7 @@ import MyDrawerTap from './src/screens/MyDrawerTap';
 import PlacesAutoComplete from './src/screens/PlacesAutoComplete';
 import DateSetting from './src/screens/DateSetting';
 import KeeperInfo from './src/screens/KeeperInfo';
-import PushNotification from " react-native-push-notification ";
+import PushNotification from 'react-native-push-notification';
 
 export async function request_location_runtime_permission() {
 
@@ -53,7 +53,8 @@ export default class App extends Component{
         // process the notification
     
         // required on iOS only (see fetchCompletionHandler docs: https://github.com/react-native-community/react-native-push-notification-ios)
-        notification.finish(PushNotificationIOS.FetchResult.NoData);
+        //밑에 이건 아이폰전용임
+        // notification.finish(PushNotificationIOS.FetchResult.NoData);
       }
     });
   }
