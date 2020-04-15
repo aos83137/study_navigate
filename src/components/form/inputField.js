@@ -35,8 +35,8 @@ export default class InputField extends Component {
         const {labelText, labelTextSize, labelColor,textColor,borderBottomColor,inputType,customStyle}  = this.props;
         const { secureInput } =this.state;
         const fontSize = labelTextSize || 14;
-        const color = labelColor || colors.white;
-        const inputColor = textColor || colors.white;
+        const color = labelColor || colors.black;
+        const inputColor = textColor || colors.black;
         const borderBottom = borderBottomColor || 'transparent';
         return (
             <View style= {[customStyle, styles.wrapper]}>
@@ -63,7 +63,6 @@ export default class InputField extends Component {
 
 //propTypes이거 뭐지?
 InputField.protoTypes = {
-
     //
     labelText: PropTypes.string.inRequired,
     labelTextSize : PropTypes.number,
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
         right: 0,
     },
     showButtonText:{
-        color:colors.white,
+        color:colors.black,
         fontWeight: '700'
         
     }

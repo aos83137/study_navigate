@@ -11,6 +11,7 @@ import PlacesAutoComplete from './src/screens/PlacesAutoComplete';
 import DateSetting from './src/screens/DateSetting';
 import KeeperInfo from './src/screens/KeeperInfo';
 import PushNotification from 'react-native-push-notification';
+import Reservation from './src/screens/Reservation';
 
 export async function request_location_runtime_permission() {
 
@@ -75,6 +76,7 @@ export default class App extends Component{
           <RootStack.Screen name="PlacesAutoComplete" component={PlacesAutoComplete} />
           <RootStack.Screen name="DateSetting" component={DateSetting}/>
           <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
+          <RootStack.Screen name="Reservation" component={Reservation}/>
         </RootStack.Navigator>
       </NavigationContainer>
     );

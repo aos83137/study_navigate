@@ -10,13 +10,29 @@ let {width, height} = Dimensions.get('window')
 
 //props 안에 navigation, route가  들어가있음 {navigation, route} 이렇게 써도 되고 props.navigatio으로 써도됨
 const KeeperInfo = (props)=>{   
+    const checkIn = props.route.params?.checkIn
+    const checkOut = props.route.params?.checkOut
+    const bagCnt = props.route.params?.bagCnt
+    const carrCnt = props.route.params?.carrCnt
+
+    const goReservation=()=>{
+        props.navigation.navigate('DateSetting',{
+            carrCnt,
+            bagCnt,
+            checkIn,
+            checkOut,
+            whereScreen:'info'
+        });
+    }
         return(
             <View style={{ flex:1 }}> 
-                <ScrollView >
+                <ScrollView stickyHeaderIndices={[0]} >
+                    <View style ={styles.header}>
+                        <TouchableHighlight onPress={()=>{props.navigation.goBack()}}>
+                            <Icon name='keyboard-arrow-left' size={24}/>
+                        </TouchableHighlight>
+                    </View>
                     <View style = {styles.container}> 
-                        <View>
-                            <Text>Header</Text>
-                        </View>
                         <View style={styles.ImageWrap}>
                             <Image style={styles.keeper} source={require('../img/img2.png')}></Image>
                         </View>
@@ -125,7 +141,7 @@ const KeeperInfo = (props)=>{
                     </View>
                 </ScrollView>
                 <View style={styles.floatView}>
-                    <Button title={'예약하기'}></Button>
+                    <Button title={'예약하기'} buttonStyle={{backgroundColor:colors.green01}} onPress={goReservation}></Button>
                 </View>
             </View>
         );
@@ -139,11 +155,17 @@ const styles = StyleSheet.create({
         backgroundColor:colors.gray
     },
     ImageWrap:{
-        width:'100%'
+        width:'100%',
+        borderRadius:2,
     },
     keeper:{
         width: '100%',
         height:200,
+        borderRadius:5,
+    },
+    header:{
+        padding:'2%',
+        backgroundColor:colors.white,
     },
     title:{
         width:'100%',
@@ -187,6 +209,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
     },
-});
+}
+);
 
 export default KeeperInfo;

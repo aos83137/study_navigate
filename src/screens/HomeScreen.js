@@ -95,25 +95,25 @@ export default class HomeScreen extends Component{
         })
     }
 
-    //Alert 사용
-    showWelcomMesage = () =>{
-        Alert.alert(
-            //Header
-            'Welecome to San 대구',
-            //title
-            'The food is amazing',
-            //footer button
-            [
-                {
-                    text:'Cancel',
-                    style: 'cancel'
-                },
-                {
-                    text:'Ok'
-                }
-            ]
-        )
-    }
+    // //Alert 사용
+    // showWelcomMesage = () =>{
+    //     Alert.alert(
+    //         //Header
+    //         'Welecome to San 대구',
+    //         //title
+    //         'The food is amazing',
+    //         //footer button
+    //         [
+    //             {
+    //                 text:'Cancel',
+    //                 style: 'cancel'
+    //             },
+    //             {
+    //                 text:'Ok'
+    //             }
+    //         ]
+    //     )
+    // }
     //onSnapToItem의 콜백함수로 쓸 함수임
     onCarouselItemChange = (index) =>{
         let location = this.state.coordinates[index];
@@ -151,7 +151,12 @@ export default class HomeScreen extends Component{
     renderCarouselItem = ({item}) => (
         <TouchableHighlight onPress={()=>{
             //네비갈때 데이터 던져주는걸로 구분하면 될듯함
-            this.props.navigation.navigate('KeeperInfo');
+            this.props.navigation.navigate('KeeperInfo',{
+                carrCnt:this.props.route.params?.carrCnt,
+                bagCnt :this.props.route.params?.bagCnt,
+                checkIn : this.props.route.params?.checkIn,
+                checkOut : this.props.route.params?.checkOut,
+            });
         }}>
             <View style={[styles.cardContainer,this.state.hiddenToggle]}>
                     <Text style={styles.cardTitle}>{item.name}</Text>
@@ -166,8 +171,8 @@ export default class HomeScreen extends Component{
         const checkOut = this.props.route.params?.checkOut
         const bagCnt = this.props.route.params?.bagCnt
         const carrCnt = this.props.route.params?.carrCnt
-        const inputData = this.props.route.params?.inputData.description
-
+        const inputData = this.props.route.params?.inputData ? this.props.route.params?.inputData.description : '검색';
+        
         // console.log('render할때 값 : '+JSON.stringify(this.state.initialRegion));
         
         return(
@@ -218,6 +223,7 @@ export default class HomeScreen extends Component{
                             bagCnt,
                             checkIn,
                             checkOut,
+                            whereScreen:'date'
                         });}}
                         checkIn = {checkIn}
                         checkOut = {checkOut}

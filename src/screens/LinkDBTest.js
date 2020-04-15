@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input } from 'react-native-elements';
 
-const url = '192.168.0.72';
+const url = '172.30.1.6';
 const LinkDBTest = (props)=>{   
  
 //navi

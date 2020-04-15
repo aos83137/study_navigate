@@ -14,7 +14,7 @@ const DateSetting = (props)=>{
     const [isCheckoutDatePickerVisible, setCheckOutDatePickerVisibility] = useState(false);
     const [checkIn, setCheckIn] = useState(props.route.params?.checkIn ? props.route.params?.checkIn:new Date());
     const [checkOut, setcheckOut] = useState(props.route.params?.checkOut ? props.route.params?.checkOut :new Date());
-    
+    const whereScreen = props.route.params?.whereScreen;
     // useEffect(()=>{
     // bagCnt = route.params?.bagCnt;
     // })
@@ -60,6 +60,28 @@ const DateSetting = (props)=>{
         let min = date.getMinutes();                //m
         if(min<10) min = '0' + min;
         return  '' + month + '.' + day + '. ' + ampm + ' ' + hour+':'+min;
+    }
+
+    let button;
+    if(whereScreen === 'date'){
+        button=<Button buttonStyle={{backgroundColor:colors.green01}} title="검색" 
+            onPress={()=>{props.navigation.navigate('Home',{
+                    checkIn,
+                    checkOut,
+                    bagCnt,
+                    carrCnt,
+                })
+            }}/>
+    }else if(whereScreen==='info'){
+        button=<Button buttonStyle={{backgroundColor:colors.green01}} title="예약 내역 확인" 
+            onPress={()=>{props.navigation.navigate('Reservation',{
+                    checkIn,
+                    checkOut,
+                    bagCnt,
+                    carrCnt,
+                    whereScreen:'reservation',
+                })
+            }}/>
     }
         return(
             <View style = {styles.container}> 
@@ -162,14 +184,7 @@ const DateSetting = (props)=>{
                     </View>
                 </View>
                 <View style={styles.footer}>
-                    <Button buttonStyle={{backgroundColor:colors.green01}} title="검색" 
-                        onPress={()=>{props.navigation.navigate('Home',{
-                                checkIn,
-                                checkOut,
-                                bagCnt,
-                                carrCnt,
-                            })
-                    }}/>
+                    {button}
                 </View>
             </View>
         );
