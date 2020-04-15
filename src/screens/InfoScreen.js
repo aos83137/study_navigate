@@ -35,20 +35,32 @@ const DATA = [
         state:'종료',
     },
 ];
-
+const Action_Click=(carrCnt,bagCnt,checkIn,checkOut,whereScreen)=> {
+    props.navigation.navigate('ViewInfo',{
+        carrCnt,
+        bagCnt,
+        checkIn,
+        checkOut,
+        whereScreen
+    })
+}
 function Item({item,props}){
     return (
         <View style={styles.item}>
-            {console.log(item)
+            {console.log(DATA[item.id])
             }
-            <TouchableOpacity onPress={()=>{props.navigation.navigate('Reservation',{
-                                        carrCnt:1,
-                                        bagCnt:1,
-                                        checkIn:new Date(),
-                                        checkOut:new Date(),
-                                        whereScreen:'info',
-                                        data:DATA
-                                        });}}>
+            <TouchableOpacity 
+                onPress={()=>{
+                    props.navigation.navigate('Reservation',{
+                    carrCnt:1,
+                    bagCnt:1,
+                    checkIn:new Date(),
+                    checkOut:new Date(),
+                    whereScreen:'info',
+                    data:DATA
+                    });}
+                    }
+            >
                 {/* <View>
                     <Text>{item.title}</Text>
                     <Text>{item.date}</Text>
