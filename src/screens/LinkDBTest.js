@@ -105,7 +105,7 @@ const LinkDBTest = (props)=>{
                 email,
                 phone_number
             })
-        }.bind();
+        }
         return(
             <View style={styles.containerDataUsers}>
                 <FlatList

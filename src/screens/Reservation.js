@@ -15,7 +15,7 @@ const Reservation = (props)=>{
     const bagCnt = props.route.params?.bagCnt;
     const carrCnt = props.route.params?.carrCnt;
     const whereScreen = props.route.params?.whereScreen ? props.route.params?.whereScreen : true;
-    const data = props.route.params?.data;
+    const data = props.route.params?.data ? props.route.params?.data : '없디';
     const [value, onChangeText] = useState('Useless Placeholder');
 
     const getFormatDate = date=>{
@@ -44,6 +44,9 @@ const Reservation = (props)=>{
     }
     const deliveryEx=()=>{
         Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
+    }
+    const goDelivery = ()=>{
+        Alert.alert('go delivery');
     }
     let headerText;
     let checkInOut;
@@ -81,26 +84,26 @@ const Reservation = (props)=>{
                     <Text>¥{bagCnt*400+carrCnt*700}</Text>
                 </View>
             </View>
-        </View>
+        </View>;
         checkInOut=
-        <View>
+            <View>
+                <View style={styles.inWrapView}>
+                    <View>
+                        <Text style={styles.subFont}>체크인</Text>
+                    </View>
+                <View>
+                    <Text style={styles.subFont}>{getFormatDate(checkIn)}</Text>
+                </View>
+            </View>
             <View style={styles.inWrapView}>
                 <View>
-                    <Text style={styles.subFont}>체크인</Text>
+                    <Text style={styles.subFont}>체크아웃</Text>
                 </View>
-            <View>
-                <Text style={styles.subFont}>{getFormatDate(checkIn)}</Text>
+                <View>
+                    <Text style={styles.subFont}>{getFormatDate(checkOut)}</Text>
+                </View>
             </View>
-        </View>
-        <View style={styles.inWrapView}>
-            <View>
-                <Text style={styles.subFont}>체크아웃</Text>
-            </View>
-            <View>
-                <Text style={styles.subFont}>{getFormatDate(checkOut)}</Text>
-            </View>
-        </View>
-        </View>
+        </View>;
         footer=
         <View>
             <TouchableOpacity onPress={deliveryEx}>
@@ -126,13 +129,92 @@ const Reservation = (props)=>{
                     />
                 </View>
             </View>
-        </View>
+        </View>;
     }else if(whereScreen === 'info'){
-        //예약 확인에서 왔을 경우
+    //예약 확인에서 왔을 경우
         headerText = <Text style={styles.headerText}>예약확인</Text>
-        checkInOut;
-        total= <Text>{data}</Text>;
-        footer;
+        checkInOut=
+        <View>
+            <View style={styles.inWrapView}>
+                <View>
+                    <Text style={styles.subFont}>체크인</Text>
+                </View>
+                <View>
+                    <Text style={styles.subFont}>{getFormatDate(data.checkIn) }</Text>
+                </View>
+            </View>
+            <View style={styles.inWrapView}>
+                <View>
+                    <Text style={styles.subFont}>체크아웃</Text>
+                </View>
+                <View>
+                    <Text style={styles.subFont}>{ getFormatDate(data.checkOut) }</Text>
+                </View>
+            </View>
+        </View>;
+        total= 
+        <View style={{ flex:1,alignItems:'center' }}>
+            <Text style={styles.headerText}>비용</Text>
+            <View style = {styles.tableView}>
+                <View style={{ flex:1}}>
+                    <Text></Text>
+                    <Text>가방</Text>
+                    <Text>캐리어</Text>
+                    <Text>합계</Text>
+                </View>
+                <View style={{ flex:1}}>
+                    <Text style={{ flex:1 }}>개수</Text>
+                    <Text>{data.bagCnt}</Text>    
+                    <Text>{data.carrCnt}</Text>
+                    <Text></Text>
+                </View>
+                <View style={{ flex:1}}>
+                    <Text style={{ flex:1 }}>기간</Text>
+                    <Text>{getDays(data.checkIn,data.checkOut)}</Text>
+                    <Text>{getDays(data.checkIn,data.checkOut)}</Text>
+                    <Text></Text>
+                </View>
+                <View style={{ flex:1}}>
+                    <Text style={{ flex:1 }}>비용</Text>
+                    <Text>¥{data.bagCnt*400}</Text>
+                    <Text>¥{data.carrCnt*700}</Text>
+                    <Text>¥{data.bagCnt*400+data.carrCnt*700}</Text>
+                </View>
+            </View>
+        </View>;
+        if(data.state==='예약' || data.state==='보관 중'){
+            footer=
+            <View>
+                <TouchableOpacity onPress={deliveryEx}>
+                    <Text style={{ borderBottomColor:1 }}>
+                        배달을 이용하고 싶은 분께서는....Click!
+                    </Text>
+                </TouchableOpacity>
+                
+                <View style={styles.paysCard}>
+                    <Text>딜리버리 요청</Text>    
+                    <View>
+                        <Text>- 가게까지 짐을 배달해 주는 서비스입니다.</Text>    
+                        <Text>- 반경 5KM 내의 딜리버리를 찾습니다.</Text>
+                        <Button
+                            buttonStyle={{backgroundColor:colors.green01}} title="예약하기" 
+                            onPress={goDelivery}
+                        />
+                    </View>
+                </View>
+            </View>;
+        }else{
+            footer=
+            <View>                
+                <View style={styles.paysCard}>
+                    <Text>딜리버리 이용 내역</Text>    
+                    <View>
+                        <Text>- 차 번호</Text>    
+                        <Text>- 이동 거리</Text>
+                    </View>
+                </View>
+            </View>;
+        }
     }
 
     

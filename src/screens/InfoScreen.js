@@ -9,62 +9,69 @@ const DATA = [
         title: '영진 펀샵 5층 store',
         date:'2020-05-14 ~ 2020-05-15',
         state:'예약',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
     },
     {
         id: '1',
         title: '맘스터치 일본취업반 점',
         date:'2020-04-13 ~ 2020-05-14',
         state:'보관 중',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
     },
     {
         id: '2',
         title: '킹PC 일본취업점',
         date:'2020-04-10 ~ 2020-04-11',
         state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
     },
     {
         id: '3',
         title: '투썸 회의실 store',
         date:'2020-04-5 ~ 2020-04-6',
         state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
     },
     {
         id: '4',
         title: '캡스톤 대신해드립니다',
         date:'2020-03-14 ~ 2020-03-15',
         state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
     },
 ];
-const Action_Click=(carrCnt,bagCnt,checkIn,checkOut,whereScreen)=> {
-    props.navigation.navigate('ViewInfo',{
-        carrCnt,
-        bagCnt,
-        checkIn,
-        checkOut,
-        whereScreen
+const Action_Click=(data,props)=> {
+    props.navigation.navigate('Reservation',{
+        data,
+        whereScreen:'info',
     })
 }
 function Item({item,props}){
     return (
         <View style={styles.item}>
-            {console.log(DATA[item.id])
-            }
             <TouchableOpacity 
                 onPress={()=>{
                     props.navigation.navigate('Reservation',{
-                    carrCnt:1,
-                    bagCnt:1,
-                    checkIn:new Date(),
-                    checkOut:new Date(),
-                    whereScreen:'info',
-                    data:DATA
-                    });}
-                    }
+                        data:item,
+                        whereScreen:'info',
+                    })                    }
+                }
             >
-                {/* <View>
-                    <Text>{item.title}</Text>
-                    <Text>{item.date}</Text>
-                </View> */}
                 <View>
                     <View style={styles.tableView}>
                         <View style={{ flex:3 }}>
