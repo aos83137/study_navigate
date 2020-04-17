@@ -46,14 +46,20 @@ const Reservation = (props)=>{
         Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
     }
     const goDelivery = ()=>{
-        Alert.alert('go delivery');
+        props.navigation.navigate('Delivery');
     }
+    let imageCard;
     let headerText;
     let checkInOut;
     let total;
     let footer;
     //예약하기로 넘어 왔을 경우
     if(whereScreen === 'reservation'){
+        imageCard=
+        <View style={styles.ImageWrap}>
+            <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
+            <Text style={styles.keeperText}>영진 펀드샵(6층)</Text>
+        </View>
         headerText = <Text style={styles.headerText}>예약하기</Text>
         total= 
         <View style={{ flex:1,alignItems:'center' }}>
@@ -118,7 +124,7 @@ const Reservation = (props)=>{
                     <Text>신용카드</Text>
                     <TextInput
                         autoCorrect={false}
-                        placeholder='XXXX-XXXX-XXXX-XXXX'
+                        placeholder='XXXX'
                         onChangeText={text => onChangeText(text)}
                         value={value}
                         style={styles.inputText}
@@ -132,6 +138,11 @@ const Reservation = (props)=>{
         </View>;
     }else if(whereScreen === 'info'){
     //예약 확인에서 왔을 경우
+        imageCard=
+            <View style={styles.ImageWrap}>
+                <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
+                <Text style={styles.keeperText}>영진 펀드샵(6층)</Text>
+            </View>
         headerText = <Text style={styles.headerText}>예약확인</Text>
         checkInOut=
         <View>
@@ -231,10 +242,7 @@ const Reservation = (props)=>{
                         </TouchableHighlight>
                     </View>
                     <View style = {styles.container}> 
-                        <View style={styles.ImageWrap}>
-                            <Image style={styles.keeperImg} source={require('../img/img2.png')}></Image>
-                            <Text style={styles.keeperText}>영진 펀드샵(6층)</Text>
-                        </View>
+                            {imageCard}
                         <View style={styles.cardView}>
                             {checkInOut}
                         </View>

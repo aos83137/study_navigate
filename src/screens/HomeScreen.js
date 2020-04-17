@@ -14,12 +14,11 @@ export default class HomeScreen extends Component{
         this.state = {
             error: null,
             coordinates:[
-                { name : '1', latitude:35.8938, longitude:128.6245, image:require('../img/sushi.jpg')},
-                { name : '2', latitude:35.8970, longitude:128.6249, image:require('../img/sushi.jpg')},
-                { name : '3', latitude:35.8965,  longitude:128.6220, image:require('../img/sushi.jpg')},
-                { name : '4', latitude:35.8940, longitude:128.6219, image:require('../img/sushi.jpg')},
-                { name : '5', latitude:35.8943188, longitude:128.6238612, image:require('../img/sushi.jpg')},
-                
+                { name : '영진 펀샵 5층 store', latitude:35.8938, longitude:128.6245, image:require('../img/store/img1.png')},
+                { name : '맘스터치 일본취업반 점', latitude:35.8970, longitude:128.6249, image:require('../img/store/img2.png')},
+                { name : '킹PC 일본취업점', latitude:35.8965,  longitude:128.6220, image:require('../img/store/img3.png')},
+                { name : '투썸 회의실 store', latitude:35.8940, longitude:128.6219, image:require('../img/store/img4.png')},
+                { name : '캡스톤 대신해드립니다', latitude:35.8943188, longitude:128.6238612, image:require('../img/store/img5.png')},
             ],
             markers:[],
             // bagCnt : props.route.params.bacCnt,
@@ -144,7 +143,7 @@ export default class HomeScreen extends Component{
             hiddenToggle:{
                 display:'flex'
             }
-        })
+        });
     }
 
     //carousel의 아이템 뷰 설정 함수

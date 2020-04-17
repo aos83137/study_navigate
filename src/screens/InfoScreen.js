@@ -13,6 +13,7 @@ const DATA = [
         bagCnt:1,
         checkIn:new Date(),
         checkOut:new Date(),
+        img:'../img/img2.png'
     },
     {
         id: '1',
@@ -23,6 +24,8 @@ const DATA = [
         bagCnt:1,
         checkIn:new Date(),
         checkOut:new Date(),
+        img:'../img/img2.png'
+
     },
     {
         id: '2',
@@ -33,6 +36,8 @@ const DATA = [
         bagCnt:1,
         checkIn:new Date(),
         checkOut:new Date(),
+        img:'../img/img2.png'
+
     },
     {
         id: '3',
@@ -43,6 +48,8 @@ const DATA = [
         bagCnt:1,
         checkIn:new Date(),
         checkOut:new Date(),
+        img:'../img/img2.png'
+
     },
     {
         id: '4',
@@ -53,6 +60,8 @@ const DATA = [
         bagCnt:1,
         checkIn:new Date(),
         checkOut:new Date(),
+        img:'../img/img2.png'
+
     },
 ];
 const Action_Click=(data,props)=> {

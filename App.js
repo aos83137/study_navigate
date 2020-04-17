@@ -12,6 +12,7 @@ import DateSetting from './src/screens/DateSetting';
 import KeeperInfo from './src/screens/KeeperInfo';
 import PushNotification from 'react-native-push-notification';
 import Reservation from './src/screens/Reservation';
+import Delivery from './src/screens/Delivery';
 
 export async function request_location_runtime_permission() {
 
@@ -62,12 +63,9 @@ export default class App extends Component{
 
   render() {
     return (
-      <NavigationContainer
-        onStateChange={state => console.log('New state is', state)}
-      >
+      <NavigationContainer>
         <RootStack.Navigator 
           headerMode ="none"
-          //Main의 header을 숨김
         > 
           <RootStack.Screen name="Main" 
             component={MainTabStack} 
@@ -77,6 +75,7 @@ export default class App extends Component{
           <RootStack.Screen name="DateSetting" component={DateSetting}/>
           <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
           <RootStack.Screen name="Reservation" component={Reservation}/>
+          <RootStack.Screen name="Delivery" component={Delivery}/>
         </RootStack.Navigator>
       </NavigationContainer>
     );

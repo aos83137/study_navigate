@@ -34,7 +34,7 @@ const KeeperInfo = (props)=>{
                     </View>
                     <View style = {styles.container}> 
                         <View style={styles.ImageWrap}>
-                            <Image style={styles.keeper} source={require('../img/img2.png')}></Image>
+                            <Image style={styles.keeper} source={require('../img/store/img2.png')}></Image>
                         </View>
                         <View style={styles.title}>
                             <View style={styles.starEmel}>

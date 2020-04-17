@@ -74,9 +74,7 @@ export default class MainTabStack extends Component{
                 inactiveTintColor: 'gray',
                 }}
             >
-                <MainTabStack.Screen name="Home" 
-                    component={HomeScreen}
-                    />
+                <MainTabStack.Screen name="Home" component={HomeScreen}/>
                 <MainTabStack.Screen name="Info" component={InfoScreen}/>
                 <MainTabStack.Screen name="Setting" component={SettingsScreen}/>
           </MainTabStack.Navigator>
