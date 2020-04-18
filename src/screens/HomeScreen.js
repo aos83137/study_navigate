@@ -27,7 +27,7 @@ export default class HomeScreen extends Component{
             }
         };        
     }
-
+    //Test
     //componentDidMount : render가 호출된 후 실행되는 메서드
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
