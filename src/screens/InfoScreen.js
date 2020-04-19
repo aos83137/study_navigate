@@ -31,7 +31,7 @@ const DATA = [
         id: '2',
         title: '킹PC 일본취업점',
         date:'2020-04-10 ~ 2020-04-11',
-        state:'종료',
+        state:'배달 중',
         carrCnt:1,
         bagCnt:1,
         checkIn:new Date(),

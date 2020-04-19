@@ -12,7 +12,8 @@ import DateSetting from './src/screens/DateSetting';
 import KeeperInfo from './src/screens/KeeperInfo';
 import PushNotification from 'react-native-push-notification';
 import Reservation from './src/screens/Reservation';
-import Delivery from './src/screens/Delivery';
+import DeliveryInfo from './src/screens/delivery/DeliveryInfo';
+import DeliveryFindScreen from './src/screens/delivery/DeliveryFindScreen'
 
 export async function request_location_runtime_permission() {
 
@@ -75,7 +76,8 @@ export default class App extends Component{
           <RootStack.Screen name="DateSetting" component={DateSetting}/>
           <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
           <RootStack.Screen name="Reservation" component={Reservation}/>
-          <RootStack.Screen name="Delivery" component={Delivery}/>
+          <RootStack.Screen name="DeliveryInfo" component={DeliveryInfo}/>
+          <RootStack.Screen name="DeliveryFindScreen" component={DeliveryFindScreen}/>
         </RootStack.Navigator>
       </NavigationContainer>
     );

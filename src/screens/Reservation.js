@@ -46,7 +46,10 @@ const Reservation = (props)=>{
         Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
     }
     const goDelivery = ()=>{
-        props.navigation.navigate('Delivery');
+        props.navigation.navigate('DeliveryInfo');
+    }
+    const goDeliveryFindScreen = ()=>{
+        props.navigation.navigate('DeliveryFindScreen');
     }
     let imageCard;
     let headerText;
@@ -165,7 +168,7 @@ const Reservation = (props)=>{
         </View>;
         total= 
         <View style={{ flex:1,alignItems:'center' }}>
-            <Text style={styles.headerText}>비용</Text>
+            <Text style={styles.headerText}>결제 된 비용</Text>
             <View style = {styles.tableView}>
                 <View style={{ flex:1}}>
                     <Text></Text>
@@ -214,7 +217,19 @@ const Reservation = (props)=>{
                     </View>
                 </View>
             </View>;
-        }else{
+        }else if(data.state==='배달 중'){
+            footer=
+            <View>                
+                <View style={styles.paysCard}>
+                        <Text>딜리버리의 위치를 확인 할 수 있습니다.</Text>    
+                        <Text>2</Text>
+                        <Button
+                            buttonStyle={{backgroundColor:colors.green01}} title="딜리버리 확인" 
+                            onPress={goDeliveryFindScreen}
+                        />
+                </View>
+            </View>;
+        }else if(data.state==='종료'){
             footer=
             <View>                
                 <View style={styles.paysCard}>
