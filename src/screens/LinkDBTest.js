@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Input } from 'react-native-elements';
 
-const url = '192.168.0.47';
+const url = 'my-project-9710670624.df.r.appspot.com';
 const LinkDBTest = (props)=>{   
  
 //navi
@@ -79,7 +79,7 @@ const LinkDBTest = (props)=>{
         const [dataSource, setDataSource] = useState({})
 
         useEffect(()=>{
-            fetch('http://'+url+'/tr_reactnative/view_users.php')
+            fetch('http://'+url+'/user')
             .then((response)=>response.json())
             .then((responseJson)=>{
                 setIsLoding(false);

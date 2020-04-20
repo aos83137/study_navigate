@@ -4,7 +4,8 @@ import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlig
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
 import {CurrentLocationButton} from '../../components/buttons/CurrentLocationButton';
-
+import {ShowDeliveryButton} from '../../components/buttons/ShowDeliveryButton';
+import {UserAndDeliveryCenterButton} from '../../components/buttons/UserAndDeliveryCenterButton';
 
 export default class DeliveryFindScreen extends Component{
     constructor(props){
@@ -13,7 +14,11 @@ export default class DeliveryFindScreen extends Component{
             storeRegion:{
                 latitude : 35.8843,
                 longitude: 128.6323,
-            } ,
+            },
+            delivery:{
+                latitude:35.8944, 
+                longitude: 128.6115
+            },
             error: null,
         };        
     }
@@ -79,7 +84,38 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta
         })
     }
-
+    goDelivery(){
+        const {
+            latitude, 
+            longitude, } = this.state.delivery
+        this._map.animateToRegion({
+            latitude,
+            longitude,
+            latitudeDelta:0.015,
+            longitudeDelta:0.015
+        })
+    }
+    zoomOut(){
+        const userRegion ={
+            latitude: this.state.initialRegion.latitude,
+            longitude:this.state.initialRegion.longitude,
+        }
+        const storeRegion = this.state.storeRegion
+        const zoomOutLat = (userRegion.latitude + storeRegion.latitude)/2;
+        const zoomOutLon = (userRegion.longitude + storeRegion.longitude)/2;
+        console.log('userRegion : ' +JSON.stringify(userRegion));
+        console.log('storeRegion : ' +JSON.stringify(storeRegion));
+        
+        console.log('zoomOutLat :'+zoomOutLat);
+        console.log('zoomOutLon : '+zoomOutLon);
+        
+        this._map.animateToRegion({
+            latitude:zoomOutLat,
+            longitude:zoomOutLon,
+            latitudeDelta:0.015,
+            longitudeDelta:0.015,
+        })
+    }
     center
     render(){     
         console.log('1'+this.state.initialRegion);
@@ -88,6 +124,12 @@ export default class DeliveryFindScreen extends Component{
             <View style={styles.container}>
                 <CurrentLocationButton
                     cb={()=>{this.centerMap()}}
+                />
+                <ShowDeliveryButton
+                    cb={()=>{this.goDelivery()}}
+                />
+                <UserAndDeliveryCenterButton
+                    cb={()=>{this.zoomOut()}}
                 />
                 <MapView
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
@@ -108,8 +150,10 @@ export default class DeliveryFindScreen extends Component{
                     <Marker
                         coordinate={this.state.storeRegion}
                     >
-                        
                     </Marker>
+                    <Marker
+                        coordinate={this.state.delivery}
+                    ></Marker>
                 </MapView>
                 <View style = {styles.flat}>
 

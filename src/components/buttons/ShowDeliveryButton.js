@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -10,16 +10,16 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export const CurrentLocationButton = function(props){
+export const ShowDeliveryButton = function(props){
     const cb = props.cb ? props.cb :()=> console.log('Callback function not passed to CurrnetLocatioinButton!');
 
     // console.log(props.bottom);
-    const bottom = props.bottom ? props.bottom : 130;
+    const bottom = props.bottom ? props.bottom : 180;
 
     return(
         <View style={[styles.container , {top: HEIGHT - bottom}]}>
             <Icon 
-                name = 'my-location'
+                name = 'directions-car'
                 color = "#000000"
                 size = {25}
                 onPress={()=>{

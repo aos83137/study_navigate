@@ -1,5 +1,6 @@
 import React , {useState, useEffect } from 'react';
 import {Text ,View,StyleSheet, Image, FlatList, Alert, Dimensions, TouchableOpacity} from 'react-native';
+import colors from '../styles/colors';
 
 let {width, height} = Dimensions.get('window')
 
@@ -115,10 +116,14 @@ const styles = StyleSheet.create({
         flex:1,
     },
     item:{
-        backgroundColor: '#f9c2ff',
+        backgroundColor: colors.white,
         padding: 20,
         marginTop:10,
         marginHorizontal: 10,
+        shadowColor:'#000000',
+        shadowOpacity: 1.0,
+        shadowRadius:5,
+        elevation: 7,
     },
     tableView:{ 
         flex:1, 
