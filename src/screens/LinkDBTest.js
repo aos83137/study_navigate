@@ -26,7 +26,7 @@ const LinkDBTest = (props)=>{
             // console.log('TextInputPhoneNumber : '+TextInputPhoneNumber);
     
             //fetch(url,콜백함수)
-            fetch('http://'+url+'/tr_reactnative/insert.php',{
+            fetch('http://'+url+'/user',{
                 method: 'POST',
                 headers:{
                     'Accept':'application/json',
@@ -87,7 +87,7 @@ const LinkDBTest = (props)=>{
             }).catch((error)=>{
                 console.error(error);
         })
-        },{})
+        },[])
         // console.log('여기는 바깥! : '+ JSON.stringify(dataSource));
         
         
@@ -150,8 +150,8 @@ const LinkDBTest = (props)=>{
         },[])
 
         const UpdateUsers= ()=>{
-            fetch('http://'+url+'/tr_reactnative/update.php',{
-                method: 'POST',
+            fetch('http://'+url+'/user/'+TextInputId,{
+                method: 'PUT',
                 headers:{
                     'Accept':'application/json',
                     'Content-Type':'application/json',
@@ -190,6 +190,8 @@ const LinkDBTest = (props)=>{
                 console.error(error);
             });        
         }
+        console.log(TextInputId);
+        
         return(
             <View style={styles.container}>
                 <TextInput
