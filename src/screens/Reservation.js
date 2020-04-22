@@ -16,7 +16,7 @@ const Reservation = (props)=>{
     const carrCnt = props.route.params?.carrCnt;
     const whereScreen = props.route.params?.whereScreen ? props.route.params?.whereScreen : true;
     const data = props.route.params?.data ? props.route.params?.data : '없디';
-    const [value, onChangeText] = useState('Useless Placeholder');
+    const [value, onChangeText] = useState('xxxx-xxxx-xxxx-xxxx');
 
     const getFormatDate = date=>{
         let month = (1 + date.getMonth());          //M
@@ -40,7 +40,7 @@ const Reservation = (props)=>{
     }
     const payEnd=()=>{
         Alert.alert('결제 완료. 예약을 확인하세요')
-        props.navigation.navigate('Info');
+        props.navigation.navigate('DeliveryInfo');
     }
     const deliveryEx=()=>{
         Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
