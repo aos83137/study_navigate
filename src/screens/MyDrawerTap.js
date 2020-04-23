@@ -6,6 +6,7 @@ import MainTabStack from './MainTabStack';
 import KeeperInfo from './KeeperInfo';
 import LinkDBTest from './LinkDBTest';
 import PlacesAutoComplete from './PlacesAutoComplete';
+import Ubertest from './Ubertest'
 
   const Drawer = createDrawerNavigator();
 
@@ -25,9 +26,9 @@ import PlacesAutoComplete from './PlacesAutoComplete';
                 options={{ drawerLabel: 'Updates' }}
               />
               <Drawer.Screen
-                name="Profile"
-                component={KeeperInfo}
-                options={{ drawerLabel: 'Profile' }}
+                name="Ubertest"
+                component={Ubertest}
+                options={{ drawerLabel: 'Ubertest' }}
               />
             </Drawer.Navigator>
           );
