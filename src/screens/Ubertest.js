@@ -3,6 +3,7 @@ import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlig
 
 import MapView, {Marker,PROVIDER_GOOGLE,AnimatedRegion  } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
+import database from '@react-native-firebase/database';
 
 
 const { width, height } = Dimensions.get("window");
@@ -78,7 +79,7 @@ export default class Ubertest extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            this.watchLocation();            
+            // this.watchLocation();            
     }
     componentDidUpdate(prevProps, prevState) {
     if (this.props.latitude !== prevState.latitude) {
@@ -92,44 +93,44 @@ export default class Ubertest extends Component{
         }
     }
 
-    watchLocation = () => {
-        const { coordinate } = this.state;
-        console.log('실행디나');
+    // watchLocation = () => {
+    //     const { coordinate } = this.state;
+    //     console.log('실행디나');
 
-        this.watchID = Geolocation.watchPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            console.log('위도'+latitude+'   '+ '경도' + longitude);
-            const newCoordinate = {
-              latitude,
-              longitude
-            };
+    //     this.watchID = Geolocation.watchPosition(
+    //       position => {
+    //         const { latitude, longitude } = position.coords;
+    //         console.log('위도'+latitude+'   '+ '경도' + longitude);
+    //         const newCoordinate = {
+    //           latitude,
+    //           longitude
+    //         };
     
-            if (Platform.OS === "android") {
-              if (this.marker) {
-                this.marker._component.animateMarkerToCoordinate(
-                  newCoordinate,
-                  1 // 500 is the duration to animate the marker
-                );
-              }
-            } else {
-              coordinate.timing(newCoordinate).start();
-            }
+    //         if (Platform.OS === "android") {
+    //           if (this.marker) {
+    //             this.marker._component.animateMarkerToCoordinate(
+    //               newCoordinate,
+    //               1 // 500 is the duration to animate the marker
+    //             );
+    //           }
+    //         } else {
+    //           coordinate.timing(newCoordinate).start();
+    //         }
     
-            this.setState({
-              latitude,
-              longitude
-            });
-          },
-          error => console.log(error),
-          {
-            enableHighAccuracy: true,
-            timeout: 20000,
-            maximumAge: 0,
-            distanceFilter: 100
-          }
-        );
-      };
+    //         this.setState({
+    //           latitude,
+    //           longitude
+    //         });
+    //       },
+    //       error => console.log(error),
+    //       {
+    //         enableHighAccuracy: true,
+    //         timeout: 20000,
+    //         maximumAge: 0,
+    //         distanceFilter: 100
+    //       }
+    //     );
+    //   };
 
       getMapRegion = () => ({
         latitude: this.state.latitude,
@@ -150,18 +151,60 @@ export default class Ubertest extends Component{
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
-                    showsMyLocationButton = {true}
-                    showsCompass = {true}
-                    showsCompass={true}
-                    rotateEnabled={false}
-                    // onRegionChange={this.onRegionChange}
+                    onUserLocationChange={
+                        coordinate=>{
+                            const {latitude,longitude}= coordinate.nativeEvent.coordinate;
+                            const currentTarget = coordinate.currentTarget;
+                            const newCoordinate = {
+                              latitude,
+                              longitude
+                            };
+                            
+
+                            database()
+                                .ref('/delivery_location')
+                                .set({
+                                    currentTarget:{
+                                        latitude,
+                                        longitude
+                                    }
+                                })
+                                .then(()=>console.log('Data set.'))
+                                .catch(err=>console.log(err));
+                                
+
+                            if (Platform.OS === "android") {
+                              if (this.marker) {
+                                this.marker._component.animateMarkerToCoordinate(
+                                  newCoordinate,
+                                  1 // 500 is the duration to animate the marker
+                                );
+                              }
+                              if(this._map){
+                                const {
+                                    latitude, 
+                                    longitude, 
+                                    latitudeDelta, 
+                                    longitudeDelta} = this.state.initialRegion
+                                console.log('위도'+latitude+'   '+ '경도' + longitude);
+                                
+                                this._map.animateToRegion({
+                                    latitude,
+                                    longitude,
+                                    latitudeDelta,
+                                    longitudeDelta
+                                })
+                              }
+                            }
+                        }
+                    }
                 >   
                     <Marker.Animated
                         ref={marker=>{
                             this.marker = marker;
                         }}
                         coordinate={this.state.coordinate}
-                        image={require('../img/UIHere.png')}
+                        image={require('../img/carTop.png')}
                     />
                 </MapView>
                 <View style = {styles.flat}>

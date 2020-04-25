@@ -202,9 +202,6 @@ export default class HomeScreen extends Component{
                             });
                         }
                     }
-                    userLocationAnnotationTitle={'wntt'}
-                    // showsMyLocationButton = {true}
-                    userLocationFastestInterval={100}
                     onPress = {this.clickMapHiddenMenu}
                 >   
                     <Circle
