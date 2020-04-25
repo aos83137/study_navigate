@@ -57,44 +57,7 @@ export default class HomeScreen extends Component{
                 //정확도, 타임아웃, 최대 연령
             );
             SplashScreen.hide();
-            this.watchLocation();
-    }
-
-    watchLocation =()=>{        
-        this.watchID = Geolocation.watchPosition(
-            position => {
-              const { latitude, longitude } = position.coords;
-              const newCoordinate = {
-                latitude,
-                longitude
-            };    
-            // if (Platform.OS === "android") {
-            //     if (this.marker) {
-            //         this.marker._component.animateMarkerToCoordinate(
-            //         newCoordinate,
-            //         500 // 500 is the duration to animate the marker
-            //         );
-            //     }
-            // } else {
-            // }
-    
-            this.setState({
-                initialRegion:{
-                    latitude,
-                    longitude,
-                    latitudeDelta: 0.045,
-                    longitudeDelta: 0.045,
-                }
-            });
-        },
-        error => console.log(error),
-            {
-                enableHighAccuracy: true,
-                timeout: 20000,
-                maximumAge: 0,
-                distanceFilter: 100
-            }
-        );
+            // this.watchLocation();
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -114,6 +77,8 @@ export default class HomeScreen extends Component{
             longitude, 
             latitudeDelta, 
             longitudeDelta} = this.state.initialRegion
+        console.log('위도'+latitude+'   '+ '경도' + longitude);
+        
         this._map.animateToRegion({
             latitude,
             longitude,
@@ -222,6 +187,22 @@ export default class HomeScreen extends Component{
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
+                    onUserLocationChange={
+                        coordinate=>{
+                            // console.log('test');
+                            // console.log(coordinate.nativeEvent.coordinate.latitude);
+                            const {latitude,longitude}= coordinate.nativeEvent.coordinate
+                            this.setState({
+                                initialRegion:{
+                                    latitude,
+                                    longitude,
+                                    latitudeDelta: 0.045,
+                                    longitudeDelta: 0.045,
+                                }
+                            });
+                        }
+                    }
+                    userLocationAnnotationTitle={'wntt'}
                     // showsMyLocationButton = {true}
                     userLocationFastestInterval={100}
                     onPress = {this.clickMapHiddenMenu}
