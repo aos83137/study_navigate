@@ -57,7 +57,44 @@ export default class HomeScreen extends Component{
                 //정확도, 타임아웃, 최대 연령
             );
             SplashScreen.hide();
+            this.watchLocation();
+    }
 
+    watchLocation =()=>{        
+        this.watchID = Geolocation.watchPosition(
+            position => {
+              const { latitude, longitude } = position.coords;
+              const newCoordinate = {
+                latitude,
+                longitude
+            };    
+            // if (Platform.OS === "android") {
+            //     if (this.marker) {
+            //         this.marker._component.animateMarkerToCoordinate(
+            //         newCoordinate,
+            //         500 // 500 is the duration to animate the marker
+            //         );
+            //     }
+            // } else {
+            // }
+    
+            this.setState({
+                initialRegion:{
+                    latitude,
+                    longitude,
+                    latitudeDelta: 0.045,
+                    longitudeDelta: 0.045,
+                }
+            });
+        },
+        error => console.log(error),
+            {
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 0,
+                distanceFilter: 100
+            }
+        );
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -185,9 +222,8 @@ export default class HomeScreen extends Component{
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
-                    showsMyLocationButton = {true}
-                    showsCompass = {true}
-                    rotateEnabled={false}
+                    // showsMyLocationButton = {true}
+                    userLocationFastestInterval={100}
                     onPress = {this.clickMapHiddenMenu}
                 >   
                     <Circle

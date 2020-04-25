@@ -99,7 +99,7 @@ export default class Ubertest extends Component{
         this.watchID = Geolocation.watchPosition(
           position => {
             const { latitude, longitude } = position.coords;
-    
+            console.log('위도'+latitude+'   '+ '경도' + longitude);
             const newCoordinate = {
               latitude,
               longitude
@@ -125,8 +125,8 @@ export default class Ubertest extends Component{
           {
             enableHighAccuracy: true,
             timeout: 20000,
-            maximumAge: 1000,
-            distanceFilter: 10
+            maximumAge: 0,
+            distanceFilter: 100
           }
         );
       };
@@ -141,9 +141,7 @@ export default class Ubertest extends Component{
     onRegionChange(region) {
         this.setState({region:region});
       }
-    render(){     
-        console.log(this.state.coordinate);
-        
+    render(){             
         return(
             <View style={styles.container}>
                 <MapView
