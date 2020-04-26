@@ -154,21 +154,24 @@ export default class Ubertest extends Component{
                     onUserLocationChange={
                         coordinate=>{
                             const {latitude,longitude}= coordinate.nativeEvent.coordinate;
+                            //currentTarget 이걸 고유id로 바꿔서 넣자
                             const currentTarget = coordinate.currentTarget;
                             const newCoordinate = {
                               latitude,
                               longitude
                             };
                             
+                            userJSON = {};
+                            
+                            locationJSON = {
+                                latitude,
+                                longitude,
+                            };
 
+                            userJSON[currentTarget]=locationJSON;
                             database()
                                 .ref('/delivery_location')
-                                .set({
-                                    currentTarget:{
-                                        latitude,
-                                        longitude
-                                    }
-                                })
+                                .set(userJSON)
                                 .then(()=>console.log('Data set.'))
                                 .catch(err=>console.log(err));
                                 
