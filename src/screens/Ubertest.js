@@ -161,17 +161,15 @@ export default class Ubertest extends Component{
                               longitude
                             };
                             
-                            userJSON = {};
-                            
+                            // userJSON = {};
                             locationJSON = {
                                 latitude,
                                 longitude,
                             };
-
-                            userJSON[currentTarget]=locationJSON;
+                            // userJSON[currentTarget]=locationJSON;
                             database()
-                                .ref('/delivery_location')
-                                .set(userJSON)
+                                .ref('/delivery_location/'+currentTarget)
+                                .set(locationJSON)
                                 .then(()=>console.log('Data set.'))
                                 .catch(err=>console.log(err));
                                 
