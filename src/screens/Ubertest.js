@@ -79,7 +79,8 @@ export default class Ubertest extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            // this.watchLocation();            
+            // this.watchLocation();      
+            this.getDeliveryLocation();      
     }
     componentDidUpdate(prevProps, prevState) {
     if (this.props.latitude !== prevState.latitude) {
@@ -132,16 +133,55 @@ export default class Ubertest extends Component{
     //     );
     //   };
 
-      getMapRegion = () => ({
+    getMapRegion = () => ({
         latitude: this.state.latitude,
         longitude: this.state.longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
-      });
+    });
 
     onRegionChange(region) {
         this.setState({region:region});
-      }
+    };
+    getDeliveryLocation(){
+        database().ref('/delivery_location')
+        .on('value', snapshot => {
+            if(snapshot.forEach){
+                snapshot.forEach(
+                    (data)=>{
+                        //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
+                        const dataToString = JSON.stringify(data);
+
+                        const dataJson = JSON.parse(dataToString);
+                        // console.log(dataJson.l);
+                        console.log(Array.isArray(data) );
+                        
+                    }
+                );
+            }
+            // let arr = new Array();
+            // arr.push(getData)
+            // console.log('User data: ', arr[0]);
+            
+            // arr.push(snapshot.val());
+            // console.log(arr);
+            
+            // const {latitude, longitude} = snapshot.val();
+            // const newCoordinate = {
+            //     latitude,
+            //     longitude
+            //   }; 
+
+            // if (Platform.OS === "android") {
+            //   if (this.marker) {
+            //     this.marker._component.animateMarkerToCoordinate(
+            //       newCoordinate,
+            //       500 // 500 is the duration to animate the marker
+            //     );
+            //   }
+            // }
+        });
+    }
     render(){             
         return(
             <View style={styles.container}>
@@ -152,51 +192,35 @@ export default class Ubertest extends Component{
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
                     onUserLocationChange={
-                        coordinate=>{
-                            const {latitude,longitude}= coordinate.nativeEvent.coordinate;
-                            //currentTarget 이걸 고유id로 바꿔서 넣자
-                            const currentTarget = coordinate.currentTarget;
-                            const newCoordinate = {
-                              latitude,
-                              longitude
-                            };
-                            
-                            // userJSON = {};
-                            locationJSON = {
-                                latitude,
-                                longitude,
-                            };
-                            // userJSON[currentTarget]=locationJSON;
-                            database()
-                                .ref('/delivery_location/'+currentTarget)
-                                .set(locationJSON)
-                                .then(()=>console.log('Data set.'))
-                                .catch(err=>console.log(err));
-                                
+                        coordinate=>{                            
+                            // const newCoordinate = {
+                            //     latitude,
+                            //     longitude
+                            //   }; 
 
-                            if (Platform.OS === "android") {
-                              if (this.marker) {
-                                this.marker._component.animateMarkerToCoordinate(
-                                  newCoordinate,
-                                  1 // 500 is the duration to animate the marker
-                                );
-                              }
-                              if(this._map){
-                                const {
-                                    latitude, 
-                                    longitude, 
-                                    latitudeDelta, 
-                                    longitudeDelta} = this.state.initialRegion
-                                console.log('위도'+latitude+'   '+ '경도' + longitude);
+                            // if (Platform.OS === "android") {
+                            //   if (this.marker) {
+                            //     this.marker._component.animateMarkerToCoordinate(
+                            //       newCoordinate,
+                            //       1 // 500 is the duration to animate the marker
+                            //     );
+                            //   }
+                            //   if(this._map){
+                            //     const {
+                            //         latitude, 
+                            //         longitude, 
+                            //         latitudeDelta, 
+                            //         longitudeDelta} = this.state.initialRegion
+                            //     console.log('위도'+latitude+'   '+ '경도' + longitude);
                                 
-                                this._map.animateToRegion({
-                                    latitude,
-                                    longitude,
-                                    latitudeDelta,
-                                    longitudeDelta
-                                })
-                              }
-                            }
+                            //     this._map.animateToRegion({
+                            //         latitude,
+                            //         longitude,
+                            //         latitudeDelta,
+                            //         longitudeDelta
+                            //     })
+                            //   }
+                            // }
                         }
                     }
                 >   
