@@ -39,7 +39,9 @@ export default class Ubertest extends Component{
               longitude: LONGITUDE,
               latitudeDelta: 0,
               longitudeDelta: 0
-            }),            
+            }),        
+            coordinates:[],    
+            markers:[],
             error: null,
         };      
         // this.pubnub = new PubNubReact({
@@ -148,38 +150,35 @@ export default class Ubertest extends Component{
         .on('value', snapshot => {
             if(snapshot.forEach){
                 snapshot.forEach(
-                    (data)=>{
+                    (data,index)=>{
                         //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
                         const dataToString = JSON.stringify(data);
 
                         const dataJson = JSON.parse(dataToString);
                         // console.log(dataJson.l);
-                        console.log(Array.isArray(data) );
-                        
+                        const {latitude, longitude} = dataJson.l;
+                        // const newCoordinate = {
+                        //     latitude,
+                        //     longitude
+                        // }; 
+                        this.state.coordinates[index] = dataJson;
+                        // this.setState({
+                        //     coordinates: dataJson,
+                        // });
+                        if (Platform.OS === "android") {
+                            if (this.marker) {
+                                this.markers[index]._component.animateMarkerToCoordinate(
+                                    newCoordinate,
+                                    500 // 500 is the duration to animate the marker
+                                );
+                            }
+                        }
                     }
                 );
+                this.setState({
+                    coordinates: this.state.coordinates,
+                })
             }
-            // let arr = new Array();
-            // arr.push(getData)
-            // console.log('User data: ', arr[0]);
-            
-            // arr.push(snapshot.val());
-            // console.log(arr);
-            
-            // const {latitude, longitude} = snapshot.val();
-            // const newCoordinate = {
-            //     latitude,
-            //     longitude
-            //   }; 
-
-            // if (Platform.OS === "android") {
-            //   if (this.marker) {
-            //     this.marker._component.animateMarkerToCoordinate(
-            //       newCoordinate,
-            //       500 // 500 is the duration to animate the marker
-            //     );
-            //   }
-            // }
         });
     }
     render(){             
@@ -224,13 +223,29 @@ export default class Ubertest extends Component{
                         }
                     }
                 >   
-                    <Marker.Animated
+                {
+                    console.log(this.state.coordinates)
+                }
+                {
+                    
+                    this.state.coordinates.map((marker,index)=>(
+                        <Marker
+                            ref={ref=>{
+                                this.state.markers[index] = ref;
+                            }}
+                            coordinate={{latitude:marker.l.latitude, longitude:marker.l.longitude}}
+                            image={require('../img/carTop.png')}
+                        >
+                        </Marker>
+                    ))
+                }
+                    {/* <Marker.Animated
                         ref={marker=>{
                             this.marker = marker;
                         }}
                         coordinate={this.state.coordinate}
                         image={require('../img/carTop.png')}
-                    />
+                    /> */}
                 </MapView>
                 <View style = {styles.flat}>
 
