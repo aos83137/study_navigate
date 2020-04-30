@@ -6,7 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Input } from 'react-native-elements';
 // http://192.168.0.2:8000/user
 // const url = '192.168.0.2:8000';
-const url = '192.168.0.2:8000';
+const url = 'my-project-9710670624.df.r.appspot.com';
 const LinkDBTest = (props)=>{   
  
 //navi
@@ -192,7 +192,6 @@ const LinkDBTest = (props)=>{
                 console.error(error);
             });        
         }
-        console.log(TextInputId);
         
         return(
             <View style={styles.container}>
