@@ -39,8 +39,29 @@ const Reservation = (props)=>{
         return days>1 ? days:1; 
     }
     const payEnd=()=>{
-        Alert.alert('결제 완료. 예약을 확인하세요')
-        props.navigation.navigate('DeliveryInfo');
+        Alert.alert(
+                    //Header
+                    '결제 감사합니다.',
+                    //title
+                    '딜리버리를 이용하시려면 다음을 눌러주세요.',
+                    //footer button
+                    [
+                        {
+                            text:'이용 안함',
+                            style: 'cancel',
+                            onPress:()=>{
+                                //딜리버리 스테이트를 바꿔야함
+                                props.navigation.navigate('Info');
+                            }
+                        },
+                        {
+                            text:'다음',
+                            onPress: ()=>{
+                                props.navigation.navigate('DeliveryInfo');
+                            }
+                        }
+                    ]
+                );
     }
     const deliveryEx=()=>{
         Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
@@ -124,14 +145,6 @@ const Reservation = (props)=>{
             <View style={styles.paysCard}>
                 <Text>지불방법을 선택해주세요.</Text>    
                 <View>
-                    <Text>신용카드</Text>
-                    <TextInput
-                        autoCorrect={false}
-                        placeholder='XXXX'
-                        onChangeText={text => onChangeText(text)}
-                        value={value}
-                        style={styles.inputText}
-                    />
                     <Button
                         buttonStyle={{backgroundColor:colors.green01}} title="예약하기" 
                         onPress={payEnd}

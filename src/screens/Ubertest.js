@@ -84,56 +84,11 @@ export default class Ubertest extends Component{
             // this.watchLocation();      
             this.getDeliveryLocation();      
     }
-    componentDidUpdate(prevProps, prevState) {
-    if (this.props.latitude !== prevState.latitude) {
-        // this.pubnub.publish({
-        //     message: {
-        //         latitude: this.state.latitude,
-        //         longitude: this.state.longitude
-        //     },
-        //         channel: "location"
-        //     });
-        }
+
+    componentWillUnmount=()=>{
+        console.log('마운트 해제');
+        
     }
-
-    // watchLocation = () => {
-    //     const { coordinate } = this.state;
-    //     console.log('실행디나');
-
-    //     this.watchID = Geolocation.watchPosition(
-    //       position => {
-    //         const { latitude, longitude } = position.coords;
-    //         console.log('위도'+latitude+'   '+ '경도' + longitude);
-    //         const newCoordinate = {
-    //           latitude,
-    //           longitude
-    //         };
-    
-    //         if (Platform.OS === "android") {
-    //           if (this.marker) {
-    //             this.marker._component.animateMarkerToCoordinate(
-    //               newCoordinate,
-    //               1 // 500 is the duration to animate the marker
-    //             );
-    //           }
-    //         } else {
-    //           coordinate.timing(newCoordinate).start();
-    //         }
-    
-    //         this.setState({
-    //           latitude,
-    //           longitude
-    //         });
-    //       },
-    //       error => console.log(error),
-    //       {
-    //         enableHighAccuracy: true,
-    //         timeout: 20000,
-    //         maximumAge: 0,
-    //         distanceFilter: 100
-    //       }
-    //     );
-    //   };
 
     getMapRegion = () => ({
         latitude: this.state.latitude,
