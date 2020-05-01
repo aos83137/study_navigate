@@ -1,7 +1,7 @@
 import React , {Component} from 'react';
 import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlight} from 'react-native';
 
-import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
+import MapView, {Marker,PROVIDER_GOOGLE,Polyline ,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
 import {CurrentLocationButton} from '../../components/buttons/CurrentLocationButton';
 import {ShowDeliveryButton} from '../../components/buttons/ShowDeliveryButton';
@@ -154,6 +154,25 @@ export default class DeliveryFindScreen extends Component{
                     <Marker
                         coordinate={this.state.delivery}
                     ></Marker>
+                    <Polyline
+                        coordinates={[
+                            { latitude:35.8944, longitude: 128.6115 },
+                            { latitude: 35.8975, longitude: 128.6151 },
+                            { latitude: 35.8933, longitude: 128.6201 },
+                            { latitude: 35.8941, longitude: 128.6211 },
+
+                        ]}
+                        strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+                        strokeColors={[
+                            '#7F0000',
+                            '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
+                            '#B24112',
+                            '#E5845C',
+                            '#238C23',
+                            '#7F0000'
+                        ]}
+                        strokeWidth={6}
+                    />
                 </MapView>
                 <View style = {styles.flat}>
 
