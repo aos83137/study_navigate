@@ -146,12 +146,6 @@ const Reservation = (props)=>{
         </View>;
         footer=
         <View>
-            {/* <TouchableOpacity onPress={deliveryEx}>
-                <Text style={{ borderBottomColor:1 }}>
-                    배달을 이용하고 싶은 분께서는....Click!
-                </Text>
-            </TouchableOpacity> */}
-            
             <View style={styles.paysCard}>
                 <View>
                     <Button
@@ -221,7 +215,7 @@ const Reservation = (props)=>{
         if(data.state==='예약' || data.state==='보관 중'){
             footer=
             <View>
-                <TouchableOpacity onPress={deliveryEx}>
+                <TouchableOpacity >
                     <Text style={{ borderBottomColor:1 }}>
                         배달을 이용하고 싶은 분께서는....Click!
                     </Text>
@@ -324,9 +318,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius:8,
     },
     header:{
-        padding:'2%',
-        backgroundColor:colors.white,
-        
+        padding:'2%',      
     },
     title:{
         width:'100%',
