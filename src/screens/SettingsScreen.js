@@ -2,9 +2,108 @@ import React,{component, Component} from 'react';
 import {View,Text, ScrollView, StyleSheet, TouchableHighlight} from 'react-native';
 import colors from '../styles/colors'
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class SettingsScreen extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            userName:'',
+            userEmail:'',
+            auth:false,
+        };
+    }
+    componentDidMount=async()=>{
+        try{
+            const value = await AsyncStorage.getItem('userToken')
+            console.log(value);
+            if(value){
+                this.setState({auth:true})    
+            }
+        }catch(e){
+
+        }
+    }
+    UNSAFE_componentWillReceiveProps= async() =>{
+        try{
+            const value = await AsyncStorage.getItem('userToken')
+            console.log(value);
+            if(value){
+                this.setState({auth:true})    
+            }
+        }catch(e){
+
+        }
+    }
+    getData = async () => {
+        try {
+          const value = await AsyncStorage.getItem('userToken')
+          console.log(value);
+          
+          if(value !== null) {
+            // value previously stored
+          }
+          this.setState({auth:true})
+        } catch(e) {
+          // error reading value
+        }
+    } 
+    removeValue = async () => {
+        try {
+            await AsyncStorage.clear()
+            this.setState({auth:false})
+          } catch(e) {
+            // clear error
+            console.error(e);
+            
+          }
+        
+          console.log('Done.')
+    }
     render(){
+        // const auth = this.getData();
+        // console.log(auth);
+        
+        let authLoginView;
+        if(!this.state.auth){
+            authLoginView = 
+            <View>
+                <TouchableHighlight onPress={
+                    ()=>{
+                        console.log(this.state.auth);
+                        
+                    }
+                }>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>회원가입</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                </TouchableHighlight>
+                <TouchableHighlight  onPress={
+                    ()=>{
+                        this.props.navigation.push('LogIn')
+                    }
+                }>
+                    <View style={styles.content}>
+                        <Text style={styles.text}>로그인</Text>
+                        <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                    </View>
+                </TouchableHighlight>                     
+            </View>
+        }else{
+            authLoginView=
+            <TouchableHighlight onPress={
+                ()=>{
+                    this.removeValue();                                
+                }
+            }>
+                <View style={styles.content}>
+                    <Text style={styles.text}>로그아웃</Text>
+                    <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
+                </View>
+            </TouchableHighlight>
+        }
+        
         return(
             <ScrollView style={styles.container} stickyHeaderIndices ={[0]} >
                 <View style={styles.titleContent}>
@@ -15,18 +114,9 @@ export default class SettingsScreen extends Component{
                         <View style={styles.subTitleContent}>
                             <Text style={styles.text}>인증</Text>
                         </View>
-                        <TouchableHighlight>
-                            <View style={styles.content}>
-                                <Text style={styles.text}>Sign Up</Text>
-                                <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight>
-                            <View style={styles.content}>
-                                <Text style={styles.text}>Login</Text>
-                                <Icon name="keyboard-arrow-right" size={30} color={colors.gray}/>
-                            </View>
-                        </TouchableHighlight>                     
+                        {
+                            authLoginView
+                        }                      
                     </View>                    
                     <View>
                         <View style={styles.subTitleContent}>

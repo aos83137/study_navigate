@@ -28,6 +28,8 @@ const Delivery = (props)=>{
     }
     return(
         <View style={{ flex:1, justifyContent:'center',}}>
+            <Text>예약 접수 완료되었습니다.</Text>
+            <Text>24시간 내 키퍼의 수락에 따라 예약이 취소 될 수가 있습니다.</Text>
             <Text>
                 딜리버리 서비스 이용하기
             </Text>
@@ -41,7 +43,7 @@ const Delivery = (props)=>{
                 "딜리버리 고객에게 설명하는 페이지임"
             </Text>
             {showActivity}
-            <Button title="딜리버리 찾기" onPress={findDelivery}/>
+            <Button title="딜리버리 찾기" styles={styles.button} onPress={findDelivery}/>
         </View>
     );
 };

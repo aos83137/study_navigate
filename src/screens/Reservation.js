@@ -38,6 +38,7 @@ const Reservation = (props)=>{
         days = d2.getDate()-d1.getDate();
         return days>1 ? days:1; 
     }
+    
     const payEnd=()=>{
         Alert.alert(
                     //Header
@@ -143,7 +144,6 @@ const Reservation = (props)=>{
             </TouchableOpacity>
             
             <View style={styles.paysCard}>
-                <Text>지불방법을 선택해주세요.</Text>    
                 <View>
                     <Button
                         buttonStyle={{backgroundColor:colors.green01}} title="예약하기" 
@@ -255,8 +255,6 @@ const Reservation = (props)=>{
             </View>;
         }
     }
-
-    
         return(
             <View style={{ flex:1 }}> 
                 <ScrollView stickyHeaderIndices={[0]}>

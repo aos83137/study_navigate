@@ -7,6 +7,7 @@ import KeeperInfo from './KeeperInfo';
 import LinkDBTest from './LinkDBTest';
 import PlacesAutoComplete from './PlacesAutoComplete';
 import Ubertest from './Ubertest'
+import LogIn from './LogIn'
 
   const Drawer = createDrawerNavigator();
 
@@ -29,6 +30,11 @@ import Ubertest from './Ubertest'
                 name="Ubertest"
                 component={Ubertest}
                 options={{ drawerLabel: 'Ubertest' }}
+              />
+              <Drawer.Screen
+                name="LogIn"
+                component={LogIn}
+                options={{ drawerLabel: 'LogIn' }}
               />
             </Drawer.Navigator>
           );
