@@ -15,9 +15,13 @@ import Reservation from './src/screens/Reservation';
 import DeliveryInfo from './src/screens/delivery/DeliveryInfo';
 import DeliveryFindScreen from './src/screens/delivery/DeliveryFindScreen';
 import LogIn  from './src/screens/LogIn';
+import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from 'react-native-splash-screen';
+
+
+let init = "Main";
 
 export async function request_location_runtime_permission() {
-
   try {
     const granted = await PermissionsAndroid.request(
       //이게 위치권한 부여하는 거임
@@ -47,7 +51,21 @@ export async function request_location_runtime_permission() {
 const RootStack = createStackNavigator();
 
 export default class App extends Component{
-
+  constructor(props){
+    super(props);
+    this.state={};
+    this.status=null;
+  }
+  UNSAFE_componentWillMount =()=>{
+    try{
+      this.status = AsyncStorage.getItem('status');
+    }catch(e){
+      console.error(e); 
+    }
+    if(this.status){
+      init = "DeliveryInfo"
+    }
+  }
   async componentDidMount() {
     await request_location_runtime_permission();
     PushNotification.configure({
@@ -61,14 +79,17 @@ export default class App extends Component{
         // notification.finish(PushNotificationIOS.FetchResult.NoData);
       }
     });
+    SplashScreen.hide();
   }
-
-  render() {
+  
+  render() {    
     return (
       <NavigationContainer>
         <RootStack.Navigator 
           headerMode ="none"
+          initialRouteName={init}
         > 
+
           <RootStack.Screen name="Main" 
             component={MainTabStack} 
             component={MyDrawerTap}

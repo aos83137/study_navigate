@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import  colors from '../styles/colors'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
 
 let {width, height} = Dimensions.get('window')
 
@@ -39,7 +40,14 @@ const Reservation = (props)=>{
         return days>1 ? days:1; 
     }
     
-    const payEnd=()=>{
+    const payEnd= async()=>{
+        try{
+            await AsyncStorage.setItem('status','endKeeper')
+            console.log('스테이터스 저장 완료');
+            
+        }catch(e){
+            console.error(e);
+        }
         Alert.alert(
                     //Header
                     '결제 감사합니다.',
@@ -64,10 +72,11 @@ const Reservation = (props)=>{
                     ]
                 );
     }
-    const deliveryEx=()=>{
-        Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
-    }
+    // const deliveryEx=()=>{
+    //     Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
+    // }
     const goDelivery = ()=>{
+
         props.navigation.navigate('DeliveryInfo');
     }
     const goDeliveryFindScreen = ()=>{
@@ -137,11 +146,11 @@ const Reservation = (props)=>{
         </View>;
         footer=
         <View>
-            <TouchableOpacity onPress={deliveryEx}>
+            {/* <TouchableOpacity onPress={deliveryEx}>
                 <Text style={{ borderBottomColor:1 }}>
                     배달을 이용하고 싶은 분께서는....Click!
                 </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             
             <View style={styles.paysCard}>
                 <View>

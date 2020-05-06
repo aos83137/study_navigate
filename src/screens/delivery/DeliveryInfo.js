@@ -6,6 +6,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import colors from '../../styles/colors'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
 
 const Delivery = (props)=>{
     const [load,setLoad] = useState(false);

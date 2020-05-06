@@ -3,7 +3,7 @@ import {View,Text, ScrollView, StyleSheet, TouchableHighlight} from 'react-nativ
 import colors from '../styles/colors'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-
+let value;
 export default class SettingsScreen extends Component{
     constructor(props) {
         super(props);
@@ -15,10 +15,10 @@ export default class SettingsScreen extends Component{
     }
     componentDidMount=async()=>{
         try{
-            const value = await AsyncStorage.getItem('userToken')
+            const value = await AsyncStorage.getItem('userToken');
             console.log(value);
             if(value){
-                this.setState({auth:true})    
+                this.setState({auth:true});
             }
         }catch(e){
 
@@ -26,8 +26,9 @@ export default class SettingsScreen extends Component{
     }
     UNSAFE_componentWillReceiveProps= async() =>{
         try{
-            const value = await AsyncStorage.getItem('userToken')
+            value = await AsyncStorage.getItem('userToken')
             console.log(value);
+
             if(value){
                 this.setState({auth:true})    
             }

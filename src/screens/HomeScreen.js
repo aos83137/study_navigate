@@ -55,7 +55,7 @@ export default class HomeScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            SplashScreen.hide();
+            // SplashScreen.hide();
             // this.watchLocation();
     }
 
