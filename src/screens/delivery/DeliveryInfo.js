@@ -18,7 +18,7 @@ const Delivery = (props)=>{
         setTimeout(()=>{
             setLoad(false);
             props.navigation.navigate('DeliveryFindScreen');
-        },1)
+        },2000)
     }
     const homeNavi=()=>{
         props.navigation.navigate('Main');
@@ -46,7 +46,7 @@ const Delivery = (props)=>{
             <LottieView style={styles.lottie} source={require('../../img/lottie/checkList3.json')} autoPlay loop={false}/>
             </View>
             <View style={styles.content}>
-                <Text style={styles.contentText}>
+                <Text style={styles.contentText2}>
                     딜리버리 서비스 이용하기
                 </Text>
                 <Text style={styles.contentText}>
@@ -55,12 +55,15 @@ const Delivery = (props)=>{
                 <Text style={styles.contentText}>
                     10분 내로 도착 할 수 있는 딜리버리를 부릅니다.
                 </Text>
-                <Text>(24시간 내 키퍼의 수락에 따라 예약이 취소 될 수가 있습니다.)</Text>
+                <Text style={styles.contentText3}>
+                    (24시간 내 키퍼의 수락에 따라 예약이 취소 될 수가 있습니다.)</Text>
             </View>
             <View style={styles.footer}>
                 {showActivity}
+                <View style={{justifyContent:'center', flexDirection:'row', }}>
                     <Button title="지금은 괜찮아요." type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={homeNavi}/>
                     <Button title="네. 사용할래요" type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={findDelivery}/>
+                </View>
             </View>
         </View>
     );
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
     elem:{
         flexDirection:'row',
         width:"100%",
-        // // alignItems:'center',
+        alignItems:'center',
         // justifyContent:'center'
     },
     lottie:{
@@ -105,14 +108,19 @@ const styles = StyleSheet.create({
         elevation: 7,
         backgroundColor:colors.white
     },
+    contentText2:{
+        fontSize:20,
+    },
     footer:{
-        flexDirection:'row',
         width:"100%",
         alignItems:'center',
-        justifyContent:'center'
     },
     contentText:{
         fontSize:16,
+    },  
+    contentText3:{
+        fontSize:12,
+        marginTop:10,
     },  
     headerTitle:{
         // width:'100%',

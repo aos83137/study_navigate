@@ -1,11 +1,12 @@
 import React , {Component} from 'react';
 import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlight} from 'react-native';
-
+import { Input  } from 'react-native-elements';
 import MapView, {Marker,PROVIDER_GOOGLE,Polyline ,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
 import {CurrentLocationButton} from '../../components/buttons/CurrentLocationButton';
 import {ShowDeliveryButton} from '../../components/buttons/ShowDeliveryButton';
 import {UserAndDeliveryCenterButton} from '../../components/buttons/UserAndDeliveryCenterButton';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default class DeliveryFindScreen extends Component{
     constructor(props){
@@ -16,8 +17,8 @@ export default class DeliveryFindScreen extends Component{
                 longitude: 128.6323,
             },
             delivery:{
-                latitude:35.8944, 
-                longitude: 128.6115
+                latitude:35.8928, 
+                longitude: 128.6226
             },
             error: null,
         };        
@@ -30,8 +31,8 @@ export default class DeliveryFindScreen extends Component{
                     let initialRegion = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.015,
-                        longitudeDelta: 0.015,
+                        latitudeDelta: 0.003,
+                        longitudeDelta: 0.003,
                     }
                     this.setState({
                         initialRegion,
@@ -91,8 +92,8 @@ export default class DeliveryFindScreen extends Component{
         this._map.animateToRegion({
             latitude,
             longitude,
-            latitudeDelta:0.015,
-            longitudeDelta:0.015
+            latitudeDelta:0.003,
+            longitudeDelta:0.003
         })
     }
     zoomOut(){
@@ -112,8 +113,8 @@ export default class DeliveryFindScreen extends Component{
         this._map.animateToRegion({
             latitude:zoomOutLat,
             longitude:zoomOutLon,
-            latitudeDelta:0.015,
-            longitudeDelta:0.015,
+            latitudeDelta:0.02,
+            longitudeDelta:0.02,
         })
     }
     center
@@ -122,6 +123,7 @@ export default class DeliveryFindScreen extends Component{
         
         return(
             <View style={styles.container}>
+
                 <CurrentLocationButton
                     cb={()=>{this.centerMap()}}
                 />
@@ -136,7 +138,7 @@ export default class DeliveryFindScreen extends Component{
                     style={styles.map}
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
-                    showsUserLocation={true}
+                    showsUserLocation={false}
                     showsMyLocationButton = {true}
                     showsCompass = {true}
                     rotateEnabled={false}
@@ -153,11 +155,12 @@ export default class DeliveryFindScreen extends Component{
                     </Marker>
                     <Marker
                         coordinate={this.state.delivery}
+                        image={require('../../img/carTop.png')}
                     ></Marker>
-                    <Polyline
+                    {/* <Polyline
                         coordinates={[
-                            { latitude:35.8944, longitude: 128.6115 },
-                            { latitude: 35.8975, longitude: 128.6151 },
+                            { latitude:35.8928, longitude: 128.6226 },
+                            { latitude: 35.8948, longitude: 128.6243 },
                             { latitude: 35.8933, longitude: 128.6201 },
                             { latitude: 35.8941, longitude: 128.6211 },
 
@@ -172,13 +175,15 @@ export default class DeliveryFindScreen extends Component{
                             '#7F0000'
                         ]}
                         strokeWidth={6}
-                    />
+                    /> */}
                 </MapView>
-                <View style = {styles.flat}>
-
-                </View>
-
+                <TouchableHighlight onPress={()=>{this.props.navigation.navigate('Main')}}>
+                    <View style = {styles.elem}>
+                        <Icon name='keyboard-arrow-left' size={24}/>
+                    </View>
+                </TouchableHighlight>
             </View>
+
         );
     } 
 }
@@ -186,8 +191,6 @@ export default class DeliveryFindScreen extends Component{
 const styles = StyleSheet.create({
     container:{
         flex : 1,
-        flexDirection:'column',
-        alignItems:"center"
     },
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -243,5 +246,8 @@ const styles = StyleSheet.create({
 
     },
     nextButton : {
+    },
+    flat:{
+        height:'30%',
     }
 });

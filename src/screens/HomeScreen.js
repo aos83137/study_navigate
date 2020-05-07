@@ -202,14 +202,7 @@ export default class HomeScreen extends Component{
                         }
                     }
                     onPress = {this.clickMapHiddenMenu}
-                >   
-                    <Circle
-                        center={{ latitude: 35.8943188,
-                            longitude:128.6238612, }}
-                        radius={100}
-                        fillColor={'rgba(100,100,200,0.5)'}
-                    />
-                    
+                >
                     {
                         this.state.coordinates.map((marker, index)=>(
                             <Marker

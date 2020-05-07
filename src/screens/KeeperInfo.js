@@ -43,7 +43,7 @@ const KeeperInfo = (props)=>{
                                     <Text>★★★★★ 5.0</Text>
                                 </View>
                             </View>
-                            <Text style={styles.titleFont}>영진 편집샵(6층)</Text>
+                            <Text style={styles.titleFont}>맘스터치 일본취업반 점</Text>
                         </View>
                         <View style={styles.cardView}>
                             <Text>보관 가능한 시간</Text>
@@ -61,10 +61,10 @@ const KeeperInfo = (props)=>{
                                 </View>
                                 <View>
                                     <Text>
-                                        가방 사이즈 x 20
+                                        가방 사이즈 x {bagCnt?bagCnt:0}
                                     </Text>
                                     <Text>
-                                        슈트케이스의 사이즈 x 20
+                                        슈트케이스의 사이즈 x {carrCnt?carrCnt:0}
                                     </Text>
                                 </View>
                             </View>
