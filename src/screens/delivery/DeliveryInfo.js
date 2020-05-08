@@ -43,7 +43,7 @@ const Delivery = (props)=>{
             </View>
             <View style = {styles.lottieView}>
             <Text style={styles.headerTitle}>예약 접수가 완료 되었습니다.</Text>
-            <LottieView style={styles.lottie} source={require('../../img/lottie/checkList3.json')} autoPlay loop={false}/>
+            <LottieView style={styles.lottie} source={require('../../img/lottie/checkList3.json')} autoPlay loop/>
             </View>
             <View style={styles.content}>
                 <Text style={styles.contentText2}>
@@ -51,6 +51,9 @@ const Delivery = (props)=>{
                 </Text>
                 <Text style={styles.contentText}>
                     고객님의 짐을 가게까지 배달해 주는 서비스입니다.
+                </Text>
+                <Text style={styles.contentText}>
+                    경로는 현재 위치에서 키퍼까지 자동 설정되며
                 </Text>
                 <Text style={styles.contentText}>
                     10분 내로 도착 할 수 있는 딜리버리를 부릅니다.

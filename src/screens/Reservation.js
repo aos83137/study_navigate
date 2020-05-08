@@ -52,11 +52,12 @@ const Reservation = (props)=>{
                     //Header
                     '결제 감사합니다.',
                     //title
-                    '딜리버리를 이용하시려면 다음을 눌러주세요.',
+                    '딜리버리를 이용하시겠습니까?.\n'+
+                    '현재가 아니라도 나중에 사용 가능합니다.',
                     //footer button
                     [
                         {
-                            text:'이용 안함',
+                            text:'지금은 괜찮아요.',
                             style: 'cancel',
                             onPress:()=>{
                                 //딜리버리 스테이트를 바꿔야함
@@ -64,7 +65,7 @@ const Reservation = (props)=>{
                             }
                         },
                         {
-                            text:'다음',
+                            text:'네. 사용할래요.',
                             onPress: ()=>{
                                 props.navigation.navigate('DeliveryInfo');
                             }
@@ -80,7 +81,7 @@ const Reservation = (props)=>{
         props.navigation.navigate('DeliveryInfo');
     }
     const goDeliveryFindScreen = ()=>{
-        props.navigation.navigate('DeliveryFindScreen');
+        props.navigation.navigate('DeliveryRealtime');
     }
     let imageCard;
     let headerText;
@@ -238,7 +239,6 @@ const Reservation = (props)=>{
             <View>                
                 <View style={styles.paysCard}>
                         <Text>딜리버리의 위치를 확인 할 수 있습니다.</Text>    
-                        <Text>2</Text>
                         <Button
                             buttonStyle={{backgroundColor:colors.green01}} title="딜리버리 확인" 
                             onPress={goDeliveryFindScreen}

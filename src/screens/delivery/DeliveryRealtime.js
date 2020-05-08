@@ -1,11 +1,14 @@
 import React , {Component} from 'react';
 import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlight} from 'react-native';
-
+import { Input,Avatar  } from 'react-native-elements';
 import MapView, {Marker,PROVIDER_GOOGLE,Polyline ,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
 import {CurrentLocationButton} from '../../components/buttons/CurrentLocationButton';
 import {ShowDeliveryButton} from '../../components/buttons/ShowDeliveryButton';
 import {UserAndDeliveryCenterButton} from '../../components/buttons/UserAndDeliveryCenterButton';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+import colors from '../../styles/colors';
 
 export default class DeliveryFindScreen extends Component{
     constructor(props){
@@ -16,8 +19,8 @@ export default class DeliveryFindScreen extends Component{
                 longitude: 128.6323,
             },
             delivery:{
-                latitude:35.8944, 
-                longitude: 128.6115
+                latitude:35.8951, 
+                longitude: 128.6237
             },
             error: null,
         };        
@@ -30,8 +33,8 @@ export default class DeliveryFindScreen extends Component{
                     let initialRegion = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.015,
-                        longitudeDelta: 0.015,
+                        latitudeDelta: 0.003,
+                        longitudeDelta: 0.003,
                     }
                     this.setState({
                         initialRegion,
@@ -47,30 +50,33 @@ export default class DeliveryFindScreen extends Component{
                 //정확도, 타임아웃, 최대 연령
             );
 
-            // this.watchID = Geolocation.watchPosition((lastPosition) => {
-            //     var { distanceTotal, record } = this.state;
-            //     this.setState({lastPosition});
-            //     if(record) {
-            //         var newLatLng = {latitude:lastPosition.coords.latitude, longitude: lastPosition.coords.longitude};
-     
-            //         this.setState({ track: this.state.track.concat([newLatLng]) });
-            //         this.setState({ distanceTotal: (distanceTotal + this.calcDistance(newLatLng)) });
-            //         this.setState({ prevLatLng: newLatLng });
-            //     }
-            // },
-            // (error) => alert(JSON.stringify(error)),
-            // {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+            fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
+                +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.storeRegion.longitude+','+this.state.storeRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+                method:"get",
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                },
+            }).then((res)=>res.json())
+            .then((resJson)=>{
+                let coords = resJson.routes[0].geometry.coordinates.map(item => {
+                    return { latitude: item[1], longitude: item[0] };
+                  });
+                console.log(coords);
+                this.setState({
+                    coords
+                })
+            })
+            .catch((e)=>{
+                console.error(e);
+            });
     }
-    static getDerivedStateFromProps(props, state) {
-        // Store prevId in state so we can compare when props change.
-        // Clear out previously-loaded data (so we don't render stale stuff).
-        if (props.id !== state.prevId) {
-          return console.log('update');
-          ;
-        }
-        // No state update necessary
-        return null;
-      }
+    deleteToken=async()=>{
+        await AsyncStorage.setItem('status','endDelivery');
+        const value = await AsyncStorage.getItem('status');
+        console.log(value);
+        
+    }
     centerMap(){
         const {
             latitude, 
@@ -91,8 +97,8 @@ export default class DeliveryFindScreen extends Component{
         this._map.animateToRegion({
             latitude,
             longitude,
-            latitudeDelta:0.015,
-            longitudeDelta:0.015
+            latitudeDelta:0.003,
+            longitudeDelta:0.003
         })
     }
     zoomOut(){
@@ -112,16 +118,32 @@ export default class DeliveryFindScreen extends Component{
         this._map.animateToRegion({
             latitude:zoomOutLat,
             longitude:zoomOutLon,
-            latitudeDelta:0.015,
-            longitudeDelta:0.015,
+            latitudeDelta:0.02,
+            longitudeDelta:0.02,
         })
     }
-    center
+    
     render(){     
-        console.log('1'+this.state.initialRegion);
+        
+        console.log(''+this.state.coords);
         
         return(
             <View style={styles.container}>
+                <View style={styles.rootMenu}>
+                    <Text>실시간 위치 확인</Text>
+                    <View style={styles.elem}>
+                        <Avatar
+                            rounded
+                            title="DV"
+                            size="large"
+                        />
+                        <View style={styles.deliveryInfoText}>
+                            <Text>딜리버리 성함</Text>
+                            <Text>대구11사1234 | 아반떼cn7</Text>
+                        </View>
+                    </View>
+                    
+                </View>
                 <CurrentLocationButton
                     cb={()=>{this.centerMap()}}
                 />
@@ -136,49 +158,45 @@ export default class DeliveryFindScreen extends Component{
                     style={styles.map}
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
-                    showsUserLocation={true}
+                    showsUserLocation={false}
                     showsMyLocationButton = {true}
                     showsCompass = {true}
                     rotateEnabled={false}
                 >   
-                    {this.state.initialRegion&&
-                        <Marker
-                            coordinate={this.state.initialRegion}
-                        >
-                        </Marker>
-                    }
                     <Marker
                         coordinate={this.state.storeRegion}
+                        image={require('../../img/signs.png')}
+                        title={'Keeper'}
                     >
                     </Marker>
                     <Marker
                         coordinate={this.state.delivery}
+                        image={require('../../img/location.png')}
+                        ref={ref=>this.state.marker=ref}
+                        title={'Delivery'}
                     ></Marker>
-                    <Polyline
-                        coordinates={[
-                            { latitude:35.8944, longitude: 128.6115 },
-                            { latitude: 35.8975, longitude: 128.6151 },
-                            { latitude: 35.8933, longitude: 128.6201 },
-                            { latitude: 35.8941, longitude: 128.6211 },
-
-                        ]}
-                        strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-                        strokeColors={[
-                            '#7F0000',
-                            '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
-                            '#B24112',
-                            '#E5845C',
-                            '#238C23',
-                            '#7F0000'
-                        ]}
-                        strokeWidth={6}
-                    />
+                    {
+                        this.state.coords?
+                        <Polyline
+                            coordinates={this.state.coords}
+                            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+                            strokeWidth={6}
+                        />:null
+                    }
+                    
                 </MapView>
-                <View style = {styles.flat}>
-
-                </View>
-
+                <TouchableHighlight 
+                    onPress={()=>{
+                        this.deleteToken()
+                        this.props.navigation.navigate('Main');
+                    }
+                }>
+                    <View style = {styles.elem}>
+                        <Icon name='keyboard-arrow-left' size={24}/>
+                    </View>
+                </TouchableHighlight>
             </View>
+
         );
     } 
 }
@@ -186,8 +204,6 @@ export default class DeliveryFindScreen extends Component{
 const styles = StyleSheet.create({
     container:{
         flex : 1,
-        flexDirection:'column',
-        alignItems:"center"
     },
     map: {
         ...StyleSheet.absoluteFillObject,
@@ -243,5 +259,30 @@ const styles = StyleSheet.create({
 
     },
     nextButton : {
+    },
+    flat:{
+        height:'30%',
+    },
+    rootMenu:{
+        position:'absolute',
+        zIndex:9,
+        width:'100%',
+        margin:10,
+        padding:10,
+        backgroundColor:colors.white,
+        marginHorizontal: 10,
+        shadowColor:'#000000',
+        shadowOpacity: 1.0,
+        shadowRadius:5,
+        elevation: 7,
+        alignItems:"center",
+    },
+    elem:{
+        flexDirection:'row',
+        width:"100%",
+        alignItems:'center',
+    },
+    deliveryInfoText:{
+        marginLeft:20,
     }
 });

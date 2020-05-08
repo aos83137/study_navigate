@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import { PermissionsAndroid, Button, View, Text,TextInput, Alert } from 'react-native';
+import { PermissionsAndroid, Button, View, Text,TextInput, Alert,ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 // import { Ionicons } from '@expo/vector-icons';
@@ -17,11 +17,12 @@ import DeliveryFindScreen from './src/screens/delivery/DeliveryFindScreen';
 import LogIn  from './src/screens/LogIn';
 import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from 'react-native-splash-screen';
+import DeliveryRealtime from './src/screens/delivery/DeliveryRealtime';
 
-
-let init = "Main";
 
 export async function request_location_runtime_permission() {
+  // 옐로우 박스 지울때 밑에꺼 주석풀기
+  // console.disableYellowBox = true;
   try {
     const granted = await PermissionsAndroid.request(
       //이게 위치권한 부여하는 거임
@@ -40,6 +41,8 @@ export async function request_location_runtime_permission() {
       // Alert.alert("Location Permission Not Granted");
 
     }
+
+
   } catch (err) {
     console.warn(err)
   }
@@ -47,25 +50,18 @@ export async function request_location_runtime_permission() {
 
 
 
-
 const RootStack = createStackNavigator();
+let init = "Main";
 
 export default class App extends Component{
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      isLoading:true,
+    };
     this.status=null;
   }
-  UNSAFE_componentWillMount =()=>{
-    try{
-      this.status = AsyncStorage.getItem('status');
-    }catch(e){
-      console.error(e); 
-    }
-    if(this.status){
-      init = "DeliveryInfo"
-    }
-  }
+
   async componentDidMount() {
     await request_location_runtime_permission();
     PushNotification.configure({
@@ -79,31 +75,49 @@ export default class App extends Component{
         // notification.finish(PushNotificationIOS.FetchResult.NoData);
       }
     });
+    let status =await AsyncStorage.getItem('status');
+    console.log('this.status 확인 : ');
+    console.log(status);
+    if(status=='endKeeper'){
+      init = "DeliveryInfo"
+    }
+    this.setState({
+      isLoading:false
+    })
     SplashScreen.hide();
   }
   
-  render() {    
-    return (
-      <NavigationContainer>
-        <RootStack.Navigator 
-          headerMode ="none"
-          initialRouteName={init}
-        > 
-
-          <RootStack.Screen name="Main" 
-            component={MainTabStack} 
-            component={MyDrawerTap}
-          />
-          <RootStack.Screen name="PlacesAutoComplete" component={PlacesAutoComplete} />
-          <RootStack.Screen name="DateSetting" component={DateSetting}/>
-          <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
-          <RootStack.Screen name="Reservation" component={Reservation}/>
-          <RootStack.Screen name="DeliveryInfo" component={DeliveryInfo}/>
-          <RootStack.Screen name="DeliveryFindScreen" component={DeliveryFindScreen}/>
-          <RootStack.Screen name="LogIn" component={LogIn}/>
-        </RootStack.Navigator>
-      </NavigationContainer>
-    );
+  render() {
+    if(this.state.isLoading){
+      return(
+        <View style={{ flex:1, paddingTop:20}}>
+            <ActivityIndicator/>
+        </View>
+      )
+    }    
+    else{
+      return (
+        <NavigationContainer>
+          <RootStack.Navigator 
+            headerMode ="none"
+            initialRouteName={init}
+          > 
+  
+            <RootStack.Screen name="Main" 
+              component={MainTabStack} 
+              component={MyDrawerTap}
+            />
+            <RootStack.Screen name="PlacesAutoComplete" component={PlacesAutoComplete} />
+            <RootStack.Screen name="DateSetting" component={DateSetting}/>
+            <RootStack.Screen name="KeeperInfo" component={KeeperInfo}/>
+            <RootStack.Screen name="Reservation" component={Reservation}/>
+            <RootStack.Screen name="DeliveryInfo" component={DeliveryInfo}/>
+            <RootStack.Screen name="DeliveryFindScreen" component={DeliveryFindScreen}/>
+            <RootStack.Screen name="LogIn" component={LogIn}/>
+            <RootStack.Screen name="DeliveryRealtime" component={DeliveryRealtime}/>
+          </RootStack.Navigator>
+        </NavigationContainer>
+      );
+    }
   }
 }
-

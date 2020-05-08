@@ -1,12 +1,14 @@
 import React , {Component} from 'react';
 import {Text ,View, StyleSheet, Image, Alert, Dimensions,Button,TouchableHighlight} from 'react-native';
-import { Input  } from 'react-native-elements';
+import { Input,Avatar  } from 'react-native-elements';
 import MapView, {Marker,PROVIDER_GOOGLE,Polyline ,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import Geolocation from 'react-native-geolocation-service';
 import {CurrentLocationButton} from '../../components/buttons/CurrentLocationButton';
 import {ShowDeliveryButton} from '../../components/buttons/ShowDeliveryButton';
 import {UserAndDeliveryCenterButton} from '../../components/buttons/UserAndDeliveryCenterButton';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-community/async-storage';
+import colors from '../../styles/colors';
 
 export default class DeliveryFindScreen extends Component{
     constructor(props){
@@ -34,6 +36,31 @@ export default class DeliveryFindScreen extends Component{
                         latitudeDelta: 0.003,
                         longitudeDelta: 0.003,
                     }
+
+
+                    fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
+                        +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+initialRegion.longitude+','+initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+                        method:"get",
+                        headers:{
+                            'Accept':'application/json',
+                            'Content-Type':'application/json',
+                        },
+                    }).then((res)=>res.json())
+                    .then((resJson)=>{
+                        let coords = resJson.routes[0].geometry.coordinates.map(item => {
+                            return { latitude: item[1], longitude: item[0] };
+                        });
+                        console.log(coords);
+                        this.setState({
+                            coords
+                        })
+                    })
+                    .catch((e)=>{
+                        console.error(e);
+                    });
+
+
+
                     this.setState({
                         initialRegion,
                         error: null,
@@ -48,30 +75,35 @@ export default class DeliveryFindScreen extends Component{
                 //정확도, 타임아웃, 최대 연령
             );
 
-            // this.watchID = Geolocation.watchPosition((lastPosition) => {
-            //     var { distanceTotal, record } = this.state;
-            //     this.setState({lastPosition});
-            //     if(record) {
-            //         var newLatLng = {latitude:lastPosition.coords.latitude, longitude: lastPosition.coords.longitude};
-     
-            //         this.setState({ track: this.state.track.concat([newLatLng]) });
-            //         this.setState({ distanceTotal: (distanceTotal + this.calcDistance(newLatLng)) });
-            //         this.setState({ prevLatLng: newLatLng });
-            //     }
-            // },
-            // (error) => alert(JSON.stringify(error)),
-            // {enableHighAccuracy: true, timeout: 15000, maximumAge: 0});
+            if(this.state.initialRegion){
+                fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
+                    +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.initialRegion.longitude+','+this.state.initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+                    method:"get",
+                    headers:{
+                        'Accept':'application/json',
+                        'Content-Type':'application/json',
+                    },
+                }).then((res)=>res.json())
+                .then((resJson)=>{
+                    let coords = resJson.routes[0].geometry.coordinates.map(item => {
+                        return { latitude: item[1], longitude: item[0] };
+                    });
+                    console.log(coords);
+                    this.setState({
+                        coords
+                    })
+                })
+                .catch((e)=>{
+                    console.error(e);
+                });
+            }
     }
-    static getDerivedStateFromProps(props, state) {
-        // Store prevId in state so we can compare when props change.
-        // Clear out previously-loaded data (so we don't render stale stuff).
-        if (props.id !== state.prevId) {
-          return console.log('update');
-          ;
-        }
-        // No state update necessary
-        return null;
-      }
+    deleteToken=async()=>{
+        await AsyncStorage.setItem('status','endDelivery');
+        const value = await AsyncStorage.getItem('status');
+        console.log(value);
+        
+    }
     centerMap(){
         const {
             latitude, 
@@ -117,13 +149,26 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta:0.02,
         })
     }
-    center
-    render(){     
-        console.log('1'+this.state.initialRegion);
-        
+    
+    render(){             
         return(
             <View style={styles.container}>
-
+                <View style={styles.rootMenu}>
+                    <Text>딜리버리를 찾았습니다.</Text>
+                    <View style={styles.elem}>
+                        <Avatar
+                            rounded
+                            title="DV"
+                            size="large"
+                        />
+                        <View style={styles.deliveryInfoText}>
+                            <Text>딜리버리 성함</Text>
+                            <Text>대구11사1234 | 아반떼cn7</Text>
+                            <Text>약 5분 후 도착합니다.</Text>
+                        </View>
+                    </View>
+                    
+                </View>
                 <CurrentLocationButton
                     cb={()=>{this.centerMap()}}
                 />
@@ -146,26 +191,26 @@ export default class DeliveryFindScreen extends Component{
                     {this.state.initialRegion&&
                         <Marker
                             coordinate={this.state.initialRegion}
+                            image={require('../../img/signs.png')}
                         >
                         </Marker>
                     }
                     <Marker
                         coordinate={this.state.storeRegion}
+                        image={require('../../img/signs.png')}
+                        title={'Keeper'}
                     >
                     </Marker>
                     <Marker
                         coordinate={this.state.delivery}
-                        image={require('../../img/carTop.png')}
+                        image={require('../../img/location.png')}
+                        title={'Delivery'}
                     ></Marker>
-                    {/* <Polyline
-                        coordinates={[
-                            { latitude:35.8928, longitude: 128.6226 },
-                            { latitude: 35.8948, longitude: 128.6243 },
-                            { latitude: 35.8933, longitude: 128.6201 },
-                            { latitude: 35.8941, longitude: 128.6211 },
-
-                        ]}
-                        strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+                    {   
+                        this.state.coords?
+                        <Polyline
+                        coordinates={this.state.coords}
+                        // strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
                         strokeColors={[
                             '#7F0000',
                             '#00000000', // no color, creates a "long" gradient between the previous and next coordinate
@@ -175,9 +220,28 @@ export default class DeliveryFindScreen extends Component{
                             '#7F0000'
                         ]}
                         strokeWidth={6}
-                    /> */}
+                      />:null
+                    }
                 </MapView>
-                <TouchableHighlight onPress={()=>{this.props.navigation.navigate('Main')}}>
+                <TouchableHighlight 
+                    onPress={()=>{
+                        Alert.alert(
+                            //header
+                            '인계 완료했습니다.',
+                            // title
+                            '현황탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
+                            [
+                                {
+                                    text:'홈으로...',
+                                    onPress:()=>{
+                                        this.props.navigation.navigate('Main');
+                                    }
+                                },
+                            ]
+                        )
+                        this.deleteToken()
+                    }
+                }>
                     <View style = {styles.elem}>
                         <Icon name='keyboard-arrow-left' size={24}/>
                     </View>
@@ -249,5 +313,27 @@ const styles = StyleSheet.create({
     },
     flat:{
         height:'30%',
+    },
+    rootMenu:{
+        position:'absolute',
+        zIndex:9,
+        width:'100%',
+        margin:10,
+        padding:10,
+        backgroundColor:colors.white,
+        marginHorizontal: 10,
+        shadowColor:'#000000',
+        shadowOpacity: 1.0,
+        shadowRadius:5,
+        elevation: 7,
+        alignItems:"center",
+    },
+    elem:{
+        flexDirection:'row',
+        width:"100%",
+        alignItems:'center',
+    },
+    deliveryInfoText:{
+        marginLeft:20,
     }
 });

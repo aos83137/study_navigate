@@ -36,8 +36,8 @@ export default class HomeScreen extends Component{
                     let initialRegion = {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.045,
-                        longitudeDelta: 0.045,
+                        latitudeDelta: 0.0084,
+                        longitudeDelta: 0.0084,
                     }
 
                     this.setState({
@@ -55,7 +55,7 @@ export default class HomeScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            // SplashScreen.hide();
+            SplashScreen.hide();
             // this.watchLocation();
     }
 
@@ -122,8 +122,8 @@ export default class HomeScreen extends Component{
         this._map.animateToRegion({
             latitude: location.latitude,
             longitude: location.longitude,
-            latitudeDelta: 0.0115,
-            longitudeDelta: 0.0121,
+            latitudeDelta: 0.0084,
+            longitudeDelta: 0.0084,
         });
 
         //showCallout() : 이 마커의 문구를 표시합니다
@@ -211,6 +211,7 @@ export default class HomeScreen extends Component{
                             title={marker.name}
                             ref={ref=> this.state.markers[index] = ref}
                             onPress = {() => this.onMarkerPressed(marker, index)}
+                            image={require('../img/tool.png')}
                             >
                                 
                             </Marker>

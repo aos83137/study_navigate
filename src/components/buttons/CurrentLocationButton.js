@@ -19,8 +19,8 @@ export const CurrentLocationButton = function(props){
 
     return(
         <View style={[styles.container , {top: HEIGHT - bottom}]}>
-            <Icon2 
-                name = 'user'
+            <Icon 
+                name = 'store'
                 color = "#000000"
                 size = {25}
                 onPress={()=>{
