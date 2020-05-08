@@ -80,14 +80,12 @@ export default class DeliveryFindScreen extends Component{
     centerMap(){
         const {
             latitude, 
-            longitude, 
-            latitudeDelta, 
-            longitudeDelta} = this.state.initialRegion
+            longitude} = this.state.storeRegion
         this._map.animateToRegion({
             latitude,
             longitude,
-            latitudeDelta,
-            longitudeDelta
+            latitudeDelta:0.03,
+            longitudeDelta:0.03
         })
     }
     goDelivery(){
@@ -140,6 +138,7 @@ export default class DeliveryFindScreen extends Component{
                         <View style={styles.deliveryInfoText}>
                             <Text>딜리버리 성함</Text>
                             <Text>대구11사1234 | 아반떼cn7</Text>
+                            <Text>약 5분 후 도착합니다.</Text>
                         </View>
                     </View>
                     

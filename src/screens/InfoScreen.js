@@ -64,6 +64,42 @@ const DATA = [
         img:'../img/img2.png'
 
     },
+    {
+        id: '5',
+        title: '캡스톤 대신해드립니다',
+        date:'2020-03-14 ~ 2020-03-15',
+        state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
+        img:'../img/img2.png'
+
+    },
+    {
+        id: '6',
+        title: '캡스톤 대신해드립니다',
+        date:'2020-03-14 ~ 2020-03-15',
+        state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
+        img:'../img/img2.png'
+
+    },
+    {
+        id: '7',
+        title: '캡스톤 대신해드립니다',
+        date:'2020-03-14 ~ 2020-03-15',
+        state:'종료',
+        carrCnt:1,
+        bagCnt:1,
+        checkIn:new Date(),
+        checkOut:new Date(),
+        img:'../img/img2.png'
+
+    },
 ];
 const Action_Click=(data,props)=> {
     props.navigation.navigate('Reservation',{
@@ -114,6 +150,7 @@ const InfoScreen = (props)=>{
 const styles = StyleSheet.create({
     container:{
         flex:1,
+        // backgroundColor:'white'
     },
     item:{
         backgroundColor: colors.white,

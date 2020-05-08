@@ -52,12 +52,11 @@ const Reservation = (props)=>{
                     //Header
                     '결제 감사합니다.',
                     //title
-                    '딜리버리를 이용하시겠습니까?.\n'+
-                    '현재가 아니라도 나중에 사용 가능합니다.',
+                    '예약이 완료 되었습니다.',
                     //footer button
                     [
                         {
-                            text:'지금은 괜찮아요.',
+                            text:'당일에 사용할께요.',
                             style: 'cancel',
                             onPress:()=>{
                                 //딜리버리 스테이트를 바꿔야함
@@ -67,7 +66,7 @@ const Reservation = (props)=>{
                         {
                             text:'네. 사용할래요.',
                             onPress: ()=>{
-                                props.navigation.navigate('DeliveryInfo');
+                                props.navigation.push('DeliveryInfo');
                             }
                         }
                     ]

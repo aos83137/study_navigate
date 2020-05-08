@@ -87,7 +87,6 @@ export default class Ubertest extends Component{
 
     componentWillUnmount=()=>{
         console.log('마운트 해제');
-        
     }
 
     getMapRegion = () => ({

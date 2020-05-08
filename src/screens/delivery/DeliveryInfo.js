@@ -14,14 +14,13 @@ const Delivery = (props)=>{
 
     const findDelivery=()=>{
         setLoad(true);    
-        console.log('test');
         setTimeout(()=>{
             setLoad(false);
             props.navigation.navigate('DeliveryFindScreen');
         },2000)
     }
     const homeNavi=()=>{
-        props.navigation.navigate('Main');
+        props.navigation.navigate('Main',{ screen: 'InfoScreen' });
     }
     let showActivity;
     if (load){
@@ -35,10 +34,9 @@ const Delivery = (props)=>{
         <View style={styles.container}>
             <View style ={styles.header}>
                 <TouchableHighlight onPress={()=>{props.navigation.navigate('Main')}}>
-                    <View style = {styles.elem}>
+                    <View>
                         <Icon name='keyboard-arrow-left' size={24}/>
                     </View>
-
                 </TouchableHighlight>
             </View>
             <View style = {styles.lottieView}>
@@ -64,8 +62,8 @@ const Delivery = (props)=>{
             <View style={styles.footer}>
                 {showActivity}
                 <View style={{justifyContent:'center', flexDirection:'row', }}>
-                    <Button title="지금은 괜찮아요." type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={homeNavi}/>
-                    <Button title="네. 사용할래요" type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={findDelivery}/>
+                    <Button title="당일에 사용할께요." type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={homeNavi}/>
+                    <Button title="네. 지금 사용할께요" type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={findDelivery}/>
                 </View>
             </View>
         </View>
@@ -83,8 +81,7 @@ const styles = StyleSheet.create({
     elem:{
         flexDirection:'row',
         width:"100%",
-        alignItems:'center',
-        // justifyContent:'center'
+        justifyContent:'center'
     },
     lottie:{
         // width:200,
