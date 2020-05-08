@@ -11,7 +11,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome';
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
-export const storeButton = function(props){
+export const StoreButton = function(props){
     const cb = props.cb ? props.cb :()=> console.log('Callback function not passed to CurrnetLocatioinButton!');
 
     // console.log(props.bottom);

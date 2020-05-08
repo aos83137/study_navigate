@@ -26,8 +26,8 @@ const Delivery = (props)=>{
     if (load){
         showActivity=
         <View style = {styles.elem}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text>딜리버리를 찾는 중 입니다....</Text>
+            <LottieView style={styles.lottie2} source={require('../../img/lottie/loading1.json')} autoPlay loop/>
+            <Text style={styles.searchText}>딜리버리를 찾는 중 입니다....</Text>
         </View>
     }
     return(
@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
         // width:200,
         // height:"100%",
         
+    },
+    lottie2:{
+        width:32
     }
     ,
     lottieView:{
@@ -110,6 +113,9 @@ const styles = StyleSheet.create({
     },
     contentText2:{
         fontSize:20,
+    },
+    searchText:{
+        fontSize:16,
     },
     footer:{
         width:"100%",

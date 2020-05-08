@@ -162,9 +162,9 @@ export default class DeliveryFindScreen extends Component{
                             size="large"
                         />
                         <View style={styles.deliveryInfoText}>
-                            <Text>딜리버리 성함</Text>
-                            <Text>대구11사1234 | 아반떼cn7</Text>
-                            <Text>약 5분 후 도착합니다.</Text>
+                            <Text style={styles.dName}>딜리버리 성함</Text>
+                            <Text style={styles.dCar}>대구11사1234 | 아반떼cn7</Text>
+                            <Text style={ styles.dTime }>약 5분 후 도착합니다.</Text>
                         </View>
                     </View>
                     
@@ -229,7 +229,7 @@ export default class DeliveryFindScreen extends Component{
                             //header
                             '인계 완료했습니다.',
                             // title
-                            '현황탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
+                            'Info탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
                             [
                                 {
                                     text:'홈으로...',
@@ -317,9 +317,9 @@ const styles = StyleSheet.create({
     rootMenu:{
         position:'absolute',
         zIndex:9,
-        width:'100%',
-        margin:10,
-        padding:10,
+        width:'95%',
+        margin:'2.5%',
+        padding:15,
         backgroundColor:colors.white,
         marginHorizontal: 10,
         shadowColor:'#000000',

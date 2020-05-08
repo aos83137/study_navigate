@@ -106,6 +106,10 @@ const LinkDBTest = (props)=>{
                 phone_number
             })
         }
+        console.log('test');
+        
+        console.log(dataSource[0]);
+        
         return(
             <View style={styles.containerDataUsers}>
                 <FlatList

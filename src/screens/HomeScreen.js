@@ -8,9 +8,13 @@ import {SearchMenu} from '../components/menu/SearchMenu';
 import {CurrentLocationButton} from '../components/buttons/CurrentLocationButton';
 import SplashScreen from 'react-native-splash-screen';
 
+const URI = 'https://my-project-9710670624.df.r.appspot.com'
 export default class HomeScreen extends Component{
+    
+
     constructor(props){
         super(props);
+        let keeper;
         this.state = {
             error: null,
             coordinates:[
@@ -45,7 +49,6 @@ export default class HomeScreen extends Component{
                         error: null,
                     });
                     console.log(JSON.stringify(position));
-                    
                 },
                 (error) => {
                     // See error code charts below.
@@ -55,6 +58,28 @@ export default class HomeScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
+
+
+            fetch(URI+'/kstoreinfos',{
+                method:"get",
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                },
+            })
+            .then((response)=>response.json())
+            .then((responseJson)=>{         
+                // let keeper = responseJson.map(item=>{
+                //     return {name.}
+                // });   
+                // console.log(keeper[0]);
+                this.setState({
+                    keeper:responseJson
+                })
+                // this.setState(responseJson);           
+            }).catch((error)=>{
+                console.error(error);
+            });
             SplashScreen.hide();
             // this.watchLocation();
     }
@@ -116,12 +141,12 @@ export default class HomeScreen extends Component{
     // }
     //onSnapToItem의 콜백함수로 쓸 함수임
     onCarouselItemChange = (index) =>{
-        let location = this.state.coordinates[index];
+        let location = this.state.keeper[index];
         
         //Region이동
         this._map.animateToRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location.keeper_store_latitude,
+            longitude: location.keeper_store_longtitude,
             latitudeDelta: 0.0084,
             longitudeDelta: 0.0084,
         });
@@ -133,8 +158,8 @@ export default class HomeScreen extends Component{
     //marker눌렀을 때 이벤트
     onMarkerPressed = (location, index) => {
         this._map.animateToRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: location.keeper_store_latitude,
+            longitude: location.keeper_store_longtitude,
             latitudeDelta: 0.0115,
             longitudeDelta: 0.0121,
         })
@@ -173,8 +198,6 @@ export default class HomeScreen extends Component{
         const carrCnt = this.props.route.params?.carrCnt
         const inputData = this.props.route.params?.inputData ? this.props.route.params?.inputData.description : '검색';
         
-        // console.log('render할때 값 : '+JSON.stringify(this.state.initialRegion));
-        
         return(
             <View style={styles.container}>
                 <CurrentLocationButton
@@ -186,36 +209,35 @@ export default class HomeScreen extends Component{
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
-                    onUserLocationChange={
-                        coordinate=>{
-                            // console.log('test');
-                            // console.log(coordinate.nativeEvent.coordinate.latitude);
-                            const {latitude,longitude}= coordinate.nativeEvent.coordinate
-                            this.setState({
-                                initialRegion:{
-                                    latitude,
-                                    longitude,
-                                    latitudeDelta: 0.045,
-                                    longitudeDelta: 0.045,
-                                }
-                            });
-                        }
-                    }
+                    // onUserLocationChange={
+                    //     coordinate=>{
+                    //         // console.log('test');
+                    //         // console.log(coordinate.nativeEvent.coordinate.latitude);
+                    //         const {latitude,longitude}= coordinate.nativeEvent.coordinate
+                    //         this.setState({
+                    //             initialRegion:{
+                    //                 latitude,
+                    //                 longitude,
+                    //                 latitudeDelta: 0.045,
+                    //                 longitudeDelta: 0.045,
+                    //             }
+                    //         });
+                    //     }
+                    // }
                     onPress = {this.clickMapHiddenMenu}
                 >
-                    {
-                        this.state.coordinates.map((marker, index)=>(
+                    {this.state.keeper?
+                        this.state.keeper.map((marker, index)=>(                            
                             <Marker
-                            key={marker.name}
-                            coordinate={{latitude:marker.latitude, longitude:marker.longitude}}
-                            title={marker.name}
+                            key={marker.keeper_store_name}
+                            coordinate={{latitude:marker.keeper_store_latitude, longitude:marker.keeper_store_longtitude}}
+                            title={marker.keeper_store_name}
                             ref={ref=> this.state.markers[index] = ref}
                             onPress = {() => this.onMarkerPressed(marker, index)}
                             image={require('../img/tool.png')}
                             >
-                                
                             </Marker>
-                        ))
+                        )):null
                     }
                 </MapView>
 
