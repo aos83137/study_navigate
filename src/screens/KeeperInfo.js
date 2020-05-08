@@ -1,12 +1,15 @@
 import React , {Component,useState, useEffect } from 'react';
-import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, TouchableHighlight} from 'react-native';
+import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import  colors from '../styles/colors'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { log } from 'react-native-reanimated';
 
 let {width, height} = Dimensions.get('window')
+
+const URI = 'https://my-project-9710670624.df.r.appspot.com'
 
 //props 안에 navigation, route가  들어가있음 {navigation, route} 이렇게 써도 되고 props.navigatio으로 써도됨
 const KeeperInfo = (props)=>{   
@@ -14,16 +17,45 @@ const KeeperInfo = (props)=>{
     const checkOut = props.route.params?.checkOut
     const bagCnt = props.route.params?.bagCnt
     const carrCnt = props.route.params?.carrCnt
+    const keeper_id = props.route.params?.keeper
+    const [keeper,setKeeper] = useState({});
+    const [isLoding, setIsLoding] = useState(true);
 
+    useEffect(()=>{
+        fetch(URI+'/kstoreinfos',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        })
+        .then((response)=>response.json())
+        .then((responseJson)=>{   
+            setIsLoding(false);
+            setKeeper(responseJson[keeper_id-1])
+        }).catch((error)=>{
+            console.error(error);
+        });
+    },[])
+    if(isLoding){
+        return(
+            <View style={{ flex:1, paddingTop:20}}>
+                <ActivityIndicator/>
+            </View>
+        )
+    }
     const goReservation=()=>{
         props.navigation.navigate('DateSetting',{
             carrCnt,
             bagCnt,
             checkIn,
             checkOut,
+            keeper,
             whereScreen:'info'
         });
     }
+    // const string = keeper.keeper_store_imgurl;
+    // const input = require(string);
         return(
             <View style={{ flex:1 }}> 
                 <ScrollView stickyHeaderIndices={[0]} >
@@ -34,7 +66,7 @@ const KeeperInfo = (props)=>{
                     </View>
                     <View style = {styles.container}> 
                         <View style={styles.ImageWrap}>
-                            <Image style={styles.keeper} source={require('../img/store/img2.png')}></Image>
+                            <Image style={styles.keeper} source={input}></Image>
                         </View>
                         <View style={styles.title}>
                             <View style={styles.starEmel}>
@@ -43,7 +75,7 @@ const KeeperInfo = (props)=>{
                                     <Text>★★★★★ 5.0</Text>
                                 </View>
                             </View>
-                            <Text style={styles.titleFont}>맘스터치 일본취업반 점</Text>
+                            <Text style={styles.titleFont}>{keeper.keeper_store_name}</Text>
                         </View>
                         <View style={styles.cardView}>
                             <Text>보관 가능한 시간</Text>
@@ -52,7 +84,7 @@ const KeeperInfo = (props)=>{
                                     <Text>오늘</Text>
                                 </View>
                                 <View>
-                                    <Text>10:00 ~ 20:00</Text>
+                                    <Text>{keeper.keeper_store_openinghours}</Text>
                                 </View>
                             </View>
                             <View style={styles.inWrapView}>
@@ -61,10 +93,10 @@ const KeeperInfo = (props)=>{
                                 </View>
                                 <View>
                                     <Text>
-                                        가방 사이즈 x {bagCnt?bagCnt:0}
+                                        가방 사이즈 x {keeper.keeper_store_bag_cnt}
                                     </Text>
                                     <Text>
-                                        슈트케이스의 사이즈 x {carrCnt?carrCnt:0}
+                                        슈트케이스의 사이즈 x {keeper.keeper_store_bag_cnt}
                                     </Text>
                                 </View>
                             </View>
@@ -73,16 +105,16 @@ const KeeperInfo = (props)=>{
                             <Text>가게 정보</Text>
                             <View style={styles.inWrapView}>
                                 <Text>전화기</Text>
-                                <Text>010-1234-5432</Text>
+                                <Text>{keeper.keeper_store_tel}</Text>
                             </View>
                             <View style={styles.inWrapView}>
                                 <Text>위치</Text>
-                                <Text>대구광역시, 북구 복현동 영진전문대학교</Text>
+                                <Text>{keeper.keeper_store_address}</Text>
                             </View>
-                            <View style={styles.inWrapView}>
+                            {/* <View style={styles.inWrapView}>
                                 <Text>홈페이지,링크</Text>
                                 <Text>http://www.naver.com</Text>
-                            </View>
+                            </View> */}
                         </View >
                         <View style={styles.cardView}>
                             <Text>평가</Text>

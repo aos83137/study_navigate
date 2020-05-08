@@ -3,6 +3,8 @@ import {Text ,View,StyleSheet, Image, Alert, Dimensions, TouchableHighlight} fro
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import Icon3 from 'react-native-vector-icons/FontAwesome5';
+import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
 import  colors from '../styles/colors'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -122,10 +124,10 @@ const DateSetting = (props)=>{
                 <View style={styles.luggageView}>
                     <View style={styles.luggageWrap}>
                         <View style={styles.elem}>
-                            <Icon2
-                                name = "calendar"
+                            <Icon4
+                                name = "bag-personal"
                                 color={colors.green01}
-                                size={24}
+                                size={30}
                                 style={styles.icon}
                             />
                             <Text style={styles.luggageText1}>가방 사이즈</Text>
@@ -153,10 +155,10 @@ const DateSetting = (props)=>{
                     </View>
                     <View style={styles.luggageWrap}>
                         <View style={styles.elem}>
-                            <Icon2
-                                name = "shopping-bag"
+                            <Icon3
+                                name = "suitcase-rolling"
                                 color={colors.green01}
-                                size={24}
+                                size={30}
                                 style={styles.icon}
                             />
                             <Text style={styles.luggageText1}>슈트케이스의 사이즈</Text>

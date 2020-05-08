@@ -17,13 +17,6 @@ export default class HomeScreen extends Component{
         let keeper;
         this.state = {
             error: null,
-            coordinates:[
-                { name : '영진 펀샵 5층 store', latitude:35.8938, longitude:128.6245, image:require('../img/store/img1.png')},
-                { name : '맘스터치 일본취업반 점', latitude:35.8970, longitude:128.6249, image:require('../img/store/img2.png')},
-                { name : '킹PC 일본취업점', latitude:35.8965,  longitude:128.6220, image:require('../img/store/img3.png')},
-                { name : '투썸 회의실 store', latitude:35.8940, longitude:128.6219, image:require('../img/store/img4.png')},
-                { name : '캡스톤 대신해드립니다', latitude:35.8943188, longitude:128.6238612, image:require('../img/store/img5.png')},
-            ],
             markers:[],
             // bagCnt : props.route.params.bacCnt,
             hiddenToggle:{
@@ -173,23 +166,26 @@ export default class HomeScreen extends Component{
     }
 
     //carousel의 아이템 뷰 설정 함수
-    renderCarouselItem = ({item}) => (
-        <TouchableHighlight onPress={()=>{
-            //네비갈때 데이터 던져주는걸로 구분하면 될듯함
-            this.props.navigation.navigate('KeeperInfo',{
-                carrCnt:this.props.route.params?.carrCnt,
-                bagCnt :this.props.route.params?.bagCnt,
-                checkIn : this.props.route.params?.checkIn,
-                checkOut : this.props.route.params?.checkOut,
-            });
-        }}>
-            <View style={[styles.cardContainer,this.state.hiddenToggle]}>
-                    <Text style={styles.cardTitle}>{item.name}</Text>
-                    <Image style={styles.cardImage} source={item.image}/>
+    renderCarouselItem = ({item}) => {
+        return (
+            <TouchableHighlight onPress={()=>{
+                //네비갈때 데이터 던져주는걸로 구분하면 될듯함
+                this.props.navigation.navigate('KeeperInfo',{
+                    carrCnt:this.props.route.params?.carrCnt,
+                    bagCnt :this.props.route.params?.bagCnt,
+                    checkIn : this.props.route.params?.checkIn,
+                    checkOut : this.props.route.params?.checkOut,
+                    keeper: item.keeper_store_id,
+                });
+            }}>
+                <View style={[styles.cardContainer,this.state.hiddenToggle]}>
+                        <Text style={styles.cardTitle}>{item.keeper_store_name}</Text>
+                        {/* <Image style={styles.cardImage} source={}/> */}
 
-            </View>
-        </TouchableHighlight>
-    )    
+                </View>
+            </TouchableHighlight>
+        );
+    }    
     
     render(){     
         const checkIn = this.props.route.params?.checkIn
@@ -272,7 +268,7 @@ export default class HomeScreen extends Component{
                         <Carousel
                         //https://github.com/archriss/react-native-snap-carousel
                             ref={(c) => { this._carousel = c; }}
-                            data={this.state.coordinates}
+                            data={this.state.keeper}
                             renderItem={this.renderCarouselItem}
                             sliderWidth={Dimensions.get('window').width}
                             itemWidth={300}
