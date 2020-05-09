@@ -1,19 +1,57 @@
 import React,{useState, useEffect} from 'react';
 import {Text, View, StyleSheet, Image,ActivityIndicator,Alert,TouchableHighlight} from 'react-native';
 import { Button } from 'react-native-elements';
+import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
-import MapView, {Marker,PROVIDER_GOOGLE,Circle,Callout } from 'react-native-maps'; // remove PROVIDER_GOOGLE import if not using Google Maps
 import colors from '../../styles/colors'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import SplashScreen from 'react-native-splash-screen';
 import LottieView from 'lottie-react-native';
+import database from '@react-native-firebase/database';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Delivery = (props)=>{
     const [load,setLoad] = useState(false);
+    const [userCoords,setUserCoords] = useState(null);
+    const [userId,setUserId] = useState(null);
+    const _storeData = async()=>{
+        try{
+            let token =await AsyncStorage.getItem('userToken');
+            console.log(token);
 
+            setUserId(token)
+            
+        }catch(e){
+            console.error(e);
+        }
+    }
+    useEffect(()=>{
+        Geolocation.getCurrentPosition((position)=>{
+            let userCoords = {
+                latitude:position.coords.latitude,
+                longitude:position.coords.longitude,
+            }
+            setUserCoords(userCoords)
+        },(e)=>{console.error(e);});
+        _storeData()
+        return ()=>{
+            console.log("This will be logged on unmount");
+        };
+    },[]);
     const findDelivery=()=>{
         setLoad(true);    
+        console.log('넣는다! :' + userId);
+        
+        database()
+        .ref('/users/'+userId)
+        .set({
+            name: userId,
+            store_latitude:128.6245,
+            store_longitude: 35.8938,
+            user_latitude:userCoords.latitude,
+            user_longitude: userCoords.longitude,
+        })
+        .then(() => console.log('Data set.'));
         setTimeout(()=>{
             setLoad(false);
             props.navigation.navigate('DeliveryFindScreen');

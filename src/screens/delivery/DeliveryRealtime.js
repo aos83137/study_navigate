@@ -71,6 +71,18 @@ export default class DeliveryFindScreen extends Component{
                 console.error(e);
             });
     }
+
+    getState(){
+        database().ref('/delivery')
+        .on('value',snapshot=>{
+            const state = snapshot.val().state;
+            console.log('User data: ', state);
+            if(state==='push_luggage'){
+                this.takeLuggage();
+            }
+        });
+    }
+
     deleteToken=async()=>{
         await AsyncStorage.setItem('status','endDelivery');
         const value = await AsyncStorage.getItem('status');

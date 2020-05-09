@@ -41,7 +41,7 @@ export default class HomeScreen extends Component{
                         initialRegion,
                         error: null,
                     });
-                    console.log(JSON.stringify(position));
+                    // console.log(JSON.stringify(position));
                 },
                 (error) => {
                     // See error code charts below.
@@ -65,7 +65,7 @@ export default class HomeScreen extends Component{
                 // let keeper = responseJson.map(item=>{
                 //     return {name.}
                 // });   
-                // console.log(keeper[0]);
+                // console.log(responseJson);
                 this.setState({
                     keeper:responseJson
                 })

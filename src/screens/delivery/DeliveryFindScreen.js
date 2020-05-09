@@ -9,6 +9,7 @@ import {UserAndDeliveryCenterButton} from '../../components/buttons/UserAndDeliv
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import colors from '../../styles/colors';
+import database from '@react-native-firebase/database';
 
 export default class DeliveryFindScreen extends Component{
     constructor(props){
@@ -59,8 +60,6 @@ export default class DeliveryFindScreen extends Component{
                         console.error(e);
                     });
 
-
-
                     this.setState({
                         initialRegion,
                         error: null,
@@ -76,34 +75,70 @@ export default class DeliveryFindScreen extends Component{
             );
 
             if(this.state.initialRegion){
-                fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
-                    +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.initialRegion.longitude+','+this.state.initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
-                    method:"get",
-                    headers:{
-                        'Accept':'application/json',
-                        'Content-Type':'application/json',
-                    },
-                }).then((res)=>res.json())
-                .then((resJson)=>{
-                    let coords = resJson.routes[0].geometry.coordinates.map(item => {
-                        return { latitude: item[1], longitude: item[0] };
-                    });
-                    console.log(coords);
-                    this.setState({
-                        coords
-                    })
-                })
-                .catch((e)=>{
-                    console.error(e);
-                });
+                this.getRouteLocation()
             }
+
+            this.getState();
     }
+    getRouteLocation(){
+        fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
+            +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.initialRegion.longitude+','+this.state.initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        }).then((res)=>res.json())
+        .then((resJson)=>{
+            let coords = resJson.routes[0].geometry.coordinates.map(item => {
+                return { latitude: item[1], longitude: item[0] };
+            });
+            console.log(coords);
+            this.setState({
+                coords
+            })
+        })
+        .catch((e)=>{
+            console.error(e);
+        });
+    }
+
+    getState(){
+        database().ref('/delivery')
+        .on('value',snapshot=>{
+            const state = snapshot.val().state;
+            console.log('User data: ', state);
+            if(state==='take_luggage'){
+                this.takeLuggage();
+            }
+        });
+    }
+
     deleteToken=async()=>{
         await AsyncStorage.setItem('status','endDelivery');
         const value = await AsyncStorage.getItem('status');
         console.log(value);
         
     }
+
+    takeLuggage(){
+        Alert.alert(
+            //header
+            '인계 완료했습니다.',
+            // title
+            'Info탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
+            [
+                {
+                    text:'홈으로...',
+                    onPress:()=>{
+                        this.props.navigation.navigate('Main');
+                    }
+                },
+            ]
+        )
+        this.deleteToken()
+    }
+
     centerMap(){
         const {
             latitude, 
@@ -133,11 +168,11 @@ export default class DeliveryFindScreen extends Component{
             latitude: this.state.initialRegion.latitude,
             longitude:this.state.initialRegion.longitude,
         }
-        const storeRegion = this.state.storeRegion
-        const zoomOutLat = (userRegion.latitude + storeRegion.latitude)/2;
-        const zoomOutLon = (userRegion.longitude + storeRegion.longitude)/2;
+        const delivery = this.state.delivery
+        const zoomOutLat = (userRegion.latitude + delivery.latitude)/2;
+        const zoomOutLon = (userRegion.longitude + delivery.longitude)/2;
         console.log('userRegion : ' +JSON.stringify(userRegion));
-        console.log('storeRegion : ' +JSON.stringify(storeRegion));
+        console.log('storeRegion : ' +JSON.stringify(delivery));
         
         console.log('zoomOutLat :'+zoomOutLat);
         console.log('zoomOutLon : '+zoomOutLon);
@@ -145,8 +180,8 @@ export default class DeliveryFindScreen extends Component{
         this._map.animateToRegion({
             latitude:zoomOutLat,
             longitude:zoomOutLon,
-            latitudeDelta:0.02,
-            longitudeDelta:0.02,
+            latitudeDelta:0.006,
+            longitudeDelta:0.006,
         })
     }
     
@@ -225,21 +260,7 @@ export default class DeliveryFindScreen extends Component{
                 </MapView>
                 <TouchableHighlight 
                     onPress={()=>{
-                        Alert.alert(
-                            //header
-                            '인계 완료했습니다.',
-                            // title
-                            'Info탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
-                            [
-                                {
-                                    text:'홈으로...',
-                                    onPress:()=>{
-                                        this.props.navigation.navigate('Main');
-                                    }
-                                },
-                            ]
-                        )
-                        this.deleteToken()
+                        this.takeLuggage();
                     }
                 }>
                     <View style = {styles.elem}>

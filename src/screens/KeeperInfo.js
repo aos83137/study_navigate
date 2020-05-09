@@ -31,8 +31,8 @@ const KeeperInfo = (props)=>{
         })
         .then((response)=>response.json())
         .then((responseJson)=>{   
-            setIsLoding(false);
             setKeeper(responseJson[keeper_id-1])
+            setIsLoding(false);
         }).catch((error)=>{
             console.error(error);
         });
@@ -54,7 +54,9 @@ const KeeperInfo = (props)=>{
             whereScreen:'info'
         });
     }
-    // const string = keeper.keeper_store_imgurl;
+    const imgUrl = ''+keeper.keeper_store_imgurl;
+       console.log(imgUrl.length);
+    const test='../img/store/img5.png';    
     // const input = require(string);
         return(
             <View style={{ flex:1 }}> 
@@ -66,7 +68,11 @@ const KeeperInfo = (props)=>{
                     </View>
                     <View style = {styles.container}> 
                         <View style={styles.ImageWrap}>
-                            <Image style={styles.keeper} source={input}></Image>
+                            {
+                                imgUrl ? 
+                                <Image style={styles.keeper} source={require('../img/store/img5.png')}></Image>
+                                :null
+                            }
                         </View>
                         <View style={styles.title}>
                             <View style={styles.starEmel}>
