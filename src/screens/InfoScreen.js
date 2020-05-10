@@ -1,8 +1,9 @@
 import React , {useState, useEffect } from 'react';
-import {Text ,View,StyleSheet, Image, FlatList, Alert, Dimensions, TouchableOpacity} from 'react-native';
+import {Text ,View,StyleSheet, Image, FlatList, Alert, ActivityIndicator,Dimensions, TouchableOpacity} from 'react-native';
 import colors from '../styles/colors';
 
 let {width, height} = Dimensions.get('window')
+const URI = 'https://my-project-9710670624.df.r.appspot.com'
 
 const DATA = [
     {
@@ -107,13 +108,28 @@ const Action_Click=(data,props)=> {
         whereScreen:'info',
     })
 }
-function Item({item,props}){
+function Item({keepers,item,props}){
+    let status;
+    let name = keepers[item.keeper_store_id-1].keeper_store_name;
+    let time = item.check_in
+    let checkIn = item.check_in.split(' ')[0]
+    let checkOut = item.check_out.split(' ')[0]
+    
+    if(item.reservation_status=='keeper_reservation'){
+        status = '예약 완료';
+    }else{
+        status = '종료';
+    }
     return (
         <View style={styles.item}>
             <TouchableOpacity 
                 onPress={()=>{
+                    console.log('2',item);
+                    
                     props.navigation.navigate('Reservation',{
-                        data:item,
+                        data:keepers[item.keeper_store_id-1],
+                        reservation:item,
+                        state:item.reservation_status,
                         whereScreen:'info',
                     })                    }
                 }
@@ -121,12 +137,14 @@ function Item({item,props}){
                 <View>
                     <View style={styles.tableView}>
                         <View style={{ flex:3 }}>
-                            <Text style = {styles.titleText}>{item.title}</Text>
-                            <Text style={styles.titleDate}>{item.date}</Text>
+                            <Text style = {styles.titleText}>{name}</Text>
+                            <Text style={styles.titleDate}>{checkIn+'~'+checkOut}</Text>
                         </View>
                         <View style={{ flex:1 }}>
                             <Text style = {styles.titleText}>상태</Text>
-                            <Text style={styles.stateText}>{item.state}</Text>
+                            <Text style={styles.stateText}>
+                                {status}
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -136,11 +154,59 @@ function Item({item,props}){
 }
 
 const InfoScreen = (props)=>{   
+    const [reservations,setReservations] = useState();
+    const [keepers, setKeepers] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+    const stateTest = props.route.params?.stateTest;
+    useEffect(()=>{
+        fetch(URI+'/reservations',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        })
+        .then((response)=>response.json())
+        .then((responseJson)=>{         
+            setReservations(responseJson.reverse());
+        }).catch((error)=>{
+            console.error(error);
+        });
+
+        fetch(URI+'/kstoreinfos',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        })
+        .then((response)=>response.json())
+        .then((responseJson)=>{         
+            // console.log(responseJson);
+            setKeepers(responseJson)
+            setIsLoading(false);
+        }).catch((error)=>{
+            console.error(error);
+        });
+        console.log(stateTest);
+        
+        return ()=>{
+            console.log('삭제됨 info');
+        }
+    },[stateTest])
+    if(isLoading){
+        return(
+            <View style={{ flex:1, paddingTop:20}}>
+                <ActivityIndicator/>
+            </View>
+        )
+    }
     return(
         <View style={styles.container}> 
             <FlatList
-                data={DATA}
-                renderItem={({item}) =>(<Item item={item} props={props}/>)}
+                data={reservations}
+                extraData={this.state}
+                renderItem={({item}) =>(<Item keepers={keepers} item={item} props={props}/>)}
                 keyExtractor={item=>item.id}
                 />
         </View>

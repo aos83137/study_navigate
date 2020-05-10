@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 
 let {width, height} = Dimensions.get('window')
-
+const url='my-project-9710670624.df.r.appspot.com';
 //props 안에 navigation, route가  들어가있음 {navigation, route} 이렇게 써도 되고 props.navigatio으로 써도됨
 const Reservation = (props)=>{   
     const checkIn = props.route.params?.checkIn;
@@ -16,9 +16,12 @@ const Reservation = (props)=>{
     const bagCnt = props.route.params?.bagCnt;
     const carrCnt = props.route.params?.carrCnt;
     const whereScreen = props.route.params?.whereScreen ? props.route.params?.whereScreen : true;
+    const keeper_id = props.route.params?.keeper_id
     const data = props.route.params?.data ? props.route.params?.data : '없디';
+    const state = props.route.params?.state;
+    const reservation = props.route.params?.reservation;
     const [value, onChangeText] = useState('xxxx-xxxx-xxxx-xxxx');
-
+    let ddd;
     const getFormatDate = date=>{
         let month = (1 + date.getMonth());          //M
         month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
@@ -34,10 +37,37 @@ const Reservation = (props)=>{
         if(min<10) min = '0' + min;
         return  '' + month + '.' + day + '. ' + ampm + ' ' + hour+':'+min;
     }
+
+    const getFromatDateTime = date=>{
+        let year = date.getFullYear()
+        let month = (1 + date.getMonth());          //M
+        month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+        let day = date.getDate();                   //d
+        day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+        let hour = date.getHours();                 //h
+        hour = hour >= 10? hour: '0' + hour;
+        let min = date.getMinutes();                //m
+        if(min<10) min = '0' + min;
+        return  ''+year +'-'+ month + '-' + day + ' ' + hour+':'+min+':'+'00';
+    }
+    const getDays2 = (d1, d2)=>{
+        ddd = d2.getDate()-d1.getDate()+1;
+        return ddd; 
+    }
     const getDays = (d1,d2)=>{
-        let days;
-        days = d2.getDate()-d1.getDate();
-        return days>1 ? days:1; 
+        let checkIn = (''+d1).split(' ')[0].split('-');
+        let checkOut = (''+d2).split(' ')[0].split('-');
+
+        let month = checkOut[1]-checkIn[1];
+        let day = checkOut[2] -checkIn[2];
+        
+        if (month<1){
+            ddd = day+1;
+            return ddd;
+        }else{
+            ddd=month*30 + day
+            return ddd;
+        }
     }
     
     const payEnd= async()=>{
@@ -48,6 +78,28 @@ const Reservation = (props)=>{
         }catch(e){
             console.error(e);
         }
+        fetch('http://'+url+'/reservations',{
+            method: 'POST',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify({
+                keeper_store_id:keeper_id,
+                tourist_id:1,
+                check_in:getFromatDateTime(checkIn),
+                check_out:getFromatDateTime(checkOut),
+                bag_cnt:bagCnt,
+                car_cnt:carrCnt,
+                reservation_status:'keeper_keeping',
+            })
+        }).then((response)=>{
+            return response.json()
+        }).then((responseJson)=>{
+            console.log(responseJson);
+        }).catch((error)=>{
+            console.error(error);
+        })
         Alert.alert(
                     //Header
                     '결제 감사합니다.',
@@ -60,7 +112,9 @@ const Reservation = (props)=>{
                             style: 'cancel',
                             onPress:()=>{
                                 //딜리버리 스테이트를 바꿔야함
-                                props.navigation.navigate('Info');
+                                props.navigation.navigate('Info',{
+                                    state:'change',
+                                });
                             }
                         },
                         {
@@ -87,12 +141,12 @@ const Reservation = (props)=>{
     let checkInOut;
     let total;
     let footer;
-    //예약하기로 넘어 왔을 경우
+    //예약하기로 넘어 왔을 경우    
     if(whereScreen === 'reservation'){
         imageCard=
         <View style={styles.ImageWrap}>
             <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
-            <Text style={styles.keeperText}>영진 펀드샵(6층)</Text>
+            <Text style={styles.keeperText}>{data.keeper_store_name}</Text>
         </View>
         headerText = <Text style={styles.headerText}>예약하기</Text>
         total= 
@@ -113,15 +167,15 @@ const Reservation = (props)=>{
                 </View>
                 <View style={{ flex:1}}>
                     <Text style={{ flex:1 }}>기간</Text>
-                    <Text>{getDays(checkIn,checkOut)}</Text>
-                    <Text>{getDays(checkIn,checkOut)}</Text>
+                    <Text>{getDays2(checkIn,checkOut)}</Text>
+                    <Text>{getDays2(checkIn,checkOut)}</Text>
                     <Text></Text>
                 </View>
                 <View style={{ flex:1}}>
                     <Text style={{ flex:1 }}>비용</Text>
-                    <Text>¥{bagCnt*400}</Text>
-                    <Text>¥{carrCnt*700}</Text>
-                    <Text>¥{bagCnt*400+carrCnt*700}</Text>
+                    <Text>¥{bagCnt*400*ddd}</Text>
+                    <Text>¥{carrCnt*700*ddd}</Text>
+                    <Text>¥{bagCnt*400*ddd+carrCnt*700*ddd}</Text>
                 </View>
             </View>
         </View>;
@@ -160,7 +214,7 @@ const Reservation = (props)=>{
         imageCard=
             <View style={styles.ImageWrap}>
                 <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
-                <Text style={styles.keeperText}>영진 펀드샵(6층)</Text>
+                <Text style={styles.keeperText}>{data.keeper_store_name }</Text>
             </View>
         headerText = <Text style={styles.headerText}>예약확인</Text>
         checkInOut=
@@ -170,7 +224,7 @@ const Reservation = (props)=>{
                     <Text style={styles.subFont}>체크인</Text>
                 </View>
                 <View>
-                    <Text style={styles.subFont}>{getFormatDate(data.checkIn) }</Text>
+                    <Text style={styles.subFont}>{reservation.check_in}</Text>
                 </View>
             </View>
             <View style={styles.inWrapView}>
@@ -178,7 +232,7 @@ const Reservation = (props)=>{
                     <Text style={styles.subFont}>체크아웃</Text>
                 </View>
                 <View>
-                    <Text style={styles.subFont}>{ getFormatDate(data.checkOut) }</Text>
+                    <Text style={styles.subFont}>{reservation.check_out}</Text>
                 </View>
             </View>
         </View>;
@@ -194,25 +248,25 @@ const Reservation = (props)=>{
                 </View>
                 <View style={{ flex:1}}>
                     <Text style={{ flex:1 }}>개수</Text>
-                    <Text>{data.bagCnt}</Text>    
-                    <Text>{data.carrCnt}</Text>
+                    <Text>{reservation.bag_cnt}</Text>    
+                    <Text>{reservation.car_cnt}</Text>
                     <Text></Text>
                 </View>
                 <View style={{ flex:1}}>
                     <Text style={{ flex:1 }}>기간</Text>
-                    <Text>{getDays(data.checkIn,data.checkOut)}</Text>
-                    <Text>{getDays(data.checkIn,data.checkOut)}</Text>
+                    <Text>{getDays(reservation.check_in,reservation.check_out)}</Text>
+                    <Text>{getDays(reservation.check_in,reservation.check_out)}</Text>
                     <Text></Text>
                 </View>
                 <View style={{ flex:1}}>
                     <Text style={{ flex:1 }}>비용</Text>
-                    <Text>¥{data.bagCnt*400}</Text>
-                    <Text>¥{data.carrCnt*700}</Text>
-                    <Text>¥{data.bagCnt*400+data.carrCnt*700}</Text>
+                    <Text>¥{reservation.bag_cnt*400*ddd}</Text>
+                    <Text>¥{reservation.car_cnt*700*ddd}</Text>
+                    <Text>¥{reservation.bag_cnt*400*ddd+reservation.car_cnt*700*ddd}</Text>
                 </View>
             </View>
         </View>;
-        if(data.state==='예약' || data.state==='보관 중'){
+        if(state==='keeper_reservation' || state==='보관 중'){
             footer=
             <View>
                 <TouchableOpacity >
@@ -233,7 +287,7 @@ const Reservation = (props)=>{
                     </View>
                 </View>
             </View>;
-        }else if(data.state==='배달 중'){
+        }else if(state==='배달 중'){
             footer=
             <View>                
                 <View style={styles.paysCard}>
@@ -244,7 +298,7 @@ const Reservation = (props)=>{
                         />
                 </View>
             </View>;
-        }else if(data.state==='종료'){
+        }else if(state==='종료'){
             footer=
             <View>                
                 <View style={styles.paysCard}>
@@ -257,6 +311,9 @@ const Reservation = (props)=>{
             </View>;
         }
     }
+
+    // console.log('1' +keeper_id);
+
         return(
             <View style={{ flex:1 }}> 
                 <ScrollView stickyHeaderIndices={[0]}>

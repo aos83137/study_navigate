@@ -51,6 +51,7 @@ const KeeperInfo = (props)=>{
             checkIn,
             checkOut,
             keeper,
+            keeper_id,
             whereScreen:'info'
         });
     }

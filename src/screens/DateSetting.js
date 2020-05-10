@@ -16,10 +16,9 @@ const DateSetting = (props)=>{
     const [isCheckoutDatePickerVisible, setCheckOutDatePickerVisibility] = useState(false);
     const [checkIn, setCheckIn] = useState(props.route.params?.checkIn ? props.route.params?.checkIn:new Date());
     const [checkOut, setcheckOut] = useState(props.route.params?.checkOut ? props.route.params?.checkOut :new Date());
+    const [keeper_id, setKeeper_id] = useState(props.route.params?.keeper_id);
+    const [keeper, setKeeper] = useState(props.route.params?.keeper);
     const whereScreen = props.route.params?.whereScreen;
-    // useEffect(()=>{
-    // bagCnt = route.params?.bagCnt;
-    // })
 
     const showDatePicker = (check) => {
         if(check === 'checkIn'){
@@ -81,10 +80,14 @@ const DateSetting = (props)=>{
                     checkOut,
                     bagCnt,
                     carrCnt,
+                    keeper_id,
+                    data:keeper,
                     whereScreen:'reservation',
                 })
             }}/>
     }
+    // console.log(keeper_id);
+    
         return(
             <View style = {styles.container}> 
                 <View style={styles.backIcon}>

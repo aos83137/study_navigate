@@ -232,6 +232,15 @@ const styles = StyleSheet.create({
     titleSearchButton:{
         width:'100%',
     },
+        titleText: {
+        fontSize: 20,
+        fontWeight: "bold"
+    },
+    timeText:{
+        color:"orange",
+        marginTop:10,
+        fontSize:15,
+    },
     content : {
         flex : 4,
         alignItems:'center',

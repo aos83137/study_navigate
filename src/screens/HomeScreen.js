@@ -180,7 +180,13 @@ export default class HomeScreen extends Component{
             }}>
                 <View style={[styles.cardContainer,this.state.hiddenToggle]}>
                         <Text style={styles.cardTitle}>{item.keeper_store_name}</Text>
-                        {/* <Image style={styles.cardImage} source={}/> */}
+                        {/* {console.log(typeof '../img/store/img5.png')
+                        }
+                        {
+                            console.log(typeof item.keeper_store_imgurl)
+                            
+                        } */}
+                        {/* <Image style={styles.cardImage} source={require(item.keeper_store_imgurl)}/> */}
 
                 </View>
             </TouchableHighlight>

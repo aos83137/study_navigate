@@ -48,12 +48,21 @@ export default class DeliveryFindScreen extends Component{
                         },
                     }).then((res)=>res.json())
                     .then((resJson)=>{
+                        const distance = ''+Math.round(resJson.routes[0].distance)/1000+'km';
+                        console.log('거리 : ',distance);
+
+                        const dPoint = resJson.waypoints[0].name;
+                        const kPoint = resJson.waypoints[1].name;
+                        console.log(dPoint);
+                        console.log(kPoint);
+
                         let coords = resJson.routes[0].geometry.coordinates.map(item => {
                             return { latitude: item[1], longitude: item[0] };
                         });
-                        console.log(coords);
+                        // console.log(coords);
                         this.setState({
-                            coords
+                            coords,
+                            distance
                         })
                     })
                     .catch((e)=>{
@@ -74,35 +83,13 @@ export default class DeliveryFindScreen extends Component{
                 //정확도, 타임아웃, 최대 연령
             );
 
-            if(this.state.initialRegion){
-                this.getRouteLocation()
-            }
-
             this.getState();
     }
-    getRouteLocation(){
-        fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
-            +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.initialRegion.longitude+','+this.state.initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
-            method:"get",
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            },
-        }).then((res)=>res.json())
-        .then((resJson)=>{
-            let coords = resJson.routes[0].geometry.coordinates.map(item => {
-                return { latitude: item[1], longitude: item[0] };
-            });
-            console.log(coords);
-            this.setState({
-                coords
-            })
-        })
-        .catch((e)=>{
-            console.error(e);
-        });
+    componentWillUnmount(){
+        console.log('componentWillUnmount');
+        database().ref('/delivery').onDisconnect().cancel;
+        console.log('성공');
     }
-
     getState(){
         database().ref('/delivery')
         .on('value',snapshot=>{
@@ -116,9 +103,8 @@ export default class DeliveryFindScreen extends Component{
 
     deleteToken=async()=>{
         await AsyncStorage.setItem('status','endDelivery');
-        const value = await AsyncStorage.getItem('status');
-        console.log(value);
-        
+        // const value = await AsyncStorage.getItem('status');
+        // console.log(value);
     }
 
     takeLuggage(){
@@ -131,6 +117,9 @@ export default class DeliveryFindScreen extends Component{
                 {
                     text:'홈으로...',
                     onPress:()=>{
+                        database().ref('/delivery').update({state:'delivering'})
+                        .then(()=>{console.log('Data updated');
+                        });
                         this.props.navigation.navigate('Main');
                     }
                 },
@@ -189,7 +178,7 @@ export default class DeliveryFindScreen extends Component{
         return(
             <View style={styles.container}>
                 <View style={styles.rootMenu}>
-                    <Text>딜리버리를 찾았습니다.</Text>
+                    <Text style={styles.titleText}>딜리버리를 찾았습니다.</Text>
                     <View style={styles.elem}>
                         <Avatar
                             rounded
@@ -197,9 +186,10 @@ export default class DeliveryFindScreen extends Component{
                             size="large"
                         />
                         <View style={styles.deliveryInfoText}>
-                            <Text style={styles.dName}>딜리버리 성함</Text>
+                            <Text style={styles.dName}>딜리버리 : 전꿈몽</Text>
                             <Text style={styles.dCar}>대구11사1234 | 아반떼cn7</Text>
-                            <Text style={ styles.dTime }>약 5분 후 도착합니다.</Text>
+                            <Text style={styles.timeText}>총 거리 : {this.state.distance}</Text>
+                            <Text style={styles.timeText}>약 5분 후 도착합니다.</Text>
                         </View>
                     </View>
                     
@@ -292,6 +282,15 @@ const styles = StyleSheet.create({
     },
     titleSearchButton:{
         width:'100%',
+    },
+    titleText: {
+        fontSize: 20,
+        fontWeight: "bold"
+    },
+    timeText:{
+        color:"orange",
+        fontSize:15,
+        fontWeight:'bold'
     },
     content : {
         flex : 4,

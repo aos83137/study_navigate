@@ -22,7 +22,7 @@ import Info from './src/screens/InfoScreen';
 
 export async function request_location_runtime_permission() {
   // 옐로우 박스 지울때 밑에꺼 주석풀기
-  // console.disableYellowBox = true;
+  console.disableYellowBox = true;
   try {
     const granted = await PermissionsAndroid.request(
       //이게 위치권한 부여하는 거임
