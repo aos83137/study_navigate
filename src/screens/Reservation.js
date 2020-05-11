@@ -148,7 +148,8 @@ const Reservation = (props)=>{
                             onPress: ()=>{
                                 props.navigation.navigate('DeliveryInfo',{
                                     reservation,
-                                    data
+                                    data,
+                                    userId,
                                 });
                             }
                         }
@@ -194,7 +195,8 @@ const Reservation = (props)=>{
         
         props.navigation.navigate('DeliveryRealtime',{
             userId,
-            data
+            reservation,
+            data,
         });
     }
     let imageCard;

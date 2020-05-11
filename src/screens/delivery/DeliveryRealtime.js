@@ -29,6 +29,7 @@ export default class DeliveryFindScreen extends Component{
             coordinates:[],    
             userId : this.props.route.params?.userId,
             data: this.props.route.params?.data,
+            reservation: this.props.route.params?.reservation,
             // markers:[],
             error: null,
         };        

@@ -13,17 +13,19 @@ import AsyncStorage from '@react-native-community/async-storage';
 const Delivery = (props)=>{
     const [load,setLoad] = useState(false);
     const [userCoords,setUserCoords] = useState(null);
-    const [userId,setUserId] = useState(null);
-    const [r_id, setR_id] = useState();
-    const reservation = props.route.params?.reservation;
-
+    const [userId,setUserId] = useState(props.route.params?.userId);
+    // const [r_id, setR_id] = useState();
+    const reservation = props.route.params?.reservation; //예약정보 받음
+    const data = props.route.params?.data ? props.route.params?.data : '없디'; // 가게정보 받음
+    console.log('reservation',reservation);
+    
     const _storeData = async()=>{
         try{
-            const token =await AsyncStorage.getItem('userToken');
-            const r_id =await AsyncStorage.getItem('reservation_id');
-            console.log('r_id',r_id);
-            setR_id(r_id);
-            setUserId(token);
+            const userToken =await AsyncStorage.getItem('userToken');
+            // const r_id =await AsyncStorage.getItem('reservation_id');
+            console.log('userToken',userToken);
+            // setR_id(r_id);
+            setUserId(userToken);
             
         }catch(e){
             console.error(e);
@@ -46,15 +48,13 @@ const Delivery = (props)=>{
         };
     },[props]);
     const findDelivery=()=>{
-        setLoad(true);    
-        let state;
-        console.log('넣는다! :' + r_id);
-        
+        console.log('넣는다! :' + reservation.reservation_id);
+        setLoad(true);
         database()
         .ref('/users/'+userId)
         .update({
             name: userId,
-            reservation_id:r_id,
+            reservation_id:reservation.reservation_id,
             user_latitude:userCoords.latitude,
             user_longitude: userCoords.longitude,
             state:'listen',
@@ -66,11 +66,12 @@ const Delivery = (props)=>{
         .ref('/users/'+userId)
         .on('value', snapshot => {
             console.log('User data: ', snapshot.val().state);
-            state = snapshot.val().state;
+            const state = snapshot.val().state;
             if(state=='ok'){
                 setLoad(false);
                 props.navigation.navigate('DeliveryFindScreen',{
                     reservation,
+                    data,
                     userId,
                 });
             }

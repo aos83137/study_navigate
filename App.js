@@ -100,7 +100,6 @@ export default class App extends Component{
         <NavigationContainer>
           <RootStack.Navigator 
             headerMode ="none"
-            initialRouteName={init}
           > 
   
             <RootStack.Screen name="Main" 

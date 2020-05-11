@@ -7,12 +7,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 let {width, height} = Dimensions.get('window')
 const URI = 'https://my-project-9710670624.df.r.appspot.com'
 
-const Action_Click=(data,props)=> {
-    props.navigation.navigate('Reservation',{
-        data,
-        whereScreen:'info',
-    })
-}
 function Item({keepers,item,props}){
     let status;
     let name = keepers[item.keeper_store_id-1].keeper_store_name;

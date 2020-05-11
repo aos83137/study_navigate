@@ -18,14 +18,13 @@ export default class DeliveryFindScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
-            storeRegion:{
-                latitude : 35.8843,
-                longitude: 128.6323,
-            },
             delivery:{
                 latitude:35.8928, 
                 longitude: 128.6226
             },
+            userId : this.props.route.params?.userId,
+            data: this.props.route.params?.data,
+            reservation: this.props.route.params?.reservation,
             error: null,
         };        
     }
@@ -41,42 +40,13 @@ export default class DeliveryFindScreen extends Component{
                         latitudeDelta: 0.003,
                         longitudeDelta: 0.003,
                     }
-
-
-                    fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
-                        +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+initialRegion.longitude+','+initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
-                        method:"get",
-                        headers:{
-                            'Accept':'application/json',
-                            'Content-Type':'application/json',
-                        },
-                    }).then((res)=>res.json())
-                    .then((resJson)=>{
-                        const distance = ''+Math.round(resJson.routes[0].distance)/1000+'km';
-                        const speed = 20;
-                        const time = Math.round((Math.round(resJson.routes[0].distance)/1000)/speed*60);
-                        console.log('거리 : ',distance);
-                        console.log('속력 : ',speed);
-                        console.log('시간 : ', time);
-
-                        let coords = resJson.routes[0].geometry.coordinates.map(item => {
-                            return { latitude: item[1], longitude: item[0] };
-                        });
-                        // console.log(coords);
-                        this.setState({
-                            coords,
-                            distance,
-                            time
-                        })
-                    })
-                    .catch((e)=>{
-                        console.error(e);
-                    });
-
                     this.setState({
                         initialRegion,
                         error: null,
                     })
+
+                    this.getDeliveryLocation();
+
                 },
                 (error) => {
                     // See error code charts below.
@@ -86,42 +56,92 @@ export default class DeliveryFindScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-            // this.getR_id();        
-            this.getState();
     }
     componentWillUnmount(){
         console.log('componentWillUnmount');
         database().ref('/delivery').onDisconnect().cancel;
         console.log('성공');
     }
-    getState(){
-        database().ref('/delivery')
-        .on('value',snapshot=>{
-            const state = snapshot.val().state;
-            console.log('User data: ', state);
-
-            const newCoordinate ={
-                latitude:snapshot.val().lat,
-                longitude:snapshot.val().lon,
-            }
-            console.log(newCoordinate);
-            
-            if(state==='take_luggage'){
-                this.takeLuggage();
-            }
-            if (Platform.OS === "android") {
-                if (this.marker) {
-                    // console.log(this.marker);
-                    
-                    this.marker._component.animateMarkerToCoordinate(
-                        newCoordinate,
-                        500 // 500 is the duration to animate the marker
-                    );
-                }
-            }
+    getDeliveryLocation(){
+        console.log('DeliveryFindScreen -> userId :',this.state.userId);
+        database()
+        .ref('/users/'+this.state.userId)
+        .once('value')
+        .then(snapshot => {
+            console.log('User data: ', snapshot.val());
             this.setState({
-                delivery:newCoordinate,
+                dInit:{
+                    latitude:snapshot.val().delivery_latitude,
+                    longitude:snapshot.val().delivery_longitude,
+                }
+            });    
+            console.log('componenMOunt',this.state.dInit);
+   
+            if(this.state.dInit){
+                this.getRouteLocation();
+            }                 
+        });
+        database().ref('/users/'+this.state.userId)
+        .on('value', snapshot => {
+                //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
+                console.log(snapshot.val());
+                
+                const newCoordinate ={
+                    latitude:snapshot.val().delivery_latitude,
+                    longitude:snapshot.val().delivery_longitude,
+                }
+                // console.log(newCoordinate);//잘나옴
+ 
+                if (Platform.OS === "android") {
+                    if (this.marker) {
+                        // console.log(this.marker);
+                        this.marker._component.animateMarkerToCoordinate(
+                            newCoordinate,
+                            500 // 500 is the duration to animate the marker
+                        );
+                    }
+                }
+                this.setState({
+                    delivery:{
+                        latitude:newCoordinate.latitude, 
+                        longitude: newCoordinate.longitude,
+                        latitudeDelta:0.003,
+                        longitudeDelta:0.003,
+                    },
+                })
+        });     
+    }
+    getRouteLocation(){
+        console.log('getRouteLoccation 안에 delivery값 : ',this.state.dInit);
+        
+        fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
+            +this.state.dInit.longitude+','+this.state.dInit.latitude+';'+this.state.initialRegion.longitude+','+this.state.initialRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        }).then((res)=>res.json())
+        .then((resJson)=>{
+            const distance = ''+Math.round(resJson.routes[0].distance)/1000+'km';
+            const speed = 20;
+            const time = Math.round((Math.round(resJson.routes[0].distance)/1000)/speed*60);
+            console.log('거리 : ',distance);
+            console.log('속력 : ',speed);
+            console.log('시간 : ', time);
+
+            let coords = resJson.routes[0].geometry.coordinates.map(item => {
+                return { latitude: item[1], longitude: item[0] };
+            });
+            // console.log(coords);
+            this.setState({
+                coords,
+                distance,
+                time
             })
+        })
+        .catch((e)=>{
+            console.error(e);
         });
     }
 
