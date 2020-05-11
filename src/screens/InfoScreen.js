@@ -67,13 +67,7 @@ const InfoScreen = (props)=>{
     const [isLoading, setIsLoading] = useState(true);
     const stateTest = props.route.params?.stateTest;
 
-    const stateToken=async()=>{
-        let tt  =await AsyncStorage.getItem('@status');
-        console.log('토큰 테스트',tt);
-    }
-
     useEffect(()=>{
-        stateToken()
         fetch(URI+'/reservations',{
             method:"get",
             headers:{

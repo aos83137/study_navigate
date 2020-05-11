@@ -12,14 +12,13 @@ import colors from '../../styles/colors';
 import database from '@react-native-firebase/database';
 
 // CurrentLocationButton
-
 export default class DeliveryFindScreen extends Component{
     constructor(props){
         super(props);
         this.state = {
             storeRegion:{
-                latitude : 35.8843,
-                longitude: 128.6323,
+                latitude : this.props.route.params?.data.keeper_store_latitude,
+                longitude: this.props.route.params?.data.keeper_store_longtitude,
             },
             coordinate: new AnimatedRegion({
                 latitude: 35.8571,
@@ -29,6 +28,7 @@ export default class DeliveryFindScreen extends Component{
               }),   
             coordinates:[],    
             userId : this.props.route.params?.userId,
+            data: this.props.route.params?.data,
             // markers:[],
             error: null,
         };        
@@ -38,13 +38,28 @@ export default class DeliveryFindScreen extends Component{
         // Instead of navigator.geolocation, just use Geolocation.
         // console.log('실시간 쪽 id' ,this.state.userId);//userID잘 넘어옴
             this.getDeliveryLocation();
-
-            if(this.state.delivery){
-                this.getRouteLocation();
-            }
+            console.log('data',this.state.data.keeper_store_latitude);
+            
     }
     getDeliveryLocation(){
         console.log(this.state.userId);
+        database()
+        .ref('/users/'+this.state.userId)
+        .once('value')
+        .then(snapshot => {
+            console.log('User data: ', snapshot.val());
+            this.setState({
+                dInit:{
+                    latitude:snapshot.val().delivery_latitude,
+                    longitude:snapshot.val().delivery_longitude,
+                }
+            });    
+            console.log('componenMOunt',this.state.dInit);
+   
+            if(this.state.dInit){
+                this.getRouteLocation();
+            }                 
+        });
         database().ref('/users/'+this.state.userId)
         .on('value', snapshot => {
                 //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
@@ -65,7 +80,6 @@ export default class DeliveryFindScreen extends Component{
                         );
                     }
                 }
-                let test = '100'
                 this.setState({
                     delivery:{
                         latitude:newCoordinate.latitude, 
@@ -74,15 +88,13 @@ export default class DeliveryFindScreen extends Component{
                         longitudeDelta:0.003,
                     },
                 })
-        });
-        console.log('1',test);
-        
+        });     
     }
     getRouteLocation(){
-        console.log('getRouteLoccation 안에 delivery값 : ',this.state.delivery);
+        console.log('getRouteLoccation 안에 delivery값 : ',this.state.dInit);
         
         fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
-            +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.storeRegion.longitude+','+this.state.storeRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
+            +this.state.dInit.longitude+','+this.state.dInit.latitude+';'+this.state.storeRegion.longitude+','+this.state.storeRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
             method:"get",
             headers:{
                 'Accept':'application/json',

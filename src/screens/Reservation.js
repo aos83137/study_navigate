@@ -109,6 +109,8 @@ const Reservation = (props)=>{
                 return response.json()
             }).then((responseJson)=>{
                 r_id = responseJson.reverse()[0].reservation_id;
+                console.log(r_id);
+                
                 AsyncStorage.setItem('reservation_id', ''+r_id )
             })
             .catch((e)=>{
@@ -145,7 +147,8 @@ const Reservation = (props)=>{
                             text:'네. 사용할래요.',
                             onPress: ()=>{
                                 props.navigation.navigate('DeliveryInfo',{
-                                    reservation
+                                    reservation,
+                                    data
                                 });
                             }
                         }
@@ -181,6 +184,7 @@ const Reservation = (props)=>{
         }
         props.navigation.navigate('DeliveryInfo',{
             reservation,
+            data
         }
         );
     }
@@ -189,7 +193,8 @@ const Reservation = (props)=>{
         // await console.log('userId',userId);
         
         props.navigation.navigate('DeliveryRealtime',{
-            userId
+            userId,
+            data
         });
     }
     let imageCard;

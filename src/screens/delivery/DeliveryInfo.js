@@ -21,7 +21,7 @@ const Delivery = (props)=>{
         try{
             const token =await AsyncStorage.getItem('userToken');
             const r_id =await AsyncStorage.getItem('reservation_id');
-            // console.log(r_id);
+            console.log('r_id',r_id);
             setR_id(r_id);
             setUserId(token);
             
