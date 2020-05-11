@@ -19,6 +19,7 @@ const DateSetting = (props)=>{
     const [keeper_id, setKeeper_id] = useState(props.route.params?.keeper_id);
     const [keeper, setKeeper] = useState(props.route.params?.keeper);
     const whereScreen = props.route.params?.whereScreen;
+    const coord = props.route.params?.coord;
 
     const showDatePicker = (check) => {
         if(check === 'checkIn'){
@@ -81,6 +82,7 @@ const DateSetting = (props)=>{
                     bagCnt,
                     carrCnt,
                     keeper_id,
+                    coord,
                     data:keeper,
                     whereScreen:'reservation',
                 })

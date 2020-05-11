@@ -21,52 +21,66 @@ export default class DeliveryFindScreen extends Component{
                 latitude : 35.8843,
                 longitude: 128.6323,
             },
-            delivery:{
-                latitude:35.8951, 
-                longitude: 128.6237
-            },
             coordinate: new AnimatedRegion({
-                latitude: 0,
-                longitude: 0,
+                latitude: 35.8571,
+                longitude: 128.6557,
                 latitudeDelta: 0,
                 longitudeDelta: 0
               }),   
             coordinates:[],    
+            userId : this.props.route.params?.userId,
             // markers:[],
             error: null,
         };        
     }
-    componentDidMount() {
+
+    async componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
-
-            Geolocation.getCurrentPosition(
-                (position) => {
-                    let initialRegion = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: 0.003,
-                        longitudeDelta: 0.003,
-                    }
-                    this.setState({
-                        initialRegion,
-                        error: null,
-                    })
-                },
-                (error) => {
-                    // See error code charts below.
-                    this.setState({error:error.message});
-                    console.log(error.code, error.message);
-                },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                //정확도, 타임아웃, 최대 연령
-            );
-
-            this.getRouteLocation();
-
+        // console.log('실시간 쪽 id' ,this.state.userId);//userID잘 넘어옴
             this.getDeliveryLocation();
+
+            if(this.state.delivery){
+                this.getRouteLocation();
+            }
     }
-    
+    getDeliveryLocation(){
+        console.log(this.state.userId);
+        database().ref('/users/'+this.state.userId)
+        .on('value', snapshot => {
+                //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
+                console.log(snapshot.val());
+                
+                const newCoordinate ={
+                    latitude:snapshot.val().delivery_latitude,
+                    longitude:snapshot.val().delivery_longitude,
+                }
+                // console.log(newCoordinate);//잘나옴
+ 
+                if (Platform.OS === "android") {
+                    if (this.marker) {
+                        // console.log(this.marker);
+                        this.marker._component.animateMarkerToCoordinate(
+                            newCoordinate,
+                            500 // 500 is the duration to animate the marker
+                        );
+                    }
+                }
+                let test = '100'
+                this.setState({
+                    delivery:{
+                        latitude:newCoordinate.latitude, 
+                        longitude: newCoordinate.longitude,
+                        latitudeDelta:0.003,
+                        longitudeDelta:0.003,
+                    },
+                })
+        });
+        console.log('1',test);
+        
+    }
     getRouteLocation(){
+        console.log('getRouteLoccation 안에 delivery값 : ',this.state.delivery);
+        
         fetch('https://api.mapbox.com/directions/v5/mapbox/walking/'
             +this.state.delivery.longitude+','+this.state.delivery.latitude+';'+this.state.storeRegion.longitude+','+this.state.storeRegion.latitude+'?geometries=geojson&access_token=pk.eyJ1IjoiamVvbnlvbmdzZW9rIiwiYSI6ImNrOXh4dGh0aTA1aXozbXBpdjNkeXM0OXYifQ.z_QRmRG_ZTKLTxHdUnLDiQ',{
             method:"get",
@@ -141,36 +155,12 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta:0.02,
         })
     }
-    getDeliveryLocation(){
-        database().ref('/delivery')
-        .on('value', snapshot => {
-                //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
-                const dataToString = JSON.stringify(snapshot);
-                const dataJson = JSON.parse(dataToString);
-                // const {latitude, longitude} = dataJson.l;
-                // console.log("hi",dataJson.lat);
-                
-                const newCoordinate ={
-                    latitude:dataJson.lat,
-                    longitude:dataJson.lon,
-                }
 
-                if (Platform.OS === "android") {
-                    if (this.marker) {
-                        // console.log(this.marker);
-                        
-                        this.marker._component.animateMarkerToCoordinate(
-                            newCoordinate,
-                            500 // 500 is the duration to animate the marker
-                        );
-                    }
-                }
-                this.setState({
-                    delivery:newCoordinate,
-                })
-        });
+    componentWillUnmount(){
+        database().ref('/delivery').onDisconnect().cancel;
+        console.log('componentWillUnmount 성공' );
     }
-    render(){             
+    render(){       
         return(
             <View style={styles.container}>
                 <View style={styles.rootMenu}>
@@ -203,7 +193,7 @@ export default class DeliveryFindScreen extends Component{
                     provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                     style={styles.map}
                     ref={map=> {this._map = map}}
-                    initialRegion={this.state.initialRegion}
+                    initialRegion={this.state.delivery}
                     showsUserLocation={false}
                     showsMyLocationButton = {true}
                     showsCompass = {true}

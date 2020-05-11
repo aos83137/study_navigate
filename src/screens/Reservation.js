@@ -17,11 +17,20 @@ const Reservation = (props)=>{
     const carrCnt = props.route.params?.carrCnt;
     const whereScreen = props.route.params?.whereScreen ? props.route.params?.whereScreen : true;
     const keeper_id = props.route.params?.keeper_id
-    const data = props.route.params?.data ? props.route.params?.data : '없디';
+    const data = props.route.params?.data ? props.route.params?.data : '없디'; // 가게정보 받음
     const state = props.route.params?.state;
-    const reservation = props.route.params?.reservation;
+    const reservation = props.route.params?.reservation; //예약정보 받음
     const [value, onChangeText] = useState('xxxx-xxxx-xxxx-xxxx');
     let ddd;
+    const coord = props.route.params?.coord;
+    console.log('여기는 reservation');
+    // console.log('data',data);
+    // console.log('reservation',reservation.reservation_id);
+
+    useEffect(()=>{
+
+    },[props])
+    let r_id;
     const getFormatDate = date=>{
         let month = (1 + date.getMonth());          //M
         month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
@@ -71,13 +80,6 @@ const Reservation = (props)=>{
     }
     
     const payEnd= async()=>{
-        try{
-            await AsyncStorage.setItem('status','endKeeper')
-            console.log('스테이터스 저장 완료');
-            
-        }catch(e){
-            console.error(e);
-        }
         fetch('http://'+url+'/reservations',{
             method: 'POST',
             headers:{
@@ -91,15 +93,37 @@ const Reservation = (props)=>{
                 check_out:getFromatDateTime(checkOut),
                 bag_cnt:bagCnt,
                 car_cnt:carrCnt,
-                reservation_status:'keeper_keeping',
+                reservation_status:'keeper_reservation',
             })
         }).then((response)=>{
             return response.json()
         }).then((responseJson)=>{
             console.log(responseJson);
+            fetch('http://'+url+'/reservations',{
+                method: 'GET',
+                headers:{
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                }
+            }).then((response)=>{
+                return response.json()
+            }).then((responseJson)=>{
+                r_id = responseJson.reverse()[0].reservation_id;
+                AsyncStorage.setItem('reservation_id', ''+r_id )
+            })
+            .catch((e)=>{
+                console.error(e);
+            })
         }).catch((error)=>{
             console.error(error);
         })
+
+        try{
+            await AsyncStorage.setItem('status','endKeeper')
+            console.log('스테이터스 저장 완료');
+        }catch(e){
+            console.error(e);
+        }
         Alert.alert(
                     //Header
                     '결제 감사합니다.',
@@ -113,14 +137,16 @@ const Reservation = (props)=>{
                             onPress:()=>{
                                 //딜리버리 스테이트를 바꿔야함
                                 props.navigation.navigate('Info',{
-                                    state:'change',
+                                    stateTest:'change',
                                 });
                             }
                         },
                         {
                             text:'네. 사용할래요.',
                             onPress: ()=>{
-                                props.navigation.push('DeliveryInfo');
+                                props.navigation.navigate('DeliveryInfo',{
+                                    reservation
+                                });
                             }
                         }
                     ]
@@ -129,12 +155,42 @@ const Reservation = (props)=>{
     // const deliveryEx=()=>{
     //     Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
     // }
-    const goDelivery = ()=>{
+    const goDelivery = async()=>{
+        fetch('http://'+url+'/reservations',{
+            method: 'GET',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            }
+        }).then((response)=>{
+            return response.json()
+        }).then((responseJson)=>{
+            r_id = responseJson.reverse()[0].reservation_id;
+            AsyncStorage.setItem('reservation_id', ''+r_id )
+        })
+        .catch((e)=>{
+            console.error(e);
+        })
 
-        props.navigation.navigate('DeliveryInfo');
+
+        try{
+            await AsyncStorage.setItem('status','endKeeper')
+            console.log('스테이터스 저장 완료');
+        }catch(e){
+            console.error(e);
+        }
+        props.navigation.navigate('DeliveryInfo',{
+            reservation,
+        }
+        );
     }
-    const goDeliveryFindScreen = ()=>{
-        props.navigation.navigate('DeliveryRealtime');
+    const goDeliveryFindScreen = async()=>{
+        const userId = await AsyncStorage.getItem('userToken');
+        // await console.log('userId',userId);
+        
+        props.navigation.navigate('DeliveryRealtime',{
+            userId
+        });
     }
     let imageCard;
     let headerText;
@@ -145,7 +201,7 @@ const Reservation = (props)=>{
     if(whereScreen === 'reservation'){
         imageCard=
         <View style={styles.ImageWrap}>
-            <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
+            <Image style={styles.keeperImg} source={{ uri:data.keeper_store_imgurl }}></Image>
             <Text style={styles.keeperText}>{data.keeper_store_name}</Text>
         </View>
         headerText = <Text style={styles.headerText}>예약하기</Text>
@@ -213,7 +269,7 @@ const Reservation = (props)=>{
     //예약 확인에서 왔을 경우
         imageCard=
             <View style={styles.ImageWrap}>
-                <Image style={styles.keeperImg} source={require('../img/store/img2.png')}></Image>
+                <Image style={styles.keeperImg} source={{ uri:data.keeper_store_imgurl }}></Image>
                 <Text style={styles.keeperText}>{data.keeper_store_name }</Text>
             </View>
         headerText = <Text style={styles.headerText}>예약확인</Text>
@@ -266,7 +322,7 @@ const Reservation = (props)=>{
                 </View>
             </View>
         </View>;
-        if(state==='keeper_reservation' || state==='보관 중'){
+        if(state==='keeper_reservation' || state==='keeper_keeping'){
             footer=
             <View>
                 <TouchableOpacity >
@@ -287,7 +343,7 @@ const Reservation = (props)=>{
                     </View>
                 </View>
             </View>;
-        }else if(state==='배달 중'){
+        }else if(state==='in_delivery'){
             footer=
             <View>                
                 <View style={styles.paysCard}>
@@ -298,7 +354,7 @@ const Reservation = (props)=>{
                         />
                 </View>
             </View>;
-        }else if(state==='종료'){
+        }else{
             footer=
             <View>                
                 <View style={styles.paysCard}>
@@ -310,8 +366,7 @@ const Reservation = (props)=>{
                 </View>
             </View>;
         }
-    }
-
+    }    
     // console.log('1' +keeper_id);
 
         return(

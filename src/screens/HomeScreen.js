@@ -94,7 +94,6 @@ export default class HomeScreen extends Component{
             longitude, 
             latitudeDelta, 
             longitudeDelta} = this.state.initialRegion
-        console.log('위도'+latitude+'   '+ '경도' + longitude);
         
         this._map.animateToRegion({
             latitude,
@@ -176,17 +175,15 @@ export default class HomeScreen extends Component{
                     checkIn : this.props.route.params?.checkIn,
                     checkOut : this.props.route.params?.checkOut,
                     keeper: item.keeper_store_id,
+                    coord:{
+                        latitude:this.state.initialRegion.latitude,
+                        longitude:this.state.initialRegion.longitude,
+                    },
                 });
             }}>
                 <View style={[styles.cardContainer,this.state.hiddenToggle]}>
                         <Text style={styles.cardTitle}>{item.keeper_store_name}</Text>
-                        {/* {console.log(typeof '../img/store/img5.png')
-                        }
-                        {
-                            console.log(typeof item.keeper_store_imgurl)
-                            
-                        } */}
-                        {/* <Image style={styles.cardImage} source={require(item.keeper_store_imgurl)}/> */}
+                        <Image style={styles.cardImage} source={{uri:item.keeper_store_imgurl}}/>
 
                 </View>
             </TouchableHighlight>

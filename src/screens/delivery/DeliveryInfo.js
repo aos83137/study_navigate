@@ -14,48 +14,73 @@ const Delivery = (props)=>{
     const [load,setLoad] = useState(false);
     const [userCoords,setUserCoords] = useState(null);
     const [userId,setUserId] = useState(null);
+    const [r_id, setR_id] = useState();
+    const reservation = props.route.params?.reservation;
+
     const _storeData = async()=>{
         try{
-            let token =await AsyncStorage.getItem('userToken');
-            console.log(token);
-
-            setUserId(token)
+            const token =await AsyncStorage.getItem('userToken');
+            const r_id =await AsyncStorage.getItem('reservation_id');
+            // console.log(r_id);
+            setR_id(r_id);
+            setUserId(token);
             
         }catch(e){
             console.error(e);
         }
     }
     useEffect(()=>{
+
         Geolocation.getCurrentPosition((position)=>{
             let userCoords = {
                 latitude:position.coords.latitude,
                 longitude:position.coords.longitude,
             }
+            console.log('DeliveryInfo화면 - 현재 유저coord : ', userCoords);
+            
             setUserCoords(userCoords)
         },(e)=>{console.error(e);});
         _storeData()
         return ()=>{
             console.log("This will be logged on unmount");
         };
-    },[]);
+    },[props]);
     const findDelivery=()=>{
         setLoad(true);    
-        console.log('넣는다! :' + userId);
+        let state;
+        console.log('넣는다! :' + r_id);
         
         database()
         .ref('/users/'+userId)
-        .set({
+        .update({
             name: userId,
-            store_latitude:128.6245,
-            store_longitude: 35.8938,
+            reservation_id:r_id,
             user_latitude:userCoords.latitude,
             user_longitude: userCoords.longitude,
+            state:'listen',
         })
-        .then(() => console.log('Data set.'));
-        setTimeout(()=>{
-            setLoad(false);
-            props.navigation.navigate('DeliveryFindScreen');
-        },2000)
+        .then(() => {
+            console.log('Data set.')
+        });
+        database()
+        .ref('/users/'+userId)
+        .on('value', snapshot => {
+            console.log('User data: ', snapshot.val().state);
+            state = snapshot.val().state;
+            if(state=='ok'){
+                setLoad(false);
+                props.navigation.navigate('DeliveryFindScreen',{
+                    reservation,
+                    userId,
+                });
+            }
+        });
+        
+
+        
+        // setTimeout(()=>{
+            
+        // },2000)
     }
     const homeNavi=()=>{
         props.navigation.navigate('Main',{ screen: 'InfoScreen' });

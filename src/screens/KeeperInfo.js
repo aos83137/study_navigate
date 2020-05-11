@@ -20,7 +20,7 @@ const KeeperInfo = (props)=>{
     const keeper_id = props.route.params?.keeper
     const [keeper,setKeeper] = useState({});
     const [isLoding, setIsLoding] = useState(true);
-
+    const coord = props.route.params?.coord;
     useEffect(()=>{
         fetch(URI+'/kstoreinfos',{
             method:"get",
@@ -52,11 +52,12 @@ const KeeperInfo = (props)=>{
             checkOut,
             keeper,
             keeper_id,
+            coord,
             whereScreen:'info'
         });
     }
     const imgUrl = ''+keeper.keeper_store_imgurl;
-       console.log(imgUrl.length);
+    // console.log(imgUrl);
     const test='../img/store/img5.png';    
     // const input = require(string);
         return(
@@ -71,7 +72,9 @@ const KeeperInfo = (props)=>{
                         <View style={styles.ImageWrap}>
                             {
                                 imgUrl ? 
-                                <Image style={styles.keeper} source={require('../img/store/img5.png')}></Image>
+                                <Image style={styles.keeper} source={{
+                                    uri: imgUrl,
+                                  }}/>
                                 :null
                             }
                         </View>
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     },
     header:{
         padding:'2%',
-        backgroundColor:colors.white,
+        position:'absolute',
     },
     title:{
         width:'100%',

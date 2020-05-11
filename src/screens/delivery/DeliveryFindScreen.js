@@ -11,6 +11,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import colors from '../../styles/colors';
 import database from '@react-native-firebase/database';
 
+
+const url='my-project-9710670624.df.r.appspot.com';
+
 export default class DeliveryFindScreen extends Component{
     constructor(props){
         super(props);
@@ -26,6 +29,7 @@ export default class DeliveryFindScreen extends Component{
             error: null,
         };        
     }
+
     componentDidMount() {
         // Instead of navigator.geolocation, just use Geolocation.
 
@@ -49,12 +53,11 @@ export default class DeliveryFindScreen extends Component{
                     }).then((res)=>res.json())
                     .then((resJson)=>{
                         const distance = ''+Math.round(resJson.routes[0].distance)/1000+'km';
+                        const speed = 20;
+                        const time = Math.round((Math.round(resJson.routes[0].distance)/1000)/speed*60);
                         console.log('거리 : ',distance);
-
-                        const dPoint = resJson.waypoints[0].name;
-                        const kPoint = resJson.waypoints[1].name;
-                        console.log(dPoint);
-                        console.log(kPoint);
+                        console.log('속력 : ',speed);
+                        console.log('시간 : ', time);
 
                         let coords = resJson.routes[0].geometry.coordinates.map(item => {
                             return { latitude: item[1], longitude: item[0] };
@@ -62,7 +65,8 @@ export default class DeliveryFindScreen extends Component{
                         // console.log(coords);
                         this.setState({
                             coords,
-                            distance
+                            distance,
+                            time
                         })
                     })
                     .catch((e)=>{
@@ -82,7 +86,7 @@ export default class DeliveryFindScreen extends Component{
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 //정확도, 타임아웃, 최대 연령
             );
-
+            // this.getR_id();        
             this.getState();
     }
     componentWillUnmount(){
@@ -95,19 +99,51 @@ export default class DeliveryFindScreen extends Component{
         .on('value',snapshot=>{
             const state = snapshot.val().state;
             console.log('User data: ', state);
+
+            const newCoordinate ={
+                latitude:snapshot.val().lat,
+                longitude:snapshot.val().lon,
+            }
+            console.log(newCoordinate);
+            
             if(state==='take_luggage'){
                 this.takeLuggage();
             }
+            if (Platform.OS === "android") {
+                if (this.marker) {
+                    // console.log(this.marker);
+                    
+                    this.marker._component.animateMarkerToCoordinate(
+                        newCoordinate,
+                        500 // 500 is the duration to animate the marker
+                    );
+                }
+            }
+            this.setState({
+                delivery:newCoordinate,
+            })
         });
     }
 
     deleteToken=async()=>{
         await AsyncStorage.setItem('status','endDelivery');
-        // const value = await AsyncStorage.getItem('status');
-        // console.log(value);
     }
 
     takeLuggage(){
+        const r_id = this.props.route.params?.reservation.reservation_id; 
+        fetch('http://'+url+'/reservations/'+r_id,{
+            method: 'PATCH',
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+            body:JSON.stringify({
+                reservation_status:'in_delivery',
+            })
+        }).then((response)=>{
+            return response.json()
+        }).catch((e)=>{console.error(e)
+        });
         Alert.alert(
             //header
             '인계 완료했습니다.',
@@ -120,7 +156,9 @@ export default class DeliveryFindScreen extends Component{
                         database().ref('/delivery').update({state:'delivering'})
                         .then(()=>{console.log('Data updated');
                         });
-                        this.props.navigation.navigate('Main');
+                        this.props.navigation.navigate('Main',{
+                            test:'test',
+                        });
                     }
                 },
             ]
@@ -173,7 +211,7 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta:0.006,
         })
     }
-    
+
     render(){             
         return(
             <View style={styles.container}>
@@ -189,7 +227,7 @@ export default class DeliveryFindScreen extends Component{
                             <Text style={styles.dName}>딜리버리 : 전꿈몽</Text>
                             <Text style={styles.dCar}>대구11사1234 | 아반떼cn7</Text>
                             <Text style={styles.timeText}>총 거리 : {this.state.distance}</Text>
-                            <Text style={styles.timeText}>약 5분 후 도착합니다.</Text>
+                            <Text style={styles.timeText}>약 {this.state.time}분 후 도착합니다.</Text>
                         </View>
                     </View>
                     
@@ -220,17 +258,12 @@ export default class DeliveryFindScreen extends Component{
                         >
                         </Marker>
                     }
-                    <Marker
-                        coordinate={this.state.storeRegion}
-                        image={require('../../img/signs.png')}
-                        title={'Keeper'}
-                    >
-                    </Marker>
-                    <Marker
+                    <Marker.Animated
                         coordinate={this.state.delivery}
                         image={require('../../img/location.png')}
+                        ref={ref=>this.marker=ref}
                         title={'Delivery'}
-                    ></Marker>
+                    />
                     {   
                         this.state.coords?
                         <Polyline
@@ -250,6 +283,8 @@ export default class DeliveryFindScreen extends Component{
                 </MapView>
                 <TouchableHighlight 
                     onPress={()=>{
+                    
+
                         this.takeLuggage();
                     }
                 }>
