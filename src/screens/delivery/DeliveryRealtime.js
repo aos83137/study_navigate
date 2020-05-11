@@ -125,6 +125,31 @@ export default class DeliveryFindScreen extends Component{
         });
     }
 
+    //짐 인계했을 때
+    pushLuggage(){
+        //
+        Alert.alert(
+            //header
+            '인계 완료했습니다.',
+            // title
+            'Info탭에서 실시간 짐의 위치를 확인할 수 있습니다.',
+            [
+                {
+                    text:'홈으로...',
+                    onPress:()=>{
+                        database().ref('/delivery').update({state:'delivering'})
+                        .then(()=>{console.log('Data updated');
+                        });
+                        this.props.navigation.navigate('Main',{
+                            test:'test',
+                        });
+                    }
+                },
+            ]
+        )
+    }
+
+    //유저위치 기준 맵 중앙으로
     centerMap(){
         const {
             latitude, 
@@ -136,6 +161,7 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta:0.003
         })
     }
+    //딜리버리 위치로
     goDelivery(){
         const {
             latitude, 
@@ -147,6 +173,7 @@ export default class DeliveryFindScreen extends Component{
             longitudeDelta:0.003
         })
     }
+    //유저+ 딜리버리 중앙위치
     zoomOut(){
         const userRegion ={
             latitude: this.state.initialRegion.latitude,
@@ -169,6 +196,7 @@ export default class DeliveryFindScreen extends Component{
         })
     }
 
+    //실행 종료때임
     componentWillUnmount(){
         database().ref('/delivery').onDisconnect().cancel;
         console.log('componentWillUnmount 성공' );

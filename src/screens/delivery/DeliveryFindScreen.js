@@ -68,7 +68,8 @@ export default class DeliveryFindScreen extends Component{
         .ref('/users/'+this.state.userId)
         .once('value')
         .then(snapshot => {
-            console.log('User data: ', snapshot.val());
+            console.log('User data - state: ', snapshot.val());
+
             this.setState({
                 dInit:{
                     latitude:snapshot.val().delivery_latitude,
@@ -85,7 +86,9 @@ export default class DeliveryFindScreen extends Component{
         .on('value', snapshot => {
                 //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
                 console.log(snapshot.val());
-                
+                if(snapshot.val().state == 'take_luggage'){
+                    this.takeLuggage();
+                }
                 const newCoordinate ={
                     latitude:snapshot.val().delivery_latitude,
                     longitude:snapshot.val().delivery_longitude,
@@ -150,8 +153,9 @@ export default class DeliveryFindScreen extends Component{
     }
 
     takeLuggage(){
-        const r_id = this.props.route.params?.reservation.reservation_id; 
-        fetch('http://'+url+'/reservations/'+r_id,{
+        console.log('reservation:',this.state.reservation);
+        
+        fetch('http://'+url+'/reservations/'+this.state.reservation.reservation_id,{
             method: 'PATCH',
             headers:{
                 'Accept':'application/json',
