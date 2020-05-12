@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Image,ActivityIndicator,Alert,TouchableHighlight} from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, StyleSheet, Image,ActivityIndicator,Alert,TouchableHighlight} from 'react-native';
+import { Button, Overlay,Text } from 'react-native-elements';
 import Geolocation from 'react-native-geolocation-service';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
@@ -68,6 +68,7 @@ const Delivery = (props)=>{
             console.log('User data: ', snapshot.val().state);
             const state = snapshot.val().state;
             if(state=='ok'){
+                setVisible(!visible);
                 setLoad(false);
                 props.navigation.navigate('DeliveryFindScreen',{
                     reservation,
@@ -90,12 +91,49 @@ const Delivery = (props)=>{
     if (load){
         showActivity=
         <View style = {styles.elem}>
-            <LottieView style={styles.lottie2} source={require('../../img/lottie/loading1.json')} autoPlay loop/>
+            <ActivityIndicator/>
             <Text style={styles.searchText}>딜리버리를 찾는 중 입니다....</Text>
         </View>
     }
+
+
+    const [visible, setVisible] = useState(false);
+
+    const toggleOverlay = () => {
+      setVisible(!visible);
+    };
     return(
         <View style={styles.container}>
+            <View>
+                <Overlay isVisible={visible}>
+                    <View style={styles.header}>
+                        <Text h3>상세금액</Text>
+                    </View>
+                    <View style={{ flex:2 }}>
+                        <LottieView style={styles.lottie} source={require('../../img/lottie/walk-processes.json')} autoPlay loop/>
+                    </View>
+                    <View style={styles.content}>
+                        <View>
+                            <Text>출발지 : 현재 위치</Text>
+                            {/* <Icon2 name='arrow-down' size={24}/> */}
+                            <Text>목적지 : {data.keeper_store_name}</Text>
+
+                            <Text h5>운행거리 : 5km</Text>
+                            <Text>최종결제금액 : 2000¥</Text>
+                        </View>
+                    </View>
+                    <View style={styles.footer}>
+                        
+                        {showActivity?
+                        showActivity:<Text>딜리버리를 찾으시겠습니까?</Text>
+                        }
+                        <View style={styles.elem}>
+                            <Button buttonStyle={styles.button2} title="아니요"  onPress={toggleOverlay}/>
+                            <Button buttonStyle={styles.button2} title="네" onPress={findDelivery}  />
+                        </View>
+                    </View >
+                </Overlay>
+            </View>
             <View style ={styles.header}>
                 <TouchableHighlight onPress={()=>{props.navigation.navigate('Main')}}>
                     <View>
@@ -104,7 +142,7 @@ const Delivery = (props)=>{
                 </TouchableHighlight>
             </View>
             <View style = {styles.lottieView}>
-            <Text style={styles.headerTitle}>예약 접수가 완료 되었습니다.</Text>
+            <Text h4 style={styles.headerTitle}>예약 접수가 완료 되었습니다.</Text>
             <LottieView style={styles.lottie} source={require('../../img/lottie/checkList3.json')} autoPlay loop/>
             </View>
             <View style={styles.content}>
@@ -124,10 +162,10 @@ const Delivery = (props)=>{
                     (24시간 내 키퍼의 수락에 따라 예약이 취소 될 수가 있습니다.)</Text>
             </View>
             <View style={styles.footer}>
-                {showActivity}
+                {/* {showActivity} */}
                 <View style={{justifyContent:'center', flexDirection:'row', }}>
                     <Button title="당일에 사용할께요." type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={homeNavi}/>
-                    <Button title="네. 지금 사용할께요" type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={findDelivery}/>
+                    <Button title="네. 지금 사용할께요" type='Clear' titleStyle={styles.buttonTitle} buttonStyle={styles.button} onPress={toggleOverlay}/>
                 </View>
             </View>
         </View>
@@ -200,6 +238,13 @@ const styles = StyleSheet.create({
     button:{
         marginLeft:13,
         marginRight:13,
+        // backgroundColor:'rgba(255,255,255,0.2)'
+    },
+    button2:{
+        marginLeft:13,
+        marginRight:13,
+        width:100,
+        backgroundColor:colors.green01,
         // backgroundColor:'rgba(255,255,255,0.2)'
     },
     buttonTitle:{

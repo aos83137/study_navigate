@@ -19,8 +19,9 @@ const Reservation = (props)=>{
     const keeper_id = props.route.params?.keeper_id
     const data = props.route.params?.data ? props.route.params?.data : '없디'; // 가게정보 받음
     const state = props.route.params?.state;
-    const reservation = props.route.params?.reservation; //예약정보 받음
+    const [reservation, setReservation] = useState(props.route.params?.reservation); //예약정보 받음
     const [value, onChangeText] = useState('xxxx-xxxx-xxxx-xxxx');
+    const [delivery, setDelivery]=useState();
     let ddd;
     const coord = props.route.params?.coord;
     console.log('여기는 reservation');
@@ -28,7 +29,20 @@ const Reservation = (props)=>{
     // console.log('reservation',reservation.reservation_id);
 
     useEffect(()=>{
-
+        fetch('http://'+url+'/deliverys',{
+            method:"get",
+            headers:{
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+            },
+        }).then((res)=>res.json())
+        .then((resJson)=>{
+            console.log('delilvery info :',resJson[0]);
+            
+            setDelivery(resJson[0]);
+        }).catch((error)=>{
+            console.error(error);
+        });
     },[props])
     let r_id;
     const getFormatDate = date=>{
@@ -80,6 +94,8 @@ const Reservation = (props)=>{
     }
     
     const payEnd= async()=>{
+        const userId = await AsyncStorage.getItem('userToken');
+
         fetch('http://'+url+'/reservations',{
             method: 'POST',
             headers:{
@@ -108,25 +124,9 @@ const Reservation = (props)=>{
             }).then((response)=>{
                 return response.json()
             }).then((responseJson)=>{
-                r_id = responseJson.reverse()[0].reservation_id;
-                console.log(r_id);
+                console.log('reservation',responseJson.reverse()[0]);
                 
-                AsyncStorage.setItem('reservation_id', ''+r_id )
-            })
-            .catch((e)=>{
-                console.error(e);
-            })
-        }).catch((error)=>{
-            console.error(error);
-        })
-
-        try{
-            await AsyncStorage.setItem('status','endKeeper')
-            console.log('스테이터스 저장 완료');
-        }catch(e){
-            console.error(e);
-        }
-        Alert.alert(
+                Alert.alert(
                     //Header
                     '결제 감사합니다.',
                     //title
@@ -147,7 +147,7 @@ const Reservation = (props)=>{
                             text:'네. 사용할래요.',
                             onPress: ()=>{
                                 props.navigation.navigate('DeliveryInfo',{
-                                    reservation,
+                                    reservation:responseJson.reverse()[0],
                                     data,
                                     userId,
                                 });
@@ -155,6 +155,21 @@ const Reservation = (props)=>{
                         }
                     ]
                 );
+            })
+            .catch((e)=>{
+                console.error(e);
+            })
+        }).catch((error)=>{
+            console.error(error);
+        })
+
+        try{
+            await AsyncStorage.setItem('status','endKeeper')
+            console.log('스테이터스 저장 완료');
+        }catch(e){
+            console.error(e);
+        }
+
     }
     // const deliveryEx=()=>{
     //     Alert.alert("키퍼 예약을 끝내신 후 배달을 원하시는 고객님께서는 '예약하기'를 눌러 완료하신 뒤 예약페이지에서 딜리버리를 예약할 수 있습니다!");
@@ -367,8 +382,9 @@ const Reservation = (props)=>{
                 <View style={styles.paysCard}>
                     <Text>딜리버리 이용 내역</Text>    
                     <View>
-                        <Text>- 차 번호</Text>    
-                        <Text>- 이동 거리</Text>
+                        <Text>- 딜리버리 : {delivery.delivery_name}</Text> 
+                        <Text>- 차종{delivery.delivery_car}</Text>   
+                        <Text>- 이동 거리 : 6.23km</Text>
                     </View>
                 </View>
             </View>;

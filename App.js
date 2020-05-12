@@ -18,7 +18,7 @@ import LogIn  from './src/screens/LogIn';
 import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from 'react-native-splash-screen';
 import DeliveryRealtime from './src/screens/delivery/DeliveryRealtime';
-// import SignUp from './src/screens/SignUp.js';
+import SignUp from './src/screens/SignUp.js';
 
 
 export async function request_location_runtime_permission() {
@@ -114,6 +114,7 @@ export default class App extends Component{
             <RootStack.Screen name="DeliveryInfo" component={DeliveryInfo}/>
             <RootStack.Screen name="DeliveryFindScreen" component={DeliveryFindScreen}/>
             <RootStack.Screen name="LogIn" component={LogIn}/>
+            <RootStack.Screen name="SignUp" component={SignUp}/>
             <RootStack.Screen name="DeliveryRealtime" component={DeliveryRealtime}/>
           </RootStack.Navigator>
         </NavigationContainer>

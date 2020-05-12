@@ -71,8 +71,9 @@ export default class SettingsScreen extends Component{
             <View>
                 <TouchableHighlight onPress={
                     ()=>{
+                        this.props.navigation.navigate('SignUp');
                         console.log(this.state.auth);
-                        
+
                     }
                 }>
                     <View style={styles.content}>
@@ -82,7 +83,7 @@ export default class SettingsScreen extends Component{
                 </TouchableHighlight>
                 <TouchableHighlight  onPress={
                     ()=>{
-                        this.props.navigation.push('LogIn')
+                        this.props.navigation.navigate('LogIn')
                     }
                 }>
                     <View style={styles.content}>

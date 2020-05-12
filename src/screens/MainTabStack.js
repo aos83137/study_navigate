@@ -45,7 +45,7 @@ export default class MainTabStack extends Component{
           function HomeIconWithBadge(props) {
             // React Context API, Redux, MobX 또는 이벤트 이미 터와 같은 다른 방법으로 badgeCount를 전달해야합니다.
             // console.log('여기는 props'+JSON.stringify(props));
-            return <IconWithBadge {...props} badgeCount={5} />;
+            return <IconWithBadge {...props} badgeCount={0} />;
           }
 
 

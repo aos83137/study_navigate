@@ -2,6 +2,8 @@ import React , {useState, useEffect } from 'react';
 import {Text ,View,StyleSheet, Image, FlatList, Alert, ActivityIndicator,Dimensions, TouchableOpacity} from 'react-native';
 import colors from '../styles/colors';
 import AsyncStorage from '@react-native-community/async-storage';
+import LottieView from 'lottie-react-native';
+
 
 
 let {width, height} = Dimensions.get('window')
@@ -105,16 +107,28 @@ const InfoScreen = (props)=>{
     }
     return(
         <View style={styles.container}> 
+                <View style={styles.background}>
+                <LottieView style={styles.lottie} source={require('../img/lottie/waves.json')} autoPlay loop/>
+            </View>
             <FlatList
                 data={reservations}
                 renderItem={({item}) =>(<Item keepers={keepers} item={item} props={props}/>)}
                 keyExtractor={item=>item.id}
                 />
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    background:{
+        position:'absolute',
+        width:'100%',
+        bottom:0
+    },
+    lottie:{
+        width:'100%',
+    },
     container:{
         flex:1,
         // backgroundColor:'white'

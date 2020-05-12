@@ -208,21 +208,21 @@ export default class HomeScreen extends Component{
                     ref={map=> {this._map = map}}
                     initialRegion={this.state.initialRegion}
                     showsUserLocation={true}
-                    // onUserLocationChange={
-                    //     coordinate=>{
-                    //         // console.log('test');
-                    //         // console.log(coordinate.nativeEvent.coordinate.latitude);
-                    //         const {latitude,longitude}= coordinate.nativeEvent.coordinate
-                    //         this.setState({
-                    //             initialRegion:{
-                    //                 latitude,
-                    //                 longitude,
-                    //                 latitudeDelta: 0.045,
-                    //                 longitudeDelta: 0.045,
-                    //             }
-                    //         });
-                    //     }
-                    // }
+                    onUserLocationChange={
+                        coordinate=>{
+                            // console.log('test');
+                            // console.log(coordinate.nativeEvent.coordinate.latitude);
+                            const {latitude,longitude}= coordinate.nativeEvent.coordinate
+                            this.setState({
+                                initialRegion:{
+                                    latitude,
+                                    longitude,
+                                    latitudeDelta: 0.045,
+                                    longitudeDelta: 0.045,
+                                }
+                            });
+                        }
+                    }
                     onPress = {this.clickMapHiddenMenu}
                 >
                     {this.state.keeper?

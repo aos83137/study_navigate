@@ -1,17 +1,49 @@
 import React , {Component,useState, useEffect } from 'react';
 import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight} from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button,Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import  colors from '../styles/colors'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { log } from 'react-native-reanimated';
+import { FlatList } from 'react-native-gesture-handler';
 
 let {width, height} = Dimensions.get('window')
 
 const URI = 'https://my-project-9710670624.df.r.appspot.com'
 
 //props 안에 navigation, route가  들어가있음 {navigation, route} 이렇게 써도 되고 props.navigatio으로 써도됨
+function Item({item, props}){
+    let cnt='';
+    for (var i=0; i<item.starpoint; i++){
+        cnt += '★';
+    }
+
+return(
+    <View>
+        <View style={styles.rowDirection}>
+            <Avatar
+                rounded
+                title={item.tourist_id[0]}
+                size="medium"
+            />
+            <Text  style={styles.nameText}>{item.tourist_id}</Text>
+        </View>
+        <View style={styles.starEmel}>
+            <View style={styles.starRating}>
+            <Text>{cnt + ' '+item.starpoint}</Text>
+            </View>
+            <Text>{item.created_at}</Text>                        
+        </View>
+        <View style={styles.inWrapView}> 
+            <Text>
+                {item.content}
+            </Text>
+        </View>
+    </View>
+    )
+}
+
 const KeeperInfo = (props)=>{   
     const checkIn = props.route.params?.checkIn
     const checkOut = props.route.params?.checkOut
@@ -21,6 +53,31 @@ const KeeperInfo = (props)=>{
     const [keeper,setKeeper] = useState({});
     const [isLoding, setIsLoding] = useState(true);
     const coord = props.route.params?.coord;
+    const comment = [
+        {
+            tourist_id:'JeonYS',
+            starpoint:5,
+            created_at:'2020.05.12',
+            content:'사장님도 친절하시고 가게 구경도 재밌게 했습니다!!\n다음에 여행오면 또 이용할 것 같아요!!'
+        },
+        {
+            tourist_id:'小嶋',
+            starpoint:5,
+            created_at:'2020.04.24',
+            content:'丁寧にご対応頂きました。ありがとうございます。'
+        },        {
+            tourist_id:'田中',
+            starpoint:5,
+            created_at:'2020.03.20',
+            content:'今回、コインロッカーが使えず、困って、白畑ら、こちらのサイトを知りました。迅速に対応していただけて、また機会があれば、是非利用したいと思います。'
+        },
+        {
+            tourist_id:'JeonYS',
+            starpoint:5,
+            created_at:'2020.05.12',
+            content:'사장님도 친절하시고 가게 구경도 재밌게 했습니다!!\n다음에 여행오면 또 이용할 것 같아요!!'
+        }
+    ]
     useEffect(()=>{
         fetch(URI+'/kstoreinfos',{
             method:"get",
@@ -128,57 +185,11 @@ const KeeperInfo = (props)=>{
                         </View >
                         <View style={styles.cardView}>
                             <Text>평가</Text>
-                            <View>
-                                <View style={styles.rowDirection}>
-                                    <Text>사진</Text>
-                                    <Text>유저 네임</Text>
-                                </View>
-                                <View style={styles.starEmel}>
-                                    <View style={styles.starRating}>
-                                        <Text>★★★★★ 5.0</Text>
-                                    </View>
-                                    <Text>2020.4.28.</Text>                        
-                                </View>
-                                <View style={styles.inWrapView}> 
-                                    <Text>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum commodi praesentium atque. Non porro deleniti consequatur quia assumenda fugit, voluptatibus, numquam quidem est delectus magni officia accusamus corporis, dolorum adipisci.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View>
-                                <View style={styles.rowDirection}>
-                                    <Text>사진</Text>
-                                    <Text>유저 네임</Text>
-                                </View>
-                                <View style={styles.starEmel}>
-                                    <View style={styles.starRating}>
-                                        <Text>★★★★★ 5.0</Text>
-                                    </View>
-                                    <Text>2020.4.28.</Text>                        
-                                </View>
-                                <View style={styles.inWrapView}> 
-                                    <Text>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum commodi praesentium atque. Non porro deleniti consequatur quia assumenda fugit, voluptatibus, numquam quidem est delectus magni officia accusamus corporis, dolorum adipisci.
-                                    </Text>
-                                </View>
-                            </View>
-                            <View>
-                                <View style={styles.rowDirection}>
-                                    <Text>사진</Text>
-                                    <Text>유저 네임</Text>
-                                </View>
-                                <View style={styles.starEmel}>
-                                    <View style={styles.starRating}>
-                                        <Text>★★★★★ 5.0</Text>
-                                    </View>
-                                    <Text>2020.4.28.</Text>                        
-                                </View>
-                                <View style={styles.inWrapView}> 
-                                    <Text>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cum commodi praesentium atque. Non porro deleniti consequatur quia assumenda fugit, voluptatibus, numquam quidem est delectus magni officia accusamus corporis, dolorum adipisci.
-                                    </Text>
-                                </View>
-                            </View>
+                            <FlatList
+                                data={comment}
+                                renderItem={({item})=>(<Item item={item} props={props}/>)}
+                                keyExtractor={item=>item.id}
+                            />
                         </View>
                     </View>
                 </ScrollView>
@@ -217,8 +228,18 @@ const styles = StyleSheet.create({
         backgroundColor:colors.white
     },
     rowDirection:{
-        flexDirection:'row'
-    },
+
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            borderColor:'#eee',
+            borderBottomWidth:0.5,
+            padding: 5,
+    },  
+    nameText:{
+        marginLeft:10,
+    },  
     starEmel:{
         flexDirection: 'row',
         justifyContent:'space-between',

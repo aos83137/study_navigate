@@ -58,9 +58,8 @@ export default class DeliveryFindScreen extends Component{
             );
     }
     componentWillUnmount(){
-        console.log('componentWillUnmount');
-        database().ref('/delivery').onDisconnect().cancel;
-        console.log('성공');
+        database().ref('/users/'+this.state.userId).off('value');
+        console.log('DelivaeryFindScreen - componentWillUnmount 성공');
     }
     getDeliveryLocation(){
         console.log('DeliveryFindScreen -> userId :',this.state.userId);

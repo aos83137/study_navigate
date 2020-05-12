@@ -11,7 +11,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import colors from '../../styles/colors';
 import database from '@react-native-firebase/database';
 
+// const ref = database().ref('/users/'+this.state.userId);
 // CurrentLocationButton
+let chang;
 export default class DeliveryFindScreen extends Component{
     constructor(props){
         super(props);
@@ -32,6 +34,7 @@ export default class DeliveryFindScreen extends Component{
             reservation: this.props.route.params?.reservation,
             // markers:[],
             error: null,
+            dbRef : database().ref('/users/'+this.props.route.params?.userId),
         };        
     }
 
@@ -44,9 +47,7 @@ export default class DeliveryFindScreen extends Component{
     }
     getDeliveryLocation(){
         console.log(this.state.userId);
-        database()
-        .ref('/users/'+this.state.userId)
-        .once('value')
+        this.state.dbRef.once('value')
         .then(snapshot => {
             console.log('User data: ', snapshot.val());
             this.setState({
@@ -61,9 +62,8 @@ export default class DeliveryFindScreen extends Component{
                 this.getRouteLocation();
             }                 
         });
-        database().ref('/users/'+this.state.userId)
-        .on('value', snapshot => {
-                //data가 object이긴 한데 json처럼 값이 안나와서 정제 한번 해줌.
+        
+        chang = this.state.dbRef.on('value', snapshot => {
                 console.log(snapshot.val());
                 
                 const newCoordinate ={
@@ -198,8 +198,8 @@ export default class DeliveryFindScreen extends Component{
 
     //실행 종료때임
     componentWillUnmount(){
-        database().ref('/delivery').onDisconnect().cancel;
-        console.log('componentWillUnmount 성공' );
+        this.state.dbRef.off('value');
+        console.log('DeliveryRealTime - componentWillUnmount 성공' );
     }
     render(){       
         return(
