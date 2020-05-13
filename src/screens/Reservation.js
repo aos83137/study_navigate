@@ -71,7 +71,25 @@ const Reservation = (props)=>{
         if(min<10) min = '0' + min;
         return  '' + month + '.' + day + '. ' + ampm + ' ' + hour+':'+min;
     }
+    const getFormatDate2 = (date)=>{
+        const ymd = date.split(' ')[0];
+        const time =date.split(' ')[1];        
 
+        const md = ymd.split('-')[1]+'.'+ymd.split('-')[2]+'. ';
+        let appm;
+        if(Number(time.split(':')[0]>12)){
+            appm = Number(time.split(':')[0])-12;
+            if(appm<10){
+                appm = '0'+appm;
+            }
+            appm = '오후 '+appm;
+        }else{
+            appm = '오전 '+ Number(time.split(':')[0]);
+        }
+        
+        const apmtime = appm+':'+time.split(':')[1];
+        return md+apmtime;
+    }
     const getFromatDateTime = date=>{
         let year = date.getFullYear()
         let month = (1 + date.getMonth());          //M
@@ -103,7 +121,7 @@ const Reservation = (props)=>{
             return ddd;
         }
     }
-    
+
     const payEnd= async()=>{
         const userId = await AsyncStorage.getItem('userToken');
 
@@ -313,7 +331,7 @@ const Reservation = (props)=>{
                     <Text style={styles.subFont}>체크인</Text>
                 </View>
                 <View>
-                    <Text style={styles.subFont}>{reservation.check_in}</Text>
+                    <Text style={styles.subFont}>{getFormatDate2(reservation.check_in)}</Text>
                 </View>
             </View>
             <View style={styles.inWrapView}>
@@ -321,7 +339,7 @@ const Reservation = (props)=>{
                     <Text style={styles.subFont}>체크아웃</Text>
                 </View>
                 <View>
-                    <Text style={styles.subFont}>{reservation.check_out}</Text>
+                    <Text style={styles.subFont}>{getFormatDate2(reservation.check_out)}</Text>
                 </View>
             </View>
         </View>;
@@ -380,7 +398,7 @@ const Reservation = (props)=>{
             footer=
             <View>                
                 <View style={styles.paysCard}>
-                        <Text>딜리버리의 위치를 확인 할 수 있습니다.</Text>    
+                        <Text>딜리버리의 위치를 실시간으로 확인 할 수 있습니다.</Text>    
                         <Button
                             buttonStyle={{backgroundColor:colors.green01}} title="딜리버리 확인" 
                             onPress={goDeliveryFindScreen}
@@ -389,14 +407,17 @@ const Reservation = (props)=>{
             </View>;
         }else{
             footer=
-            <View>                
+            <View>  
+                <Text>딜리버리 이용 내역</Text>                  
                 <View style={styles.paysCard}>
-                    <Text>딜리버리 이용 내역</Text>    
                     <View>
                         <Text>- 딜리버리 : {delivery.delivery_name}</Text> 
-                        <Text>- 차종{delivery.delivery_car}</Text>   
+                        <Text>- 차종 : {delivery.delivery_car}</Text>   
                         <Text>- 이동 거리 : 6.23km</Text>
                     </View>
+                </View>
+                <View>
+                    <Button title='리뷰 추가' />
                 </View>
             </View>;
         }

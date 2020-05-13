@@ -137,7 +137,7 @@ const KeeperInfo = (props)=>{
                         </View>
                         <View style={styles.title}>
                             <View style={styles.starEmel}>
-                                <Text>Keeper name</Text>
+                                <Text>Keeper</Text>
                                 <View style={styles.starRating}>
                                     <Text>★★★★★ 5.0</Text>
                                 </View>
@@ -145,7 +145,7 @@ const KeeperInfo = (props)=>{
                             <Text style={styles.titleFont}>{keeper.keeper_store_name}</Text>
                         </View>
                         <View style={styles.cardView}>
-                            <Text>보관 가능한 시간</Text>
+                            <Text h4>보관 가능한 시간</Text>
                             <View style={styles.inWrapView}>
                                 <View>
                                     <Text>오늘</Text>
