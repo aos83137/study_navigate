@@ -179,7 +179,7 @@ export default class DeliveryFindScreen extends Component{
                         database().ref('/delivery').update({state:'delivering'})
                         .then(()=>{console.log('Data updated');
                         });
-                        this.props.navigation.navigate('Main',{
+                        this.props.navigation.navigate('Info',{
                             test:'test',
                         });
                     }

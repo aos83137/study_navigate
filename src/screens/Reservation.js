@@ -1,5 +1,5 @@
 import React , {Component,useState, useEffect } from 'react';
-import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, TouchableHighlight,TextInput} from 'react-native';
+import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight,TextInput} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
@@ -19,6 +19,7 @@ const Reservation = (props)=>{
     const keeper_id = props.route.params?.keeper_id
     const data = props.route.params?.data ? props.route.params?.data : '없디'; // 가게정보 받음
     const state = props.route.params?.state;
+    const [isLoading, setIsLoading] = useState(true);
     const [reservation, setReservation] = useState(props.route.params?.reservation); //예약정보 받음
     const [value, onChangeText] = useState('xxxx-xxxx-xxxx-xxxx');
     const [delivery, setDelivery]=useState();
@@ -40,10 +41,20 @@ const Reservation = (props)=>{
             console.log('delilvery info :',resJson[0]);
             
             setDelivery(resJson[0]);
+            setIsLoading(false);
         }).catch((error)=>{
             console.error(error);
         });
-    },[props])
+    },[props]);
+
+    if(isLoading){
+        return(
+            <View>
+                <ActivityIndicator/>
+            </View>
+        )
+    }
+
     let r_id;
     const getFormatDate = date=>{
         let month = (1 + date.getMonth());          //M
