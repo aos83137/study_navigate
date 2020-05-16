@@ -112,25 +112,6 @@ export default class HomeScreen extends Component{
         })
     }
 
-    // //Alert 사용
-    // showWelcomMesage = () =>{
-    //     Alert.alert(
-    //         //Header
-    //         'Welecome to San 대구',
-    //         //title
-    //         'The food is amazing',
-    //         //footer button
-    //         [
-    //             {
-    //                 text:'Cancel',
-    //                 style: 'cancel'
-    //             },
-    //             {
-    //                 text:'Ok'
-    //             }
-    //         ]
-    //     )
-    // }
     //onSnapToItem의 콜백함수로 쓸 함수임
     onCarouselItemChange = (index) =>{
         let location = this.state.keeper[index];

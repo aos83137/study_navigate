@@ -159,7 +159,7 @@ const Reservation = (props)=>{
                     //Header
                     '결제 감사합니다.',
                     //title
-                    '예약이 완료 되었습니다.',
+                    '예약이 완료 되었습니다.\n딜리버리 서비스를 사용 하시겠습니까?',
                     //footer button
                     [
                         {
@@ -417,7 +417,7 @@ const Reservation = (props)=>{
                     </View>
                 </View>
                 <View>
-                    <Button title='리뷰 추가' />
+                    {/* <Button title='리뷰 추가' /> */}
                 </View>
             </View>;
         }

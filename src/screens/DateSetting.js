@@ -1,10 +1,12 @@
 import React , {useState, useEffect } from 'react';
-import {Text ,View,StyleSheet, Image, Alert, Dimensions, TouchableHighlight} from 'react-native';
+import {Text ,View,StyleSheet, Image, Alert, Dimensions, TouchableHighlight,TouchableOpacity} from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/FontAwesome5';
 import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon5 from 'react-native-vector-icons/Fontisto';
+
 import  colors from '../styles/colors'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
@@ -93,9 +95,9 @@ const DateSetting = (props)=>{
         return(
             <View style = {styles.container}> 
                 <View style={styles.backIcon}>
-                    <TouchableHighlight onPress={()=>{props.navigation.goBack()}}>
+                    <TouchableOpacity onPress={()=>{props.navigation.goBack()}}>
                         <Icon name='keyboard-arrow-left' size={24}/>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.dateView}>
                     <DateTimePickerModal
@@ -110,32 +112,38 @@ const DateSetting = (props)=>{
                         onConfirm={checkOutHandleConfirm}
                         onCancel={hideDatePicker}
                     />
-                    <TouchableHighlight onPress={()=>{showDatePicker('checkIn')}}>
+                    <TouchableOpacity onPress={()=>{showDatePicker('checkIn')}}>
                         <View>
                             <Text style={styles.checkText1}>체크인</Text>
                             <Text style={styles.checkText2}>{getFormatDate(checkIn)}</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                     <View>
                         <Icon name='keyboard-arrow-right' size={30}/>
                     </View>
-                    <TouchableHighlight onPress={()=>{showDatePicker('checkOut')}}>
+                    <TouchableOpacity onPress={()=>{showDatePicker('checkOut')}}>
                         <View>
                             <Text style={styles.checkText1}>체크아웃</Text>
                             <Text style={styles.checkText2}>{getFormatDate(checkOut)}</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.luggageView}>
                     <View style={styles.luggageWrap}>
                         <View style={styles.elem}>
-                            <Icon4
-                                name = "bag-personal"
+                            <Icon
+                                name = "card-travel"
                                 color={colors.green01}
                                 size={30}
                                 style={styles.icon}
                             />
                             <Text style={styles.luggageText1}>가방 사이즈</Text>
+                            <TouchableOpacity>
+                                <Icon2
+                                    name="question-circle-o"
+                                    size = {20}
+                                />
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.buttonElem}>
                             <Button icon={
@@ -160,13 +168,19 @@ const DateSetting = (props)=>{
                     </View>
                     <View style={styles.luggageWrap}>
                         <View style={styles.elem}>
-                            <Icon3
-                                name = "suitcase-rolling"
+                            <Icon5
+                                name = "suitcase"
                                 color={colors.green01}
                                 size={30}
                                 style={styles.icon}
                             />
                             <Text style={styles.luggageText1}>슈트케이스의 사이즈</Text>
+                            <TouchableOpacity>
+                                <Icon2
+                                    name="question-circle-o"
+                                    size = {20}
+                                />
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.buttonElem}>
                             <Button icon={

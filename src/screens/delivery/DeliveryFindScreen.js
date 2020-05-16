@@ -127,7 +127,8 @@ export default class DeliveryFindScreen extends Component{
         .then((resJson)=>{
             const distance = ''+Math.round(resJson.routes[0].distance)/1000+'km';
             const speed = 20;
-            const time = Math.round((Math.round(resJson.routes[0].distance)/1000)/speed*60);
+            const time = Math.ceil((Math.ceil(resJson.routes[0].distance)/1000)/speed*60);
+
             console.log('거리 : ',distance);
             console.log('속력 : ',speed);
             console.log('시간 : ', time);

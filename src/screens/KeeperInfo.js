@@ -3,6 +3,7 @@ import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityInd
 import { Button,Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import Icon3 from 'react-native-vector-icons/SimpleLineIcons';
 import  colors from '../styles/colors'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { log } from 'react-native-reanimated';
@@ -145,38 +146,70 @@ const KeeperInfo = (props)=>{
                             <Text style={styles.titleFont}>{keeper.keeper_store_name}</Text>
                         </View>
                         <View style={styles.cardView}>
-                            <Text h4>보관 가능한 시간</Text>
+                            <Text style = {styles.subTitle}>보관 가능한 시간</Text>
                             <View style={styles.inWrapView}>
-                                <View>
-                                    <Text>오늘</Text>
+                                <View style={styles.elem}>
+                                    <Icon
+                                        name='access-time'
+                                        size={28}
+                                        color={colors.green01}
+                                        style={styles.icon}
+                                    />
+                                    <Text style={styles.subText}>오늘</Text>
                                 </View>
                                 <View>
-                                    <Text>{keeper.keeper_store_openinghours}</Text>
+                                    <Text style={styles.subText}>{keeper.keeper_store_openinghours}</Text>
                                 </View>
                             </View>
-                            <View style={styles.inWrapView}>
-                                <View>
-                                    <Text>수하물 개수 제한</Text>
+                            <View style={styles.inWrapViewLast}>
+                                <View style={styles.elem}>
+                                    <Icon
+                                        name='card-travel'
+                                        size={28}
+                                        color={colors.green01}
+                                        style={styles.icon}
+                                    />
+                                    <Text style={styles.subText}>수하물 개수 제한</Text>
                                 </View>
                                 <View>
-                                    <Text>
+                                    <Text style={styles.subText}>
                                         가방 사이즈 x {keeper.keeper_store_bag_cnt}
                                     </Text>
-                                    <Text>
+                                    <Text style={styles.subText}>
                                         슈트케이스의 사이즈 x {keeper.keeper_store_bag_cnt}
                                     </Text>
                                 </View>
                             </View>
                         </View>
                         <View style={styles.cardView}>
-                            <Text>가게 정보</Text>
+                            <Text style = {styles.subTitle}>가게 정보</Text>
                             <View style={styles.inWrapView}>
-                                <Text>전화기</Text>
-                                <Text>{keeper.keeper_store_tel}</Text>
+                                <View style={styles.elem}>
+                                    <Icon
+                                        name='local-phone'
+                                        size={28}
+                                        color={colors.green01}
+                                        style={styles.icon}
+                                    />
+                                    <Text style={styles.subText}>전화기</Text>
+                                </View>
+                                <View style={styles.elem}>
+                                    <Text style={styles.subText}>{keeper.keeper_store_tel}</Text>
+                                </View>
                             </View>
-                            <View style={styles.inWrapView}>
-                                <Text>위치</Text>
-                                <Text>{keeper.keeper_store_address}</Text>
+                            <View style={styles.inWrapViewLast}>
+                                <View style={styles.elem}>
+                                    <Icon   
+                                        name='location-on'
+                                        size={28}
+                                        color={colors.green01}
+                                        style={styles.icon}
+                                    />
+                                    <Text style={styles.subText}>위치</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.subText}>{keeper.keeper_store_address}</Text>
+                                </View>
                             </View>
                             {/* <View style={styles.inWrapView}>
                                 <Text>홈페이지,링크</Text>
@@ -184,7 +217,7 @@ const KeeperInfo = (props)=>{
                             </View> */}
                         </View >
                         <View style={styles.cardView}>
-                            <Text>평가</Text>
+                            <Text style={styles.subTitle}>평가</Text>
                             <FlatList
                                 data={comment}
                                 renderItem={({item})=>(<Item item={item} props={props}/>)}
@@ -220,6 +253,13 @@ const styles = StyleSheet.create({
         padding:'2%',
         position:'absolute',
     },
+    subTitle:{
+        fontWeight:'bold',
+        fontSize:18,
+    },
+    subText:{
+        fontSize:16,
+    },
     title:{
         width:'100%',
         paddingTop:10,
@@ -246,6 +286,7 @@ const styles = StyleSheet.create({
     },
     titleFont:{
         fontSize:24,
+        fontWeight:'bold',
         marginTop:15,
         marginBottom:15,
 
@@ -261,9 +302,19 @@ const styles = StyleSheet.create({
     inWrapView:{
         borderBottomColor: colors.gray,
         borderBottomWidth: 1,
+        marginTop:10,
+        paddingBottom:5,
         width:"100%",
         flexDirection: 'row',
         justifyContent:'space-between',
+    },
+    inWrapViewLast:{
+        marginTop:5,
+        width:"100%",
+        flexDirection: 'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        paddingBottom:10,
     },
     floatView:{
         position:'absolute',
@@ -271,6 +322,13 @@ const styles = StyleSheet.create({
         bottom:15,
         alignItems:'center',
         justifyContent:'center',
+    },
+    elem:{
+        flexDirection:'row',
+        alignItems:'center',    
+    },
+    icon:{
+        marginRight:5,
     },
 }
 );
