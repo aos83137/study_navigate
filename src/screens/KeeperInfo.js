@@ -1,6 +1,6 @@
 import React , {Component,useState, useEffect } from 'react';
-import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight} from 'react-native';
-import { Button,Avatar } from 'react-native-elements';
+import {View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight} from 'react-native';
+import { Button,Avatar,Text,Tooltip,Rating } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/SimpleLineIcons';
@@ -140,27 +140,30 @@ const KeeperInfo = (props)=>{
                             <View style={styles.starEmel}>
                                 <Text>Keeper</Text>
                                 <View style={styles.starRating}>
-                                    <Text>★★★★★ 5.0</Text>
+                                    <Rating imageSize={20} readonly startingValue={5} style={styles.rating} />
+                                    <Text>  5.0</Text>
                                 </View>
                             </View>
                             <Text style={styles.titleFont}>{keeper.keeper_store_name}</Text>
                         </View>
                         <View style={styles.cardView}>
-                            <Text style = {styles.subTitle}>보관 가능한 시간</Text>
-                            <View style={styles.inWrapView}>
-                                <View style={styles.elem}>
-                                    <Icon
-                                        name='access-time'
-                                        size={28}
-                                        color={colors.green01}
-                                        style={styles.icon}
-                                    />
-                                    <Text style={styles.subText}>오늘</Text>
+                            <Text style = {styles.subTitle}>보관 가능한 시간</Text>                            
+                            {/* <Tooltip popover={<Text>Info here</Text>} height={100}> */}
+                                <View style={styles.inWrapView}>
+                                    <View style={styles.elem}>
+                                        <Icon
+                                            name='access-time'
+                                            size={28}
+                                            color={colors.green01}
+                                            style={styles.icon}
+                                        />
+                                        <Text style={styles.subText}>오늘</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.subText}>{keeper.keeper_store_openinghours}</Text>
+                                    </View>
                                 </View>
-                                <View>
-                                    <Text style={styles.subText}>{keeper.keeper_store_openinghours}</Text>
-                                </View>
-                            </View>
+                            {/* </Tooltip> */}
                             <View style={styles.inWrapViewLast}>
                                 <View style={styles.elem}>
                                     <Icon
@@ -282,6 +285,7 @@ const styles = StyleSheet.create({
     },  
     starEmel:{
         flexDirection: 'row',
+        alignItems:'center',
         justifyContent:'space-between',
     },
     titleFont:{
@@ -330,6 +334,10 @@ const styles = StyleSheet.create({
     icon:{
         marginRight:5,
     },
+    starRating:{
+        flexDirection:'row',
+        justifyContent:'center',
+    }
 }
 );
 

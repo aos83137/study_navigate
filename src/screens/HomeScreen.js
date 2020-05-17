@@ -148,7 +148,9 @@ export default class HomeScreen extends Component{
     //carousel의 아이템 뷰 설정 함수
     renderCarouselItem = ({item}) => {
         return (
-            <TouchableOpacity onPress={()=>{
+            <TouchableOpacity 
+                style={styles.shadow}
+                onPress={()=>{
                 //네비갈때 데이터 던져주는걸로 구분하면 될듯함
                 this.props.navigation.navigate('KeeperInfo',{
                     carrCnt:this.props.route.params?.carrCnt,
@@ -307,12 +309,18 @@ const styles = StyleSheet.create({
         bottom: 0,
         marginBottom: 48
     },
+    shadow:{
+        shadowColor:'#000000',
+        shadowOpacity: 1.0,
+        shadowRadius:5,
+        elevation: 7,  
+    },
     cardContainer:{
         backgroundColor: 'rgba(0,0,0,0.6)',
         height:200,
         width:300,
         padding:24,
-        borderRadius:24
+        borderRadius:24,
     },
     cardImage:{
         height:120,

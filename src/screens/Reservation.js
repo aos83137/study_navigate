@@ -176,7 +176,7 @@ const Reservation = (props)=>{
                             text:'네. 사용할래요.',
                             onPress: ()=>{
                                 props.navigation.navigate('DeliveryInfo',{
-                                    reservation:responseJson.reverse()[0],
+                                    reservation:responseJson[0],
                                     data,
                                     userId,
                                 });
