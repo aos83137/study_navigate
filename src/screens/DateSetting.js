@@ -131,7 +131,7 @@ const DateSetting = (props)=>{
                         </View>
                     </View>
                 </Overlay>
-                <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+                <Overlay overlayStyle={styles.overlay} isVisible={visible} onBackdropPress={toggleOverlay}>
                     <View style={styles.overlayStyle}>
                         <View style = {styles.title}>
                             <Text style={styles.checkText1}>가방 사이즈</Text>    
@@ -141,16 +141,19 @@ const DateSetting = (props)=>{
                             <Avatar
                                 size="large"
                                 rounded
+                                icon={{name: 'shopping-bag', type: 'font-awesome'}}
                                 containerStyle={styles.avatarStyle}
                             />
                             <Avatar
                                 size="large"
                                 rounded
+                                icon={{name: 'suitcase', type: 'font-awesome'}}
                                 containerStyle={styles.avatarStyle}
                             />
                             <Avatar
                                 size="large"
                                 rounded
+                                icon={{name: 'shopping-basket', type: 'font-awesome'}}
                                 containerStyle={styles.avatarStyle}
                             />
                         </View>
