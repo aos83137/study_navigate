@@ -9,7 +9,7 @@ import {
     ScrollView ,
     StyleSheet,
     KeyboardAvoidingView,
-    Dimensions,
+    Dimensions,s
 } from 'react-native';
 import colors from '../styles/colors';
 import InputField from '../components/form/InputField';

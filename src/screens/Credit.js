@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
 //prop-types : 타입 확인 라이브러리
 import  Icon from 'react-native-vector-icons/FontAwesome';
+import { Button} from 'react-native-elements';
 import {
     Alert,
     View,
@@ -15,164 +16,127 @@ import colors from '../styles/colors';
 import InputField from '../components/form/InputField';
 import NextArrowButton from '../components/buttons/NextArrowButton';
 import AsyncStorage from '@react-native-community/async-storage';
+import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
+
+const USE_LITE_CREDIT_CARD_INPUT = false;
 
 export default class Credit extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          formValid: true,
-          validEmail: false,
-          emailAddress: '',
-          password: '',
-          validPassword: false,
-          loadingVisible: false,
-          userName:'',
-          auth:false,
-        };
-    
-        this.handleEmailChange = this.handleEmailChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handleNextButton = this.handleNextButton.bind(this);
+            valid: true, // will be true once all fields are "valid" (time to enable the submit button)
+            values: { // will be in the sanitized and formatted form
+                number: "5272 8951 8851 4144",
+                expiry: "1123",
+                cvc: "322",
+                type: "master-card", // will be one of [null, "visa", "master-card", "american-express", "diners-club", "discover", "jcb", "unionpay", "maestro"]
+                name: "JEON YONG SEOK",
+            },
+            status: {  // will be one of ["incomplete", "invalid", and "valid"]
+              number: "incomplete",
+              expiry: "incomplete",
+              cvc: "incomplete",
+              name: "incomplete", 
+            },
+          };
     }
-    handleNextButton = async ()=>{
-        try{
-            const userEmail = this.state.emailAddress;
-            const userName = userEmail.split('@')[0];
-            await AsyncStorage.setItem('userToken',userName)
-            Alert.alert(
-                //Header
-                '로그인',
-                //title
-                '로그인이 되었습니다.',
-                //footer button
-                [
-                    {
-                        text:'Ok',
-                        onPress: ()=>{
-                          this.props.navigation.navigate('Setting',{
-                            'auth':true,
-                          });
-                        }
-                    }
-                ]
-            );
-
-        }catch(e){
-            console.error(e);
+    // _onChange => form => console.log(form);
+    _onChange = formData => {
+        /* eslint no-console: 0 */
+        console.log(JSON.stringify(formData, null, " "));
+        if(formData.valid){
+            this.setState({
+                values:formData.valid,
+                status:formData.status,
+                vaild:formData.valid,
+            })
         }
-        console.log('Done.');
+      };
+    _onFocus = field => {
+    /* eslint no-console: 0 */
+    console.log(field);
+    };
+    save = ()=>{
+        Alert.alert(
+            //Header
+            '저장 완료.',
+            //title
+            '이제 키퍼 예약 밑 딜리버리 서비스 이용 시 간편하게 사용 가능합니다.',
+            //footer button
+        [
+            {
+                text:'Ok',
+                onPress:()=>{
+                    this.props.navigation.navigate('Setting');
+                }
+            }
+        ])
     }
-    handleEmailChange(email) {
-        // eslint-disable-next-line
-        const emailCheckRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        const { validEmail } = this.state;
-        this.setState({ emailAddress: email });
-    
-        if (!validEmail) {
-          if (emailCheckRegex.test(email)) {
-            this.setState({ validEmail: true });
-          }
-        } else if (!emailCheckRegex.test(email)) {
-          this.setState({ validEmail: false });
-        }
-      }
-      handlePasswordChange(password) {
-        const { validPassword } = this.state;
-    
-        this.setState({ password });
-    
-        if (!validPassword) {
-          if (password.length > 4) {
-            // Password has to be at least 4 characters long
-            this.setState({ validPassword: true });
-          }
-        } else if (password <= 4) {
-          this.setState({ validPassword: false });
-        }
-      }
     render(){
-        const {
-            formValid, loadingVisible, validEmail, validPassword,
-          } = this.state;
         return (
-            <KeyboardAvoidingView 
-                style={styles.wrapper}
-                //behavior 키보드에 숨겨진 다음 버튼을 수정해야합니다 
-                behavior="padding"
-                >
-                <View
-                    style={styles.scrollViewWrapper}
-                >
-                    <ScrollView style={styles.scrollView}>
-                        <Text style={styles.loginHeader}>
-                            로그인
-                        </Text>
-                        <InputField
-                            labelText={"EMAIL"}
-                            labelTextSize={14}
-                            labelColor={colors.white}
-                            textColor={colors.white}
-                            borderBottomColor = {colors.white}
-                            inputType="email"
-                            customStyle={{ marginBottom : 30 }}
-                            onChangeText={this.handleEmailChange}
-                            showCheckmark={validEmail}
-                            />
-                        <InputField
-                            labelText={"PASS WORD"}
-                            labelTextSize={14}
-                            labelColor={colors.white}
-                            textColor={colors.white}
-                            borderBottomColor = {colors.white}
-                            inputType="password"
-                            customStyle={{ marginBottom : 30 }}
-                            onChangeText={this.handlePasswordChange}
-                            showCheckmark={validPassword}
-                        />
-                    </ScrollView>
-                    <View style={styles.nextButton}>
-                        <NextArrowButton
-                            handleNextButton={this.handleNextButton}
-                        />
-                    </View>
+            <View style={s.container}>
+                <View style={s.header}>
+                    <Text style={s.headerText}>
+                        결제 정보
+                    </Text>
                 </View>
-            </KeyboardAvoidingView>
+            { USE_LITE_CREDIT_CARD_INPUT ?
+              (<LiteCreditCardInput
+                  autoFocus
+                  inputStyle={s.input}
+    
+                  validColor={"black"}
+                  invalidColor={"red"}
+                  placeholderColor={"darkgray"}
+    
+                  onFocus={this._onFocus}
+                  onChange={this._onChange} />) :
+                (<CreditCardInput
+                    autoFocus
+    
+                    requiresName
+                    requiresCVC
+    
+                    labelStyle={s.label}
+                    inputStyle={s.input}
+                    validColor={"black"}
+                    invalidColor={"red"}
+                    placeholderColor={"darkgray"}
+
+                    onFocus={this._onFocus}
+                    onChange={this._onChange} />)
+            }
+            <Button buttonStyle={s.button} type={'clear'} title={'저장'} onPress={this.save}/>
+          </View>
         );
     }
 }
-const styles = StyleSheet.create({
-    wrapper:{
-        display : 'flex',
-        flex: 1,
-        backgroundColor:colors.green01,
+const s = StyleSheet.create({
+    container: {
+      backgroundColor: "#F5F5F5",
+      marginTop: 60,
+      flex:1
     },
-    scrollViewWrapper: {
-        marginTop: 70,
-        flex: 1,
-        padding: 0,
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-      },
-    scrollView:{
-        paddingLeft :30,
-        paddingRight: 30,
-        paddingTop: 20,
-        flex:1,
+    label: {
+      color: "black",
+      fontSize: 12,
     },
-    loginHeader:{
-        fontSize:30,
-        color: colors.white,
-        fontWeight: '300',
-        marginBottom:40,
+    input: {
+      fontSize: 16,
+      color: "black",
     },
-    nextButton:{
-        //flex-end 이거하면 스크롤해도 밑에 고정임
-        alignItems: 'flex-end',
-        right : 20,
-        bottom: 20,
-    }
-
-});
+    button:{
+        marginTop:15,
+    },
+    header:{
+        width:'100%',
+        paddingLeft:10,
+        marginBottom:20,
+        alignItems:'center'
+    },
+    headerText:{
+        width:'100%',
+        fontSize:24,
+        fontWeight:"bold",
+    },
+  });
