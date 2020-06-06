@@ -90,9 +90,9 @@ const KeeperInfo = (props)=>{
         .then((response)=>response.json())
         .then((responseJson)=>{
             console.log('keeper_id',keeper_id);
-            console.log('responseJson',responseJson);
+            // console.log('responseJson',responseJson);
             responseJson.forEach(element => {
-                console.log(element.keeper_store_id);
+                // console.log(element.keeper_store_id);
                 if(element.keeper_store_id == keeper_id){
                     console.log('element',element);
                     setKeeper(element)

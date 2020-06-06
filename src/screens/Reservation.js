@@ -138,7 +138,7 @@ const Reservation = (props)=>{
                 check_out:getFromatDateTime(checkOut),
                 bag_cnt:bagCnt,
                 car_cnt:carrCnt,
-                reservation_status:'keeper_reservation',
+                reservation_status:'keeper_listen',
             })
         }).then((response)=>{
             return response.json()
@@ -317,7 +317,7 @@ const Reservation = (props)=>{
             </View>
         </View>;
     }else if(whereScreen === 'info'){
-    //예약 확인에서 왔을 경우
+    //예약 확인 info에서 왔을 경우
         imageCard=
             <View style={styles.ImageWrap}>
                 <Image style={styles.keeperImg} source={{ uri:data.keeper_store_imgurl }}></Image>
@@ -373,6 +373,7 @@ const Reservation = (props)=>{
                 </View>
             </View>
         </View>;
+        //상태 : 예약 완료, 보관 중 
         if(state==='keeper_reservation' || state==='keeper_keeping'){
             footer=
             <View>
@@ -394,6 +395,7 @@ const Reservation = (props)=>{
                     </View>
                 </View>
             </View>;
+        //상태 : 배달 중
         }else if(state==='in_delivery'){
             footer=
             <View>                
@@ -405,21 +407,43 @@ const Reservation = (props)=>{
                         />
                 </View>
             </View>;
-        }else{
+        //상태 : 종료
+        }else if(state ==='keeper_listen'){
             footer=
-            <View>  
-                <Text>딜리버리 이용 내역</Text>                  
+            <View>                
                 <View style={styles.paysCard}>
-                    <View>
-                        <Text>- 딜리버리 : {delivery.delivery_name}</Text> 
-                        <Text>- 차종 : {delivery.delivery_car}</Text>   
-                        <Text>- 이동 거리 : 6.23km</Text>
-                    </View>
-                </View>
-                <View>
-                    {/* <Button title='리뷰 추가' /> */}
+                        <Text>키퍼의 수락을 대기 중 입니다....</Text>    
                 </View>
             </View>;
+        }else{
+            footer=
+            <View>
+                <View>  
+                    <Text>딜리버리 이용 내역</Text>                  
+                    <View style={styles.paysCard}>
+                        <View>
+                            <Text>- 딜리버리 : {delivery.delivery_name}</Text> 
+                            <Text>- 차종 : {delivery.delivery_car}</Text>   
+                            <Text>- 이동 거리 : 6.23km</Text>
+                        </View>
+                    </View>
+                    <View>
+                        {/* <Button title='리뷰 추가' /> */}
+                    </View>
+                </View>
+                <View>  
+                    <Text>리뷰 작성</Text>                  
+                    <View style={styles.paysCard}>
+                        <View>
+                            <Text>키퍼에 대한 리뷰를 남겨주세요.</Text> 
+                            <Button title={'리뷰'}/>
+                        </View>
+                    </View>
+                    <View>
+                        {/* <Button title='리뷰 추가' /> */}
+                    </View>
+                </View>
+            </View>
         }
     }    
     // console.log('1' +keeper_id);

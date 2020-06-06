@@ -15,10 +15,9 @@ function Item({keepers,item,props}){
     let time = item.check_in
     let checkIn = item.check_in.split(' ')[0]
     let checkOut = item.check_out.split(' ')[0]
-    if(item.reservation_status == 'keeper_listen'){
-        status = '예약 대기 중'
-    }else if(item.reservation_status=='keeper_reservation'){
-        status = '예약 확정';
+    
+    if(item.reservation_status=='keeper_reservation'){
+        status = '예약 완료';
     }else if(item.reservation_status=='in_delivery'){
         status = '배달 중';
     }else if(item.reservation_status=='keeper_keeping'){
@@ -59,100 +58,12 @@ function Item({keepers,item,props}){
 }
 
 const InfoScreen = (props)=>{   
-    const [reservations,setReservations] = useState();
-    const [keepers, setKeepers] = useState();
-    const [isLoading, setIsLoading] = useState(true);
-    const stateTest = props.route.params?.stateTest;
-    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const onRelease = ()=> {
-        // offsetY must be less than the refreshing height
-        // to trigger refresh
-          setIsRefreshing(true);
-          setTimeout(() => {
-            setIsRefreshing(false);
-          }, 3000);
-      }
-    
-    useEffect(()=>{
-        fetch(URI+'/reservations',{
-            method:"get",
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            },
-        })
-        .then((response)=>response.json())
-        .then((responseJson)=>{         
-            setReservations(responseJson.reverse());
-        }).catch((error)=>{
-            // console.log('test');
-            // console.error(error);
-        });
-
-        fetch(URI+'/kstoreinfos',{
-            method:"get",
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            },
-        })
-        .then((response)=>response.json())
-        .then((responseJson)=>{         
-            // console.log(responseJson);
-            setKeepers(responseJson)
-            setIsLoading(false);
-        }).catch((error)=>{
-            // console.error(error);
-            
-            setIsLoading(false);
-        });
-        
-        return ()=>{
-            console.log('삭제됨 info');
-        }
-    },[props]);
-
-    const handleRefresh = ()=>{    
-        console.log('refresh start');
-        
-        setIsRefreshing(true);
-        fetch(URI+'/reservations',{
-            method:"get",
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json',
-            },
-        })
-        .then((response)=>response.json())
-        .then((responseJson)=>{        
-            setIsRefreshing(false);
-            setReservations(responseJson.reverse());
-            console.log('refresh end');
-        }).catch((error)=>{
-            console.error(error);
-        });
-    }
-
-    if(isLoading){
-        return(
-            <View style={{ flex:1, paddingTop:20}}>
-                <ActivityIndicator/>
-            </View>
-        )
-    }
     return(
         <View style={styles.container}> 
                 <View style={styles.background}>
                 <LottieView style={styles.lottie} source={require('../img/lottie/waves.json')} autoPlay loop/>
             </View>
-            <FlatList
-                data={reservations}
-                renderItem={({item}) =>(<Item keepers={keepers} item={item} props={props}/>)}
-                keyExtractor={item=>item.id}
-                refreshing={false}
-                onRefresh={handleRefresh}
-                />
 
         </View>
     );
