@@ -86,8 +86,7 @@ const InfoScreen = (props)=>{
         .then((responseJson)=>{         
             setReservations(responseJson.reverse());
         }).catch((error)=>{
-            // console.log('test');
-            // console.error(error);
+            console.log(error);
         });
 
         fetch(URI+'/kstoreinfos',{
@@ -130,7 +129,7 @@ const InfoScreen = (props)=>{
             setReservations(responseJson.reverse());
             console.log('refresh end');
         }).catch((error)=>{
-            console.error(error);
+            console.log(error);
         });
     }
 

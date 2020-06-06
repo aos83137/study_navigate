@@ -22,6 +22,7 @@ import SplashScreen from 'react-native-splash-screen';
 import DeliveryRealtime from './src/screens/delivery/DeliveryRealtime';
 import SignUp from './src/screens/SignUp.js';
 import Credit from './src/screens/Credit.js';
+import Review from './src/screens/Review.js';
 
 export async function request_location_runtime_permission() {
   // 옐로우 박스 지울때 밑에꺼 주석풀기
@@ -155,7 +156,7 @@ export default class App extends Component{
     // this.notificationListener = messaging().onNotification((notification) => {
     //   console.log('onNotification', notification);
     // });
-
+    this.setTopic = messaging().subscribeToTopic('tourist');
     this.unsubscribe  = messaging().onMessage(async remoteMessage => {
       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
     });
@@ -190,6 +191,7 @@ export default class App extends Component{
             <RootStack.Screen name="SignUp" component={SignUp}/>
             <RootStack.Screen name="DeliveryRealtime" component={DeliveryRealtime}/>
             <RootStack.Screen name="Credit" component={Credit}/>
+            <RootStack.Screen name="Review" component={Review}/>
           </RootStack.Navigator>
         </NavigationContainer>
       );

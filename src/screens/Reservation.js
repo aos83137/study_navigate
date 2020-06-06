@@ -122,6 +122,10 @@ const Reservation = (props)=>{
         }
     }
 
+    const goReview =()=>{
+        props.navigation.navigate('Review');
+    }
+
     const payEnd= async()=>{
         const userId = await AsyncStorage.getItem('userToken');
 
@@ -192,6 +196,29 @@ const Reservation = (props)=>{
             console.error(error);
         })
 
+        fetch('https://fcm.googleapis.com/fcm/send',{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': 'key=AAAAnXNFhws:APA91bH5gDeGFgVYolbkdx44qnOyYadDP1-xst1-tkUYlWHXqC3Lropg4GIPwqnD8-fG8kmT6yzCh8ueY1rnvSYSrVokqfMRWOLexTF87JK_2cETW8RkT2oA9r13k8FLnG0IAHGBYqsc'
+            },
+            body:JSON.stringify(
+                {
+                    //여기 토큰을 키퍼꺼로 바꾸면 될듯
+                    "to":"/topics/tourist",
+                    "priority":"high",
+                    "notification":{
+                        "body":"예약완료",
+                        "title":"예약이 되었습니다.",
+                        "icon":"myicon"
+                    }, 
+                    "data":{
+                        "title": "투어리스트의 예약",
+                        "message":"투어리스트의 예약이 완료되었습니다."
+                    }
+                }
+            )
+        });
         try{
             await AsyncStorage.setItem('status','endKeeper')
             console.log('스테이터스 저장 완료');
@@ -419,7 +446,7 @@ const Reservation = (props)=>{
             footer=
             <View>
                 <View>  
-                    <Text>딜리버리 이용 내역</Text>                  
+                    <Text style={styles.headerText}>딜리버리 이용 내역</Text>                  
                     <View style={styles.paysCard}>
                         <View>
                             <Text>- 딜리버리 : {delivery.delivery_name}</Text> 
@@ -432,11 +459,11 @@ const Reservation = (props)=>{
                     </View>
                 </View>
                 <View>  
-                    <Text>리뷰 작성</Text>                  
+                    <Text style={styles.headerText}>리뷰 작성</Text>                  
                     <View style={styles.paysCard}>
-                        <View>
-                            <Text>키퍼에 대한 리뷰를 남겨주세요.</Text> 
-                            <Button title={'리뷰'}/>
+                        <View style={styles.container}>
+                            <Text style={{ width:'100%' }}>키퍼에 대한 리뷰를 남겨주세요.</Text> 
+                            <Button buttonStyle={styles.button2} title={'리뷰'} onPress={goReview}/>
                         </View>
                     </View>
                     <View>
@@ -589,7 +616,14 @@ const styles = StyleSheet.create({
         color:colors.black,
         marginTop:10,
         marginBottom:10,
-    }
+    },
+    button2:{
+        marginLeft:13,
+        marginRight:13,
+        width:300,
+        backgroundColor:colors.green01,
+        // backgroundColor:'rgba(255,255,255,0.2)'
+    },
 });
 
 export default Reservation;

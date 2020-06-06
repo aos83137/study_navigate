@@ -73,7 +73,7 @@ export default class HomeScreen extends Component{
                 })
                 // this.setState(responseJson);           
             }).catch((error)=>{
-                console.error(error);
+                console.log(error);
             });
             SplashScreen.hide();
             // this.watchLocation();

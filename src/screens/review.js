@@ -9,55 +9,8 @@ import LottieView from 'lottie-react-native';
 let {width, height} = Dimensions.get('window')
 const URI = 'https://my-project-9710670624.df.r.appspot.com'
 
-function Item({keepers,item,props}){
-    let status;
-    let name = keepers[item.keeper_store_id-1].keeper_store_name;
-    let time = item.check_in
-    let checkIn = item.check_in.split(' ')[0]
-    let checkOut = item.check_out.split(' ')[0]
-    
-    if(item.reservation_status=='keeper_reservation'){
-        status = '예약 완료';
-    }else if(item.reservation_status=='in_delivery'){
-        status = '배달 중';
-    }else if(item.reservation_status=='keeper_keeping'){
-        status = '보관 중';
-    }else{
-        status = '종료';
-    }
-    return (
-        <View style={styles.item}>
-            <TouchableOpacity 
-                onPress={()=>{
-                    
-                    props.navigation.navigate('Reservation',{
-                        data:keepers[item.keeper_store_id-1],
-                        reservation:item,
-                        state:item.reservation_status,
-                        whereScreen:'info',
-                    })                    }
-                }
-            >
-                <View>
-                    <View style={styles.tableView}>
-                        <View style={{ flex:3 }}>
-                            <Text style = {styles.titleText}>{name}</Text>
-                            <Text style={styles.titleDate}>{checkIn+'~'+checkOut}</Text>
-                        </View>
-                        <View style={{ flex:1 }}>
-                            <Text style = {styles.titleText}>상태</Text>
-                            <Text style={styles.stateText}>
-                                {status}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </TouchableOpacity>
-        </View>
-    )
-}
 
-const InfoScreen = (props)=>{   
+const Review = (props)=>{   
 
     return(
         <View style={styles.container}> 
@@ -112,4 +65,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default InfoScreen;
+export default Review;
