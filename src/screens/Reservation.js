@@ -1,6 +1,6 @@
 import React , {Component,useState, useEffect } from 'react';
 import {Text ,View,StyleSheet, Image, ScrollView, Alert, Dimensions, ActivityIndicator,TouchableHighlight,TextInput} from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button,Rating,AirbnbRating,Input  } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import  colors from '../styles/colors'
@@ -122,10 +122,23 @@ const Reservation = (props)=>{
         }
     }
 
-    const goReview =()=>{
-        props.navigation.navigate('Review');
+    const sendReviewData =()=>{
+        Alert.alert(
+            //Header
+            '리뷰 등록',
+            //title
+            '리뷰가 등록 되었습니다.\n감사합니다.',
+            //footer button
+            [
+                {
+                    text:'확인',
+                    onPress: ()=>{
+                        
+                    }
+                }
+            ]
+        );
     }
-
     const payEnd= async()=>{
         const userId = await AsyncStorage.getItem('userToken');
 
@@ -275,6 +288,8 @@ const Reservation = (props)=>{
     let checkInOut;
     let total;
     let footer;
+    let Review;
+    let pictureView;
     //예약하기로 넘어 왔을 경우    
     if(whereScreen === 'reservation'){
         imageCard=
@@ -404,14 +419,10 @@ const Reservation = (props)=>{
         if(state==='keeper_reservation' || state==='keeper_keeping'){
             footer=
             <View>
-                <TouchableOpacity >
-                    <Text style={{ borderBottomColor:1 }}>
-                        배달을 이용하고 싶은 분께서는....Click!
-                    </Text>
-                </TouchableOpacity>
-                
+                <Text style={styles.headerText}>
+                    딜리버리 이용
+                </Text>
                 <View style={styles.paysCard}>
-                    <Text>딜리버리 요청</Text>    
                     <View>
                         <Text>- 가게까지 짐을 배달해 주는 서비스입니다.</Text>    
                         <Text>- 반경 5KM 내의 딜리버리를 찾습니다.</Text>
@@ -422,6 +433,22 @@ const Reservation = (props)=>{
                     </View>
                 </View>
             </View>;
+            pictureView = 
+            <View>
+                <Text style={styles.headerText}>
+                    고객님의 짐
+                </Text>
+                <View style={styles.paysCard}>
+                    <Text>
+                        고객님의 짐은 키퍼가 안전하게 보관 하고 있습니다.
+                    </Text>
+                    <View>
+                        <Text>
+                            사진
+                        </Text>
+                    </View>
+                </View>
+            </View>
         //상태 : 배달 중
         }else if(state==='in_delivery'){
             footer=
@@ -439,7 +466,10 @@ const Reservation = (props)=>{
             footer=
             <View>                
                 <View style={styles.paysCard}>
-                        <Text>키퍼의 수락을 대기 중 입니다....</Text>    
+                        <Text>키퍼의 수락을 대기 중 입니다...</Text>    
+                        <Text>
+                            잠시만 기다려 주십시오...
+                        </Text>
                 </View>
             </View>;
         }else{
@@ -454,21 +484,36 @@ const Reservation = (props)=>{
                             <Text>- 이동 거리 : 6.23km</Text>
                         </View>
                     </View>
-                    <View>
-                        {/* <Button title='리뷰 추가' /> */}
+                </View>
+            </View>;
+            Review=
+            <View>
+                <Text style={styles.headerText}>리뷰 작성</Text>                  
+                <Text style={{ width:'100%' }}>키퍼에 대한 리뷰를 남겨주세요.</Text> 
+                <View style={styles.reviewView}>
+                    <View style={styles.field}>
+                        <Text style={{ marginBottom:5, fontSize:18 }}>후기</Text>
+                        <TextInput
+                            style={{ borderColor:colors.gray, borderWidth:2, width:'90%', padding:10 }}
+                            multiline={true}
+                            underlineColorAndroid={'transparent'}
+                            textAlignVertical={'top'}
+                        />
+                    </View>
+                    <View style={styles.field}>
+                        <AirbnbRating 
+                            // starStyle={{ flex:3 }}
+                          size={20}
+                        />
+
+                    </View>
+
+                    <View style={styles.field2}>
+                        <Button title={'登録'} buttonStyle={styles.button2} onPress={sendReviewData}/>
                     </View>
                 </View>
-                <View>  
-                    <Text style={styles.headerText}>리뷰 작성</Text>                  
-                    <View style={styles.paysCard}>
-                        <View style={styles.container}>
-                            <Text style={{ width:'100%' }}>키퍼에 대한 리뷰를 남겨주세요.</Text> 
-                            <Button buttonStyle={styles.button2} title={'리뷰'} onPress={goReview}/>
-                        </View>
-                    </View>
-                    <View>
-                        {/* <Button title='리뷰 추가' /> */}
-                    </View>
+                <View>
+                    {/* <Button title='리뷰 추가' /> */}
                 </View>
             </View>
         }
@@ -495,6 +540,17 @@ const Reservation = (props)=>{
                         <View style={styles.cardView}>
                             {total}
                         </View >
+                        {Review?
+                        <View style={styles.cardView}>
+                            {Review}
+                        </View>:null
+                        }
+                        {
+                            pictureView?
+                            <View style={styles.cardView}>
+                            {pictureView}
+                            </View>:null
+                        }
                         <View style={styles.cardView}>
                             {footer}
                         </View>
@@ -622,8 +678,27 @@ const styles = StyleSheet.create({
         marginRight:13,
         width:300,
         backgroundColor:colors.green01,
+        marginBottom:15,
         // backgroundColor:'rgba(255,255,255,0.2)'
     },
+    field:{
+        marginTop:10,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    field2:{
+        marginTop:17,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    reviewView:{
+        margin:10,
+        backgroundColor:'rgba(200,200,200,0.4)',
+        borderRadius:10,
+        marginTop:8,
+        marginBottom:30,
+        padding:8,
+    }
 });
 
 export default Reservation;
